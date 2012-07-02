@@ -25,6 +25,8 @@
 
     <modules>
         <module>sdm-core</module>
+        <module>sdm-sample</module>
+        <module>sdm-integrationtest</module>
     </modules>
 
     <profiles>
