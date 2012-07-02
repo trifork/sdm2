@@ -3,45 +3,52 @@ class jboss6as() {
         ensure => present
     }
 
-    file{"/etc/init.d/jboss":
+    file {"/tmp/jdk.tar.gz":
+        ensure => present,
+        source => "puppet:///modules/jboss6as/jdk.tar.gz"
+    }
+    exec {"unpack-jdk":
+        command => "tar xvzf /tmp/jdk.tar.gz",
+        cwd => "/pack",
+        onlyif => "test ! -d /pack/jdk-1.6.0_24"
+    }
+    file {"/pack/jdk":
+        ensure => symlink,
+        target => "/pack/jdk-1.6.0_24",
+        require => Exec["unpack-jdk"]
+    }
+    file {"/tmp/jboss.tar.gz":
+        ensure => present,
+        source => "puppet:///modules/jboss6as/jboss.tar.gz"
+    }
+
+    file {"/etc/init.d/jboss":
         ensure => present,
         owner => "root",
         group => "root",
         mode => 755,
         source => "puppet:///modules/jboss6as/jboss"
     }
-
-    file { "/pack/jdk-1.6.0_24":
+    file {"/pack/jboss-6.0":
         ensure => directory,
-        recurse => true,
-        owner => root,
-        group => root,
-        source => "puppet:///modules/jboss6as/jdk-1.6.0_24"
-    }
-
-    file {"/pack/jdk":
-        ensure => symlink,
-        target => "/pack/jdk-1.6.0_24",
-        require => File["/pack/jdk-1.6.0_24"]
-    }
-
-    file { "/pack/jboss-6.0":
-        ensure => directory,
-        recurse => true,
         owner => jboss,
-        group => root,
-        source => "puppet:///modules/jboss6as/jboss-6.0"
+        group => jboss,
     }
-
+    exec {"unpack-jboss":
+        command => "tar xvzf /tmp/jboss.tar.gz",
+        cwd => "/pack",
+        onlyif => "test ! -d /pack/jboss-6.0/bin",
+        user => "jboss",
+        require => File["/pack/jboss-6.0"]
+    }
     file {"/pack/jboss":
         ensure => symlink,
         target => "/pack/jboss-6.0",
         require => File["/pack/jboss-6.0"]
     }
-
     service {"jboss":
         ensure => running,
-        require => File["/pack/jboss"],
+        require => Exec["unpack-jboss"],
         hasrestart => true,
         hasstatus => true,
     }
