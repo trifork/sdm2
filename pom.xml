@@ -29,6 +29,11 @@
         <module>sdm-integrationtest</module>
     </modules>
 
+    <properties>
+        <integrationtest.urlprefix>http://localhost:${integrationtest.serverport}/</integrationtest.urlprefix>
+        <integrationtest.serverport>8080</integrationtest.serverport>
+    </properties>
+
     <profiles>
         <profile>
             <id>ci</id>
@@ -38,7 +43,7 @@
                 </property>
             </activation>
             <properties>
-                <functionaltest.serverport>${env.CONTAINERPORT}</functionaltest.serverport>
+                <integrationtest.serverport>${env.CONTAINERPORT}</integrationtest.serverport>
             </properties>
         </profile>
     </profiles>
