@@ -1,6 +1,8 @@
 package dk.nsi.sdm2.core.web;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,7 @@ public abstract class StatusControllerBase {
 
     @RequestMapping("/status")
     public ResponseEntity<String> ping() {
+        HttpHeaders headers = new HttpHeaders();
         String body = "OK";
         HttpStatus status = HttpStatus.OK;
 
@@ -21,7 +24,8 @@ public abstract class StatusControllerBase {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
         }
 
-        return new ResponseEntity<String>(body, status);
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        return new ResponseEntity<String>(body, headers, status);
     }
 
     protected abstract void doHealthCheck();
