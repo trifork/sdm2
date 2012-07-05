@@ -13,7 +13,7 @@ class jboss6as() {
     exec {"unpack-jdk":
         command => "tar xvzf /tmp/jdk.tar.gz",
         cwd => "/pack",
-        onlyif => "test ! -d /pack/jdk-1.6.0_24"
+        unless => "test -d /pack/jdk-1.6.0_24"
     }
     file {"/pack/jdk":
         ensure => symlink,
@@ -40,7 +40,7 @@ class jboss6as() {
     exec {"unpack-jboss":
         command => "tar xvzf /tmp/jboss.tar.gz",
         cwd => "/pack",
-        onlyif => "test ! -d /pack/jboss-6.0/bin",
+        unless => "test -d /pack/jboss-6.0/bin",
         user => "jboss",
         require => File["/pack/jboss-6.0"]
     }
