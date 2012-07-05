@@ -12,4 +12,133 @@
 
     <artifactId>sdm-integrationtest</artifactId>
 
+    <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>1.0</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>wagon-maven-plugin</artifactId>
+                <version>1.0-beta-4</version>
+                <executions>
+                    <execution>
+                        <id>deploy-sdm-sample</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>upload-single</goal>
+                        </goals>
+                        <configuration>
+                            <fromFile>${project.basedir}/../sdm-sample/target/sdm-sample-${project.version}.war </fromFile>
+                            <url>scp://jboss:bosshy@localhost:2222/pack/jboss</url>
+                            <toFile>sdm-sample.war</toFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <id>groovy-compile</id>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <providerSelection>1.8</providerSelection>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>webapp-deployment</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <providerSelection>1.8</providerSelection>
+                            <scriptpath>
+                                <element>${project.basedir}/src/main/script</element>
+                            </scriptpath>
+                            <source><![CDATA[
+                                @groovy.transform.TimedInterrupt(20L)
+                                def waitForStatusOk() {
+                                    while (true) {
+                                        if (new URL("${project.properties['integrationtest.urlprefix']}/status").openConnection().responseCode == 200) {
+                                            break
+                                        }
+                                    }
+                                }
+
+                                DeploymentCommands.copyWarToJboss("localhost", 2222)
+
+                                Thread.sleep(5000) //Wait for jboss to undeploy existing application
+                                waitForStatusOk()
+                                ]]></source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.12</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <integrationtest.urlprefix>${integrationtest.urlprefix}</integrationtest.urlprefix>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.surefire</groupId>
+                        <artifactId>surefire-junit47</artifactId>
+                        <version>2.12</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>dk.nsi.stamdata2</groupId>
+            <artifactId>sdm-sample</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.45</version>
+        </dependency>
+    </dependencies>
 </project>
