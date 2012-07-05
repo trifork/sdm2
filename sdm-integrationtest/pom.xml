@@ -67,11 +67,10 @@
                                 <element>${project.basedir}/src/main/script</element>
                             </scriptpath>
                             <source><![CDATA[
-
                                 @groovy.transform.TimedInterrupt(20L)
                                 def waitForStatusOk() {
                                     while (true) {
-                                        if (new URL("http://localhost:8080/sdm-sample/status").openConnection().responseCode == 200) {
+                                        if (new URL("${project.properties['integrationtest.urlprefix']}/status").openConnection().responseCode == 200) {
                                             break
                                         }
                                     }
@@ -92,7 +91,7 @@
                 <version>2.12</version>
                 <configuration>
                     <systemPropertyVariables>
-                        <functionaltest.urlprefix>${integrationtest.urlprefix}</functionaltest.urlprefix>
+                        <integrationtest.urlprefix>${integrationtest.urlprefix}</integrationtest.urlprefix>
                     </systemPropertyVariables>
                 </configuration>
                 <executions>
