@@ -2,8 +2,9 @@ class jboss6as() {
     user {"jboss":
         ensure => present,
         home => "/pack/jboss",
-        password => "d82abb4db1464d4264db880b83d0c322700f1e9c"
     }
+
+    exec {"echo jboss:bosshy|sudo chpasswd": }
 
     file {"/tmp/jdk.tar.gz":
         ensure => present,
