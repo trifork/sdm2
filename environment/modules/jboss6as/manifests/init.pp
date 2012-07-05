@@ -1,6 +1,8 @@
 class jboss6as() {
     user {"jboss":
-        ensure => present
+        ensure => present,
+        home => "/pack/jboss",
+        password => "d82abb4db1464d4264db880b83d0c322700f1e9c"
     }
 
     file {"/tmp/jdk.tar.gz":

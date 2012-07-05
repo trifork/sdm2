@@ -33,6 +33,6 @@ public class StatusControllerBaseTest {
 
         assertEquals(500, response.getStatusCode().value());
         assertEquals("Error message", response.getBody());
-        assertEquals("text/plain", response.getHeaders().getContentType().getType());
+        assertEquals("text/plain", response.getHeaders().getContentType().toString());
     }
 }
