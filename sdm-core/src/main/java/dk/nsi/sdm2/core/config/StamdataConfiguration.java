@@ -1,8 +1,8 @@
 package dk.nsi.sdm2.core.config;
 
-import dk.nsi.sdm2.core.importer.parser.DirectoryInbox;
-import dk.nsi.sdm2.core.importer.parser.Inbox;
-import dk.nsi.sdm2.core.importer.parser.ParserExecutor;
+import dk.nsi.sdm2.core.parser.DirectoryInbox;
+import dk.nsi.sdm2.core.parser.Inbox;
+import dk.nsi.sdm2.core.parser.ParserExecutor;
 import dk.nsi.sdm2.core.persist.RecordPersister;
 import dk.nsi.sdm2.core.persist.RecordPersisterEbean;
 import org.springframework.context.annotation.Bean;

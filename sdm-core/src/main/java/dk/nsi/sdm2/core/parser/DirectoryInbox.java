@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.sdm2.core.importer.parser;
+package dk.nsi.sdm2.core.parser;
 
 import static dk.nsi.sdm2.core.util.Preconditions.checkArgument;
 import static dk.nsi.sdm2.core.util.Preconditions.checkState;

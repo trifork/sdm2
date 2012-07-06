@@ -1,18 +1,16 @@
 package dk.nsi.sdm2.core.config;
 
 import dk.nsi.sdm2.core.annotations.EnableStamdata;
-import dk.nsi.sdm2.core.importer.parser.Inbox;
-import dk.nsi.sdm2.core.importer.parser.Parser;
+import dk.nsi.sdm2.core.parser.Inbox;
+import dk.nsi.sdm2.core.parser.Parser;
 import dk.nsi.sdm2.core.persist.RecordPersister;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AbstractContextLoader;
 
 import javax.activation.DataSource;
 import javax.inject.Inject;

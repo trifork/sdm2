@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.sdm2.core.importer.parser;
+package dk.nsi.sdm2.core.parser;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -40,8 +40,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import com.google.common.base.Strings;
-
-import dk.nsi.sdm2.core.importer.parser.DirectoryInbox;
 
 public class DirectoryInboxTest {
     

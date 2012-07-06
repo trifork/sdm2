@@ -1,4 +1,4 @@
- /**
+/**
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
@@ -22,27 +22,14 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.sdm2.core.importer.parser;
+package dk.nsi.sdm2.core.parser;
 
-/**
- * @author Thomas Børlum <thb@trifork.com>
- */
-public class ParserException extends RuntimeException
+import static java.lang.String.format;
+
+public class OutOfSequenceException extends ParserException
 {
-    private static final long serialVersionUID = 780632659490028872L;
-    
-    public ParserException(String message)
+    public OutOfSequenceException(String currentVersion, String newVersion)
     {
-        super(message);
-    }
-
-    public ParserException(Throwable cause)
-    {
-        super(cause);
-    }
-    
-    public ParserException(String message, Throwable cause)
-    {
-        super(message, cause);
+        super(format("Import out of sequence. current_version=%s, new_version=%s.", currentVersion, newVersion));
     }
 }

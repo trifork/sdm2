@@ -1,4 +1,4 @@
-package dk.nsi.sdm2.core.importer.parser;
+package dk.nsi.sdm2.core.parser;
 
 import dk.nsi.sdm2.core.persist.RecordPersister;
 import org.springframework.scheduling.annotation.Scheduled;

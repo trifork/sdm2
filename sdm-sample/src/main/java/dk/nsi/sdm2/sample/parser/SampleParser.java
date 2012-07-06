@@ -1,7 +1,7 @@
 package dk.nsi.sdm2.sample.parser;
 
-import dk.nsi.sdm2.core.importer.parser.Parser;
-import dk.nsi.sdm2.core.importer.parser.ParserException;
+import dk.nsi.sdm2.core.parser.Parser;
+import dk.nsi.sdm2.core.parser.ParserException;
 import dk.nsi.sdm2.core.persist.RecordPersister;
 
 import java.io.File;
