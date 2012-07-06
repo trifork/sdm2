@@ -37,6 +37,11 @@ class jboss6as() {
         owner => jboss,
         group => jboss,
     }
+    file {"/pack/jboss/server/default/deploy/devmysql-ds.xml":
+        ensure => present,
+        require => File["/pack/jboss"],
+        source => "puppet:///jboss6as/devmysql-ds.xml"
+    }
     exec {"unpack-jboss":
         command => "tar xvzf /tmp/jboss.tar.gz",
         cwd => "/pack",
