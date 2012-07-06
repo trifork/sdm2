@@ -43,6 +43,7 @@ import com.google.common.collect.MapMaker;
 import com.google.common.collect.Ordering;
 
 import dk.nsi.sdm2.core.util.Preconditions;
+import org.springframework.beans.factory.InitializingBean;
 
 /**
  * Uses a file system directory as inbox.
@@ -64,7 +65,7 @@ import dk.nsi.sdm2.core.util.Preconditions;
  * 
  * @author Thomas Børlum <thb@trifork.com>
  */
-public class DirectoryInbox implements Inbox {
+public class DirectoryInbox implements Inbox, InitializingBean {
     private static final ConcurrentMap<String, InboxState> sizeHistory = new MapMaker().expireAfterAccess(10,
             TimeUnit.MINUTES).makeMap();
 
@@ -83,10 +84,13 @@ public class DirectoryInbox implements Inbox {
 
         this.inboxDirectory = new File(root, dataOwnerId);
         this.lockFile = new File(inboxDirectory, "LOCKED");
+    }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
         // Make sure the directory exists.
         //
-        //TODO: FileUtils.forceMkdir(inboxDirectory);
+        FileUtils.forceMkdir(inboxDirectory);
     }
 
     /**
