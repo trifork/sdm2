@@ -28,8 +28,6 @@ import static java.lang.String.format;
 
 public class OutOfSequenceException extends ParserException
 {
-    private static final long serialVersionUID = -5991399950114645718L;
-
     public OutOfSequenceException(String currentVersion, String newVersion)
     {
         super(format("Import out of sequence. current_version=%s, new_version=%s.", currentVersion, newVersion));

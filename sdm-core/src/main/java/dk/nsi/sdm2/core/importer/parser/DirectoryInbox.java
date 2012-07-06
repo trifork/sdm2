@@ -77,7 +77,7 @@ public class DirectoryInbox implements Inbox {
     private Queue<File> dataSets = Lists.newLinkedList();
     private final int stabilizationPeriod;
 
-    DirectoryInbox(String root, String dataOwnerId, int stabilizationPeriod) throws IOException {
+    public DirectoryInbox(String root, String dataOwnerId, int stabilizationPeriod) throws IOException {
         Preconditions.checkArgument(stabilizationPeriod >= 0, "stabilizationPeriod must be a non-negative number.");
         this.stabilizationPeriod = stabilizationPeriod;
 
@@ -86,7 +86,7 @@ public class DirectoryInbox implements Inbox {
 
         // Make sure the directory exists.
         //
-        FileUtils.forceMkdir(inboxDirectory);
+        //TODO: FileUtils.forceMkdir(inboxDirectory);
     }
 
     /**
