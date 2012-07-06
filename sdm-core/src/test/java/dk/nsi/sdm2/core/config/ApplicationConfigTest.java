@@ -7,16 +7,21 @@ import dk.nsi.sdm2.core.persist.RecordPersister;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AbstractContextLoader;
 
+import javax.activation.DataSource;
 import javax.inject.Inject;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ApplicationConfigTest.ApplicationConfiguration.class, ApplicationConfigTest.TestConfiguration.class})
+@ContextConfiguration(classes = {ApplicationConfigTest.TestConfiguration.class})
 public class ApplicationConfigTest {
     @Inject
     Parser parser;
@@ -27,16 +32,35 @@ public class ApplicationConfigTest {
     @Inject
     Inbox inbox;
 
+    @Inject
+    DataSource dataSource;
+
     @EnableStamdata(home = "test_home")
-    public static class TestConfiguration {
+    @Configuration
+    @Import({ApplicationConfiguration.class})
+    static class TestConfiguration {
         @Bean
         public Parser testParser() {
             return mock(Parser.class);
         }
     }
 
+    @Configuration
     public static class ApplicationConfiguration {
-        //todo: datasource, recordPesister, etc.
+        @Bean
+        public DataSource dataSource() {
+            return mock(DataSource.class);
+        }
+
+        @Bean
+        public RecordPersister recordPersister() {
+            return mock(RecordPersister.class);
+        }
+
+        @Bean
+        public Inbox inbox() {
+            return mock(Inbox.class);
+        }
     }
 
     @Test
