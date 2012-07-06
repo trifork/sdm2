@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.sdm2.importer.parser;
+package dk.nsi.sdm2.core.importer.parser;
 
 import java.io.File;
 import java.io.IOException;
