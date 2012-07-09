@@ -4,7 +4,7 @@
 Vagrant::Config.run do |config|
   config.vm.box = "lucid64"
   config.vm.box_url="http://files.vagrantup.com/lucid64.box"
-  
+
   containerport = (ENV['CONTAINERPORT'] || 8080).to_i
 
   config.vm.provision :puppet, :module_path => "environment/modules" do |puppet|

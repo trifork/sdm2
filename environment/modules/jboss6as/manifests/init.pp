@@ -37,11 +37,6 @@ class jboss6as() {
         owner => jboss,
         group => jboss,
     }
-    file {"/pack/jboss/server/default/deploy/devmysql-ds.xml":
-        ensure => present,
-        require => File["/pack/jboss"],
-        source => "puppet:///jboss6as/devmysql-ds.xml"
-    }
     exec {"unpack-jboss":
         command => "tar xvzf /tmp/jboss.tar.gz",
         cwd => "/pack",
@@ -53,6 +48,16 @@ class jboss6as() {
         ensure => symlink,
         target => "/pack/jboss-6.0",
         require => File["/pack/jboss-6.0"]
+    }
+    file {"/pack/jboss/server/default/deploy/devmysql-ds.xml":
+        ensure => present,
+        require => [Exec["unpack-jboss"],File["/pack/jboss"]],
+        source => "puppet:///jboss6as/devmysql-ds.xml",
+    }
+    file {"/pack/jboss/lib/endorsed/mysql-connector-java.jar":
+        ensure => present,
+        source => "puppet:///jboss6as/mysql-connector-java-5.1.21.jar",
+        require => [Exec["unpack-jboss"],File["/pack/jboss"]],
     }
     service {"jboss":
         ensure => running,

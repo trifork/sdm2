@@ -67,7 +67,7 @@
                                 <element>${project.basedir}/src/main/script</element>
                             </scriptpath>
                             <source><![CDATA[
-                                @groovy.transform.TimedInterrupt(20L)
+                                @groovy.transform.TimedInterrupt(40L)
                                 def waitForStatusOk() {
                                     while (true) {
                                         if (new URL("${project.properties['integrationtest.urlprefix']}/status").openConnection().responseCode == 200) {

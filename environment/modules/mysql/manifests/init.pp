@@ -18,6 +18,6 @@ class mysql() {
     exec { "bootstrap-db":
         command => "mysql -u root < /tmp/bootstrap.sql",
         require => [File["/tmp/bootstrap.sql"], Service["mysql"]],
-        onlyif => 'test `mysql -u root <<< "SHOW DATABASES;" | grep sdmsample | wc -l` -eq 0'
+        onlyif => "test `mysql -u root -e 'SHOW DATABASES;' | grep sdmsample | wc -l` -eq 0"
     }
 }
