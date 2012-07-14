@@ -3,6 +3,8 @@ package dk.nsi.sdm2.sample.config;
 import dk.nsi.sdm2.core.annotations.EnableStamdata;
 import dk.nsi.sdm2.core.parser.Parser;
 import dk.nsi.sdm2.sample.parser.SampleParser;
+import dk.nsi.sdm2.sample.specification.SampleRecordSpecs;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +14,6 @@ public class SampleApplicationConfig {
 
     @Bean
     public Parser parser() {
-        return new SampleParser();
+        return new SampleParser(SampleRecordSpecs.SAMPLE_RECORD_SPEC);
     }
 }

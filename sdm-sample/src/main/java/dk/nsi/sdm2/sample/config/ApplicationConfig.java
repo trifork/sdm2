@@ -13,6 +13,7 @@ public class ApplicationConfig {
     @Bean
     public DataSource dataSource() throws Exception{
         JndiObjectFactoryBean factory = new JndiObjectFactoryBean();
+        // TODO: property
         factory.setJndiName("java:jdbc/MySQLDS");
         factory.afterPropertiesSet();
         return (DataSource) factory.getObject();
