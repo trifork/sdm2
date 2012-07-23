@@ -41,12 +41,11 @@ public class StamdataConfiguration {
     }
 
     @Bean
-    public DataSource dataSource() throws Exception{
+    public JndiObjectFactoryBean dataSource() throws Exception{
         JndiObjectFactoryBean factory = new JndiObjectFactoryBean();
         // TODO: property
         factory.setJndiName("java:jdbc/MySQLDS");
-        factory.afterPropertiesSet();
-        return (DataSource) factory.getObject();
+        return factory;
     }
 
     @Bean(initMethod = "migrate")
@@ -57,12 +56,12 @@ public class StamdataConfiguration {
     }
 
     @Bean
-    public EbeanServerFactoryBean ebeanServer() throws Exception {
+    public EbeanServerFactoryBean ebeanServer(DataSource dataSource) throws Exception {
         final EbeanServerFactoryBean factoryBean = new EbeanServerFactoryBean();
         final ServerConfig serverConfig = new ServerConfig();
         serverConfig.setName("localhostConfig");
         serverConfig.setClasses(new ArrayList<Class<?>>(new Reflections("dk.nsi").getSubTypesOf(AbstractRecord.class)));
-        serverConfig.setDataSource(dataSource());
+        serverConfig.setDataSource(dataSource);
         serverConfig.setExternalTransactionManager(new SpringAwareJdbcTransactionManager());
         factoryBean.setServerConfig(serverConfig);
         return factoryBean;
