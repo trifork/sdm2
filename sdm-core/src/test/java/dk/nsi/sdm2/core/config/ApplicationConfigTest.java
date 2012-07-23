@@ -3,7 +3,7 @@ package dk.nsi.sdm2.core.config;
 import dk.nsi.sdm2.core.annotations.EnableStamdata;
 import dk.nsi.sdm2.core.parser.Inbox;
 import dk.nsi.sdm2.core.parser.Parser;
-import dk.nsi.sdm2.core.persist.RecordPersister;
+import dk.nsi.sdm2.core.persist.RecordPersisterEbean;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +13,12 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.activation.DataSource;
 import javax.inject.Inject;
+import javax.sql.DataSource;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ApplicationConfigTest.TestConfiguration.class})
@@ -26,7 +27,7 @@ public class ApplicationConfigTest {
     Parser parser;
 
     @Inject
-    RecordPersister recordPersister;
+    RecordPersisterEbean recordPersister;
 
     @Inject
     Inbox inbox;
@@ -36,31 +37,11 @@ public class ApplicationConfigTest {
 
     @EnableStamdata(home = "test_home")
     @Configuration
-    @Import({ApplicationConfiguration.class})
-    static class TestConfiguration {
+    @Import({StamdataTestConfiguration.class})
+    static class TestConfiguration implements StamdataConfigurationSupport {
         @Bean
-        public Parser testParser() {
+        public Parser parser() {
             return mock(Parser.class);
-        }
-    }
-
-    @Configuration
-    public static class ApplicationConfiguration extends StamdataConfiguration {
-        //Make sure to override all methods on StamdataConfiguration with mock methods
-
-        @Bean
-        public DataSource dataSource() {
-            return mock(DataSource.class);
-        }
-
-        @Bean
-        public RecordPersister recordPersister() {
-            return mock(RecordPersister.class);
-        }
-
-        @Bean
-        public Inbox inbox() {
-            return mock(Inbox.class);
         }
     }
 
@@ -71,7 +52,8 @@ public class ApplicationConfigTest {
         assertNotNull(inbox);
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void inboxIsPopulatedWithHome() throws Exception {
         assertEquals("/jbossHome/test_home", inbox.top().getAbsolutePath());
     }

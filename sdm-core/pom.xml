@@ -17,6 +17,16 @@
 			<artifactId>spring-web</artifactId>
 			<version>3.1.1.RELEASE</version>
 		</dependency>
+        <dependency>
+            <groupId>org.avaje</groupId>
+            <artifactId>ebean-spring</artifactId>
+            <version>2.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.8</version>
+        </dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
