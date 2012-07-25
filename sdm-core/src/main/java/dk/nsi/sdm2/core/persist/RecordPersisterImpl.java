@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.List;
 
+import dk.nsi.sdm2.core.domain.AbstractRecord;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.Instant;
 
@@ -23,6 +25,16 @@ public class RecordPersisterImpl implements RecordPersister {
     {
         this.connection = connection;
         this.transactionTime = transactionTime;
+    }
+
+    @Override
+    public void persist(AbstractRecord record) throws SQLException {
+        throw new RuntimeException();
+    }
+
+    @Override
+    public void persist(Collection<? extends AbstractRecord> record) throws SQLException {
+        throw new RuntimeException();
     }
 
     @Override

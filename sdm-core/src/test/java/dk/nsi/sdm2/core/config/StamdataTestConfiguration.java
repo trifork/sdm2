@@ -7,6 +7,7 @@ import dk.nsi.sdm2.core.parser.ParserExecutor;
 import dk.nsi.sdm2.core.persist.RecordPersisterEbean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jndi.JndiObjectFactoryBean;
 
 import javax.sql.DataSource;
 
@@ -17,8 +18,8 @@ public class StamdataTestConfiguration extends StamdataConfiguration {
     //Make sure to override all methods on StamdataConfiguration with mock methods
 
     @Bean
-    public DataSource dataSource() {
-        return mock(DataSource.class);
+    public JndiObjectFactoryBean dataSource() {
+        return null;
     }
 
     @Bean

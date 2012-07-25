@@ -103,5 +103,15 @@
             <version>5.1.21</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>net.sourceforge.collections</groupId>
+            <artifactId>collections-generic</artifactId>
+            <version>4.01</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+            <version>3.1.1.RELEASE</version>
+        </dependency>
     </dependencies>
 </project>

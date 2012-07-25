@@ -24,15 +24,25 @@
  */
 package dk.nsi.sdm2.core.persist;
 
+import dk.nsi.sdm2.core.domain.AbstractRecord;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
 
 
 public interface RecordPersister {
 
+    public void persist(AbstractRecord record) throws SQLException;
+
+    public void persist(Collection<? extends AbstractRecord> records) throws SQLException;
+
+    @Deprecated
     public void persist(Record record, RecordSpecification specification) throws SQLException;
 
+    @Deprecated
     public void populateInsertStatement(PreparedStatement preparedStatement, Record record, RecordSpecification recordSpec) throws SQLException;
 
+    @Deprecated
     public String createInsertStatementSql(RecordSpecification specification);
 }
