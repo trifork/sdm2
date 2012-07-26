@@ -69,8 +69,10 @@
                             <source><![CDATA[
                                 @groovy.transform.TimedInterrupt(40L)
                                 def waitForStatusOk() {
+                                    def statusUrl = new URL("${project.properties['integrationtest.urlprefix']}/status")
+                                    println("Checkin ${statusUrl}")
                                     while (true) {
-                                        if (new URL("${project.properties['integrationtest.urlprefix']}/status").openConnection().responseCode == 200) {
+                                        if (statusUrl.openConnection().responseCode == 200) {
                                             break
                                         }
                                     }

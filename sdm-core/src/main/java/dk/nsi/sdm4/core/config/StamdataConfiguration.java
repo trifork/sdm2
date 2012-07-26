@@ -4,15 +4,15 @@ import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 import com.googlecode.flyway.core.Flyway;
-import dk.nsi.sdm4.core.domain.AbstractRecord;
 import dk.nsi.sdm4.core.parser.DirectoryInbox;
 import dk.nsi.sdm4.core.parser.Inbox;
 import dk.nsi.sdm4.core.parser.ParserExecutor;
 import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
-import org.reflections.Reflections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
@@ -41,11 +41,13 @@ public class StamdataConfiguration {
     }
 
     @Bean
-    public JndiObjectFactoryBean dataSource() throws Exception{
+    public DataSource dataSource() throws Exception{
         JndiObjectFactoryBean factory = new JndiObjectFactoryBean();
         // TODO: property
         factory.setJndiName("java:jdbc/MySQLDS");
-        return factory;
+        factory.setExpectedType(DataSource.class);
+        factory.afterPropertiesSet();
+        return (DataSource) factory.getObject();
     }
 
     @Bean(initMethod = "migrate")
@@ -60,11 +62,15 @@ public class StamdataConfiguration {
         final EbeanServerFactoryBean factoryBean = new EbeanServerFactoryBean();
         final ServerConfig serverConfig = new ServerConfig();
         serverConfig.setName("localhostConfig");
-        serverConfig.setClasses(new ArrayList<Class<?>>(new Reflections("dk.nsi").getSubTypesOf(AbstractRecord.class)));
+        //serverConfig.setClasses(new ArrayList<Class<?>>(new Reflections("dk.nsi").getTypesAnnotatedWith(Entity.class)));
         serverConfig.setDataSource(dataSource);
         serverConfig.setExternalTransactionManager(new SpringAwareJdbcTransactionManager());
         factoryBean.setServerConfig(serverConfig);
         return factoryBean;
     }
 
+    @Bean
+    public Unmarshaller jaxbMarshaller() {
+        return new Jaxb2Marshaller();
+    }
 }

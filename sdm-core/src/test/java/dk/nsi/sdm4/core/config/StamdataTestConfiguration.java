@@ -8,8 +8,9 @@ import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
-import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import static org.mockito.Mockito.mock;
@@ -19,21 +20,15 @@ public class StamdataTestConfiguration extends StamdataConfiguration {
     //Make sure to override all methods on StamdataConfiguration with mock methods
 
     @Bean
-    public JndiObjectFactoryBean dataSource() {
-        return new JndiObjectFactoryBean() {
-            @Override
-            public Class<?> getObjectType() {
-                return DataSource.class;
-            }
-
-            @Override
-            public Object getObject() {
-                return mock(DataSource.class);
-            }
-
-            @Override
-            public void afterPropertiesSet() throws IllegalArgumentException, NamingException { }
-        };
+    public DataSource dataSource() {
+        return mock(DataSource.class);
+/*
+        return new JndiObjectFactoryBean() {{
+            setJndiName("TEST");
+            setDefaultObject(mock(DataSource.class));
+            setExpectedType(DataSource.class);
+        }};
+*/
     }
 
     @Bean
@@ -48,7 +43,7 @@ public class StamdataTestConfiguration extends StamdataConfiguration {
     }
 
     @Bean
-    public EbeanServerFactoryBean ebeanServer() throws Exception {
+    public EbeanServerFactoryBean ebeanServer(DataSource dataSource) throws Exception {
         return null;
     }
 
@@ -60,5 +55,10 @@ public class StamdataTestConfiguration extends StamdataConfiguration {
     @Bean
     public Inbox inbox() {
         return mock(Inbox.class);
+    }
+
+    @Override
+    public Unmarshaller jaxbMarshaller() {
+        return mock(Unmarshaller.class);
     }
 }
