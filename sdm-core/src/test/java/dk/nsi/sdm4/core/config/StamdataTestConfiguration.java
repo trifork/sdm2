@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiObjectFactoryBean;
 
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import static org.mockito.Mockito.mock;
@@ -19,7 +20,20 @@ public class StamdataTestConfiguration extends StamdataConfiguration {
 
     @Bean
     public JndiObjectFactoryBean dataSource() {
-        return null;
+        return new JndiObjectFactoryBean() {
+            @Override
+            public Class<?> getObjectType() {
+                return DataSource.class;
+            }
+
+            @Override
+            public Object getObject() {
+                return mock(DataSource.class);
+            }
+
+            @Override
+            public void afterPropertiesSet() throws IllegalArgumentException, NamingException { }
+        };
     }
 
     @Bean
