@@ -18,6 +18,6 @@ public class ParserExecutor {
     public void run() throws IOException {
         //TODO: exception håndtering?
         inbox.update();
-        parser.process(inbox.top(), recordPersister);
+        parser.process(inbox.top());
     }
 }
