@@ -8,7 +8,7 @@ import java.util.Collection;
 @Repository
 public class SampleParser extends SimpleParser<SampleRecord, Samples, Sample> {
     @Override
-    protected Collection<Sample> getTypes(Samples type) {
+    protected Collection<Sample> getContainedEntitiesFrom(Samples type) {
         return type.getSampleList();
     }
 

@@ -32,7 +32,7 @@ public class SimpleParserTest {
     @InjectMocks
     Parser thingParser = new SimpleParser<ThingRecord, Things, Thing>() {
         @Override
-        protected Collection<Thing> getTypes(Things type) {
+        protected Collection<Thing> getContainedEntitiesFrom(Things type) {
             return type.getThingList();
         }
 
@@ -70,7 +70,7 @@ public class SimpleParserTest {
         }};
         when(unmarshaller.unmarshal(any(StreamSource.class))).thenReturn(things);
 
-        thingParser.process(dataSet, recordPersister);
+        thingParser.process(dataSet);
 
         ArgumentCaptor<Collection> recordCollectionCaptor = ArgumentCaptor.forClass(Collection.class);
         verify(recordPersister).persist(recordCollectionCaptor.capture());

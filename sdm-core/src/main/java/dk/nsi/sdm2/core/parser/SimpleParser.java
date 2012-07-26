@@ -17,8 +17,11 @@ public abstract class SimpleParser<R extends AbstractRecord, T, E> implements Pa
     @Inject
     Unmarshaller unmarshaller;
 
+    @Inject
+    RecordPersister recordPersister;
+
     @Override
-    public void process(File dataSet, RecordPersister persister) throws ParserException {
+    public void process(File dataSet) throws ParserException {
         T types;
         try {
             types = (T) unmarshaller.unmarshal(new StreamSource(dataSet));
@@ -26,14 +29,14 @@ public abstract class SimpleParser<R extends AbstractRecord, T, E> implements Pa
             throw new ParserException("Could not unmarshall", e);
         }
 
-        Collection<R> records = CollectionUtils.collect(getTypes(types), this);
+        Collection<R> records = CollectionUtils.collect(getContainedEntitiesFrom(types), this);
         try {
-            persister.persist(records);
+            recordPersister.persist(records);
         } catch (SQLException e) {
             throw new ParserException("Could not persist records", e);
         }
     }
 
-    protected abstract Collection<E> getTypes(T type);
+    protected abstract Collection<E> getContainedEntitiesFrom(T type);
 
 }

@@ -26,8 +26,6 @@ package dk.nsi.sdm2.core.parser;
 
 import java.io.File;
 
-import dk.nsi.sdm2.core.persist.RecordPersister;
-
 /**
  * A parser that imports files and stores the data in a database.
  *
@@ -55,10 +53,10 @@ public interface Parser
      *
      *
      *
+     *
      * @param dataSet the root directory of the file set. Data files are contained within the directory.
-     * @param persister the persister that should be used to store the records.
      * @throws OutOfSequenceException if the data set is out of sequence in the expected order.
      * @throws ParserException if anything parser specific error happens or unexpected happens.
      */
-    void process(File dataSet, RecordPersister persister) throws ParserException;
+    void process(File dataSet) throws ParserException;
 }
