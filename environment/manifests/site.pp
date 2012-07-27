@@ -18,8 +18,9 @@ node app {
         group => "root"
     }
 
-	class {'jboss6as':
-	}
+    class {'jdk': }
+
+	class {'jboss7as': }
 
 	class {'mysql':
 	}
