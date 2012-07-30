@@ -39,6 +39,26 @@ class jboss7as() {
         require => File["/pack/jboss-as-7.1.1.Final"]
     }
 
+    file {"/pack/jboss/modules/mysql":
+        ensure => directory,
+        owner => jboss,
+        require => File["/pack/jboss"]
+    }
+
+    file {"/pack/jboss/modules/mysql/mysql-connector-java-5.1.21.jar":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/mysql-connector-java-5.1.21.jar",
+        owner => jboss,
+        require => File["/pack/jboss/modules/mysql"]
+    }
+
+    file {"/pack/jboss/modules/mysql/module.xml":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/mysql-module.xml",
+        owner => jboss,
+        require => File["/pack/jboss/modules/mysql"]
+    }
+
     #TODO: copy -ds files
 
     service {"jboss":
