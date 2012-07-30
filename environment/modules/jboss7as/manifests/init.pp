@@ -41,25 +41,30 @@ class jboss7as() {
 
     file {"/pack/jboss/modules/mysql":
         ensure => directory,
-        owner => jboss,
+        owner => "jboss",
         require => File["/pack/jboss"]
     }
 
     file {"/pack/jboss/modules/mysql/mysql-connector-java-5.1.21.jar":
         ensure => present,
         source => "puppet:///modules/jboss7as/mysql-connector-java-5.1.21.jar",
-        owner => jboss,
+        owner => "jboss",
         require => File["/pack/jboss/modules/mysql"]
     }
 
     file {"/pack/jboss/modules/mysql/module.xml":
         ensure => present,
         source => "puppet:///modules/jboss7as/mysql-module.xml",
-        owner => jboss,
+        owner => "jboss",
         require => File["/pack/jboss/modules/mysql"]
     }
 
-    #TODO: copy -ds files
+    file {"/pack/jboss/standalone/configuration/standalone.xml":
+        ensure => present,
+        owner => "jboss",
+        source => "puppet:///modules/jboss7as/standalone.xml",
+        require => File["/pack/jboss"]
+    }
 
     service {"jboss":
         ensure => running,
