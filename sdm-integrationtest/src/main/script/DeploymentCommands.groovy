@@ -23,7 +23,7 @@ class DeploymentCommands {
 
         channel.errStream = System.err
 
-        channel.command = "/bin/mv /pack/jboss/sdm-sample.war /pack/jboss/server/default/deploy/sdm-sample.war"
+        channel.command = "/bin/mv /pack/jboss/sdm-sample.war /pack/jboss/standalone/deployments/sdm-sample.war"
         InputStream stream = channel.inputStream
         channel.connect()
 
