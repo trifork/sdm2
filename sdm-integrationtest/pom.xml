@@ -21,7 +21,7 @@
             </extension>
         </extensions>
         <plugins>
-            <plugin>
+            <!--plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>wagon-maven-plugin</artifactId>
                 <version>1.0-beta-4</version>
@@ -86,8 +86,51 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>sdm-sample</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>war</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.basedir}/../environment/modules/jboss7as/files</outputDirectory>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
+                <groupId>dk.nsi.stamdata2</groupId>
+                <artifactId>maven-vagrant-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>provision</goal>
+                        </goals>
+                        <configuration>
+                            <vagrantfile>../Vagrantfile</vagrantfile>
+                            <nodes>
+                                <param>app</param>
+                            </nodes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--TODO: reenable plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.12</version>
@@ -111,7 +154,7 @@
                         <version>2.12</version>
                     </dependency>
                 </dependencies>
-            </plugin>
+            </plugin-->
         </plugins>
     </build>
 

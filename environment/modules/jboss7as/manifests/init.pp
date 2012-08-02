@@ -36,7 +36,7 @@ class jboss7as() {
     file {"/pack/jboss":
         ensure => symlink,
         target => "/pack/jboss-as-7.1.1.Final",
-        require => File["/pack/jboss-as-7.1.1.Final"]
+        require => [File["/pack/jboss-as-7.1.1.Final"], Exec["unpack-jboss"]]
     }
 
     file {"/pack/jboss/modules/mysql":
@@ -71,6 +71,11 @@ class jboss7as() {
         require => Exec["unpack-jboss"],
         hasrestart => true,
         hasstatus => true,
+    }
+
+    file {"/pack/jboss/standalone/deployments/sdm-sample.war":
+        ensure => present,
+        require => Service["jboss"]
     }
 
 }

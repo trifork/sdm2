@@ -14,7 +14,7 @@ Vagrant::Config.run do |config|
 
   config.vm.define :app do |config|
     config.vm.customize ["modifyvm", :id, "--memory", 2048]
-    config.vm.forward_port 8080, containerport
+    config.vm.forward_port 3306, 3306
     config.vm.host_name = "app.stamdata.nsi.test"
   end
 end

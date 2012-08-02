@@ -25,8 +25,8 @@ public class StamdataConfiguration {
     @Bean
     public Inbox inbox() throws Exception {
         return new DirectoryInbox(
-                "/pack/jboss/server/default/data/sdm4", //TODO: property
-                "TODO:::sample", //TODO: Read from @EnableStamdata.home
+                "/tmp", //TODO: property
+                "TODO.sample", //TODO: Read from @EnableStamdata.home
                 10); //TODO: Property
     }
 
@@ -44,7 +44,7 @@ public class StamdataConfiguration {
     public DataSource dataSource() throws Exception{
         JndiObjectFactoryBean factory = new JndiObjectFactoryBean();
         // TODO: property
-        factory.setJndiName("java:jdbc/MySQLDS");
+        factory.setJndiName("java:jboss/datasources/MySQLDS");
         factory.setExpectedType(DataSource.class);
         factory.afterPropertiesSet();
         return (DataSource) factory.getObject();
