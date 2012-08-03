@@ -90,22 +90,28 @@
         <subsystem xmlns="urn:jboss:domain:configadmin:1.0"/>
         <subsystem xmlns="urn:jboss:domain:datasources:1.0">
             <datasources>
-                <datasource jndi-name="java:jboss/datasources/MySQLDS" pool-name="MySQLDS" enabled="true" use-java-context="true">
+                <datasource jndi-name="java:/MySQLDS" pool-name="MySQLPool" enabled="true" jta="true" use-java-context="true" use-ccm="true">
                     <connection-url>jdbc:mysql://localhost:3306/sdmsample</connection-url>
-
                     <driver>mysql</driver>
-
+                    <!--transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation-->
+                    <!--pool>
+                        <min-pool-size>100</min-pool-size>
+                        <max-pool-size>200</max-pool-size>
+                    </pool-->
                     <security>
                         <user-name>sdmsample</user-name>
                         <password></password>
                     </security>
-
+                    <statement>
+                        <prepared-statement-cache-size>100</prepared-statement-cache-size>
+                        <share-prepared-statements/>
+                    </statement>
                 </datasource>
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
                     </driver>
-                    <driver name="mysql" module="mysql"/>
+                    <driver name="mysql" module="com.mysql"/>
                 </drivers>
             </datasources>
         </subsystem>

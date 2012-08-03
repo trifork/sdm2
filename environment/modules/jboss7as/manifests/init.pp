@@ -39,24 +39,30 @@ class jboss7as() {
         require => [File["/pack/jboss-as-7.1.1.Final"], Exec["unpack-jboss"]]
     }
 
-    file {"/pack/jboss/modules/mysql":
+    file {"/pack/jboss/modules/com/mysql":
         ensure => directory,
         owner => "jboss",
-        require => File["/pack/jboss"]
+        require => File["/pack/jboss"],
     }
 
-    file {"/pack/jboss/modules/mysql/mysql-connector-java-5.1.21.jar":
+    file {"/pack/jboss/modules/com/mysql/main":
+        ensure => directory,
+        owner => "jboss",
+        require => File["/pack/jboss/modules/com/mysql"],
+    }
+
+    file {"/pack/jboss/modules/com/mysql/main/mysql-connector-java-5.1.21.jar":
         ensure => present,
         source => "puppet:///modules/jboss7as/mysql-connector-java-5.1.21.jar",
         owner => "jboss",
-        require => File["/pack/jboss/modules/mysql"]
+        require => File["/pack/jboss/modules/com/mysql/main"]
     }
 
-    file {"/pack/jboss/modules/mysql/module.xml":
+    file {"/pack/jboss/modules/com/mysql/main/module.xml":
         ensure => present,
         source => "puppet:///modules/jboss7as/mysql-module.xml",
         owner => "jboss",
-        require => File["/pack/jboss/modules/mysql"]
+        require => File["/pack/jboss/modules/com/mysql/main"]
     }
 
     file {"/pack/jboss/standalone/configuration/standalone.xml":
@@ -69,7 +75,7 @@ class jboss7as() {
     service {"jboss":
         ensure => running,
         require => Exec["unpack-jboss"],
-        hasrestart => true,
+        hasrestart => false,
         hasstatus => true,
     }
 
