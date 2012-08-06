@@ -44,7 +44,7 @@ public class StamdataConfiguration {
     public DataSource dataSource() throws Exception{
         JndiObjectFactoryBean factory = new JndiObjectFactoryBean();
         // TODO: property
-        factory.setJndiName("java:jboss/datasources/MySQLDS");
+        factory.setJndiName("java:/MySQLDS");
         factory.setExpectedType(DataSource.class);
         factory.afterPropertiesSet();
         return (DataSource) factory.getObject();
@@ -71,6 +71,10 @@ public class StamdataConfiguration {
 
     @Bean
     public Unmarshaller jaxbMarshaller() {
-        return new Jaxb2Marshaller();
+        final Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setContextPaths(
+                "dk.nsi.sdm4.sample.parser"
+        );
+        return marshaller;
     }
 }

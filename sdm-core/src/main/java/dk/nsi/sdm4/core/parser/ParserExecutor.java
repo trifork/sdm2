@@ -14,10 +14,12 @@ public class ParserExecutor {
     @Inject
     Inbox inbox;
 
-    @Scheduled(fixedDelay = 10)
+    @Scheduled(fixedDelay = 1000)
     public void run() throws IOException {
         //TODO: exception håndtering?
         inbox.update();
-        parser.process(inbox.top());
+
+        //TODO: parser.process(inbox.top());
+        System.out.println("Parse processing is temporary disabled");
     }
 }

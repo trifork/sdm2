@@ -39,6 +39,13 @@ class jboss7as() {
         require => [File["/pack/jboss-as-7.1.1.Final"], Exec["unpack-jboss"]]
     }
 
+    file {"/pack/jboss/standalone/configuration/mgmt-users.properties":
+        ensure => present,
+        owner => "jboss",
+        content => "sdmadmin=75d10a01dff4e8332cf34a70811946c7",
+        require => File["/pack/jboss"]
+    }
+
     file {"/pack/jboss/modules/com/mysql":
         ensure => directory,
         owner => "jboss",
@@ -79,9 +86,18 @@ class jboss7as() {
         hasstatus => true,
     }
 
-    file {"/pack/jboss/standalone/deployments/sdm-sample.war":
+    file {"/tmp/sdm-sample.war":
         ensure => present,
+        source => "puppet:///modules/jboss7as/sdm-sample.war",
         require => Service["jboss"]
     }
 
+    exec {"deploy-sample":
+        command => "/pack/jboss/bin/jboss-cli.sh -c --commands='deploy /tmp/sdm-sample.war' --user=sdmadmin --password=trifork",
+        require => [
+            File["/tmp/sdm-sample.war"],
+            Service["jboss"],
+            File["/pack/jboss/standalone/configuration/mgmt-users.properties"]
+        ]
+    }
 }

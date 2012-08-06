@@ -1,7 +1,7 @@
 class jdk() {
     file {"/tmp/jdk.tar.gz":
         ensure => present,
-        source => "puppet:///modules/jboss6as/jdk.tar.gz"
+        source => "puppet:///modules/jdk/jdk.tar.gz"
     }
     exec {"unpack-jdk":
         command => "tar xvzf /tmp/jdk.tar.gz",
