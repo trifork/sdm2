@@ -25,9 +25,7 @@ node app {
 
 	class {'jboss7as': }
 
-	class {'mysql':
-	}
+	class {'mysql': }
 
-	class {'haproxy':
-	}
+	class {'haproxy': }
 }
