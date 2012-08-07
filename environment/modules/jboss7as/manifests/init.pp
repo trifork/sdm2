@@ -6,12 +6,13 @@ class jboss7as() {
 
     exec {"echo jboss:bosshy|sudo chpasswd": }
 
-    file {"/etc/init.d/jboss":
+    file {"jboss-init-script":
         ensure => present,
         owner => "root",
         group => "root",
         mode => 755,
-        source => "puppet:///modules/jboss7as/jboss"
+        path => "/etc/init.d/jboss-as",
+        source => "puppet:///modules/jboss7as/jboss-as",
     }
 
     file {"/tmp/jboss-as-7.1.1.Final.tar.gz":
@@ -81,9 +82,8 @@ class jboss7as() {
 
     service {"jboss":
         ensure => running,
-        require => Exec["unpack-jboss"],
-        hasrestart => false,
-        hasstatus => true,
+        name => "jboss-as",
+        require => [Exec["unpack-jboss"], Class["jdk"], File["jboss-init-script"]],
     }
 
     file {"/tmp/sdm-sample.war":
@@ -93,7 +93,8 @@ class jboss7as() {
     }
 
     exec {"deploy-sample":
-        command => "/pack/jboss/bin/jboss-cli.sh -c --commands='deploy /tmp/sdm-sample.war' --user=sdmadmin --password=trifork",
+        command => "/pack/jboss/bin/jboss-cli.sh -c --commands='deploy --force /tmp/sdm-sample.war' --user=sdmadmin --password=trifork",
+        user => "jboss",
         require => [
             File["/tmp/sdm-sample.war"],
             Service["jboss"],
