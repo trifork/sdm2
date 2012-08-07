@@ -88,7 +88,7 @@ class jboss7as() {
 
     file {"/tmp/sdm-sample.war":
         ensure => present,
-        source => "puppet:///modules/jboss7as/sdm-sample.war",
+        source => ["puppet:///modules/jboss7as/sdm-sample.war", "puppet:///modules/jboss7as/sdm-sample-placeholder.war"],
         require => Service["jboss"]
     }
 
@@ -100,5 +100,6 @@ class jboss7as() {
             Service["jboss"],
             File["/pack/jboss/standalone/configuration/mgmt-users.properties"]
         ]
+		logoutput => "on_failure",
     }
 }
