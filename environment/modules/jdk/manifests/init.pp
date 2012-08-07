@@ -14,4 +14,9 @@ class jdk() {
         require => Exec["unpack-jdk"]
     }
 
+    file { "/etc/profile.d/sdm_java.sh":
+        ensure => present,
+        content => 'JAVA_HOME=/pack/jdk
+PATH=${PATH}:${JAVA_HOME}/bin',
+    }
 }
