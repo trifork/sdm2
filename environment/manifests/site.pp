@@ -1,7 +1,7 @@
 Exec["apt-get-update"] -> Package <| |>
 
 Exec {
-    path => "/usr/bin:/usr/sbin:/bin",
+    path => "/usr/bin:/usr/sbin:/bin:/pack/jdk/bin",
     environment => [
         'JAVA_HOME=/pack/jdk'
     ]
