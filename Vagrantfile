@@ -4,6 +4,7 @@
 Vagrant::Config.run do |config|
   config.vm.box = "lucid64"
   config.vm.box_url="http://files.vagrantup.com/lucid64.box"
+  #config.vm.boot_mode = :gui # useful when the guest does not manage to get an IP via DHCP, meaning vagrant cannot ssh to the box. Fix by login to the console as vagrant/vagrant and run sudo /etc/init.d/networking restart
 
   containerport = (ENV['CONTAINERPORT'] || 8080).to_i
 
