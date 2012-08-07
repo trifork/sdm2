@@ -118,7 +118,7 @@ start() {
   chown ${JBOSS_USER}: $(dirname $JBOSS_PIDFILE) || true
 
   if [ ! -z "$JBOSS_USER" ]; then
-    start-stop-daemon --start -b -u "$JBOSS_USER" -c "$JBOSS_USER" -d "$JBOSS_HOME" -p "$JBOSS_PIDFILE" -x ${JBOSS_HOME}/"bin/standalone.sh" -- -Djboss.server.log.dir="$JBOSS_LOG_DIR"
+    start-stop-daemon --start -b -u "$JBOSS_USER" -c "$JBOSS_USER" -d "$JBOSS_HOME" -p "$JBOSS_PIDFILE" -x ${JBOSS_HOME}/"bin/standalone.sh"
   else
     log_failure_msg "Error: Environment variable JBOSS_USER not set or empty."
     log_end_msg 1
