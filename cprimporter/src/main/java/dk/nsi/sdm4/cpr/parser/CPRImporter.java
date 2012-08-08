@@ -80,7 +80,7 @@ public class CPRImporter implements Parser {
                 SLALogItem slaLogItemFile = getSLALogger().createLogItem("CPRImport of file", personFile.getName());
                 logger.info("Started parsing CPR file. file=" + personFile.getAbsolutePath());
 
-                CPRDataset changes = CprParser.parse(personFile);
+                CPRDataset changes = CprSingleFileImporter.parse(personFile);
 
                 if (isDeltaFile(personFile)) {
                     Date previousVersion = getLatestVersion(connection);

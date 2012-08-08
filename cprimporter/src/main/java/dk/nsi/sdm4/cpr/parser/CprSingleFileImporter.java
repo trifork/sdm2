@@ -42,11 +42,15 @@ import java.util.regex.Pattern;
 import static dk.nsi.sdm4.core.util.Dates.yyyyMMddHHmm;
 import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
 
-public class CprParser
+/**
+ * This class parses a single file from a cpr dump.
+ * It acts as a utility class for the CPRImporter. It does not implements the Parser interface
+ */
+public class CprSingleFileImporter
 {
 	private static final String FILE_ENCODING = "ISO-8859-1";
 
-	private static final Logger logger = Logger.getLogger(CprParser.class);
+	private static final Logger logger = Logger.getLogger(CprSingleFileImporter.class);
 
 	private static final int END_RECORD = 999;
 	private static final String EMPTY_DATE_STRING = "000000000000";

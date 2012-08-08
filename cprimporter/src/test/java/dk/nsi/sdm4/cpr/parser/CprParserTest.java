@@ -35,11 +35,11 @@ import static org.junit.Assert.assertEquals;
 
 public class CprParserTest
 {
-	private CprParser parser;
+	private CprSingleFileImporter parser;
 
 	@Before
 	public void instantiateParser() {
-		parser = new CprParser();
+		parser = new CprSingleFileImporter();
 	}
 
 	@Test
