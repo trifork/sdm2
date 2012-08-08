@@ -27,6 +27,22 @@
         <maven>3.0.0</maven>
     </prerequisites>
 
+    <repositories>
+        <repository>
+            <id>Trifork-Nexus-Public-Repository</id>
+            <name>Trifork Nexus Public Repository</name>
+            <url>https://nexus.trifork.com/content/groups/public/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>Trifork-Nexus-Public-Repository</id>
+            <name>Trifork Nexus Public Repository</name>
+            <url>https://nexus.trifork.com/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <modules>
         <module>sdm-core</module>
         <module>sdm-sample</module>
