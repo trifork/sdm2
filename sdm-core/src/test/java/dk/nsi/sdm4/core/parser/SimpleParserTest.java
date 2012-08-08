@@ -60,6 +60,7 @@ public class SimpleParserTest {
         String content;
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void canProcess() throws Exception {
         File dataSet = new File("/dev/null");

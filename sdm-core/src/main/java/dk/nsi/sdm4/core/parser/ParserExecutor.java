@@ -20,6 +20,6 @@ public class ParserExecutor {
         inbox.update();
 
         //TODO: parser.process(inbox.top());
-        System.out.println("Parse processing is temporary disabled");
+        System.out.println("Parse processing is temporary disabled for parser " + parser.getClass().getSimpleName());
     }
 }
