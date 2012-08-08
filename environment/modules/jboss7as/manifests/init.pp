@@ -99,7 +99,7 @@ class jboss7as() {
             File["/tmp/sdm-sample.war"],
             Service["jboss"],
             File["/pack/jboss/standalone/configuration/mgmt-users.properties"]
-        ]
+        ],
 		logoutput => "on_failure",
     }
 }
