@@ -23,6 +23,10 @@
         <url>https://ci82.trifork.com/view/sdm2/</url>
     </ciManagement>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <modules>
         <module>sdm-core</module>
         <module>sdm-sample</module>
