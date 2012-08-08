@@ -23,10 +23,6 @@
         <url>https://ci82.trifork.com/view/sdm2/</url>
     </ciManagement>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <prerequisites>
         <maven>3.0.0</maven>
     </prerequisites>
@@ -42,6 +38,7 @@
     <properties>
         <integrationtest.urlprefix>http://localhost:${integrationtest.serverport}/sdm-sample</integrationtest.urlprefix>
         <integrationtest.serverport>8080</integrationtest.serverport>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <profiles>
