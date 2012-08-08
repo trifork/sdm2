@@ -155,7 +155,7 @@ public class CprParser
 	}
 
 
-	static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String line)
+	protected UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String line)
 	{
 		UmyndiggoerelseVaergeRelation u = new UmyndiggoerelseVaergeRelation();
 		u.setCpr(cut(line, 3, 13));
@@ -176,7 +176,7 @@ public class CprParser
 	}
 
 
-	static ForaeldreMyndighedRelation foraeldreMyndighedRelation(String line)
+	protected ForaeldreMyndighedRelation foraeldreMyndighedRelation(String line)
 	{
 		ForaeldreMyndighedRelation f = new ForaeldreMyndighedRelation();
 		f.setCpr(cut(line, 3, 13));
@@ -190,7 +190,7 @@ public class CprParser
 	}
 
 
-	static BarnRelation barnRelation(String line)
+	protected BarnRelation barnRelation(String line)
 	{
 		BarnRelation b = new BarnRelation();
 		b.setCpr(cut(line, 3, 13));
@@ -199,7 +199,7 @@ public class CprParser
 	}
 
 
-	static Navneoplysninger navneoplysninger(String line)
+	protected Navneoplysninger navneoplysninger(String line)
 	{
 		Navneoplysninger n = new Navneoplysninger();
 		n.setCpr(cut(line, 3, 13));
@@ -216,7 +216,7 @@ public class CprParser
 	}
 
 
-	static NavneBeskyttelse navneBeskyttelse(String line)
+	protected NavneBeskyttelse navneBeskyttelse(String line)
 	{
 		NavneBeskyttelse n = new NavneBeskyttelse();
 		n.setCpr(cut(line, 3, 13));
@@ -226,7 +226,7 @@ public class CprParser
 	}
 
 
-	static Klarskriftadresse klarskriftadresse(String line)
+	protected Klarskriftadresse klarskriftadresse(String line)
 	{
 		Klarskriftadresse k = new Klarskriftadresse();
 
@@ -258,7 +258,7 @@ public class CprParser
 	}
 
 
-	static Personoplysninger personoplysninger(String line)
+	protected Personoplysninger personoplysninger(String line)
 	{
 		Personoplysninger p = new Personoplysninger();
 

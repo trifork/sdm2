@@ -37,6 +37,10 @@
             <groupId>dk.sdsd.nsp</groupId>
             <artifactId>nsp-util</artifactId>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
