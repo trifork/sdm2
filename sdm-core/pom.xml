@@ -101,5 +101,9 @@
             <artifactId>spring-oxm</artifactId>
             <version>3.1.1.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
     </dependencies>
 </project>
