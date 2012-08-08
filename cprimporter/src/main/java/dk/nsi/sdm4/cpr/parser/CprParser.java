@@ -42,11 +42,11 @@ import java.util.regex.Pattern;
 import static dk.nsi.sdm4.core.util.Dates.yyyyMMddHHmm;
 import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
 
-public class CPRParser
+public class CprParser
 {
 	private static final String FILE_ENCODING = "ISO-8859-1";
 
-	private static final Logger logger = Logger.getLogger(CPRParser.class);
+	private static final Logger logger = Logger.getLogger(CprParser.class);
 
 	private static final int END_RECORD = 999;
 	private static final String EMPTY_DATE_STRING = "000000000000";
