@@ -28,6 +28,7 @@
         <module>sdm-sample</module>
         <module>sdm-integrationtest</module>
         <module>maven-vagrant-plugin</module>
+        <module>parsers/cprimporter</module>
     </modules>
 
     <properties>
@@ -59,7 +60,7 @@
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
-                <version>4.9</version>
+                <version>4.10</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -68,6 +69,11 @@
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
                 <version>2.2</version>
             </plugin>
             <plugin>
