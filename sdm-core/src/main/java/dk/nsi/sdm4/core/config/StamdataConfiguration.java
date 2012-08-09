@@ -1,34 +1,27 @@
 package dk.nsi.sdm4.core.config;
 
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 import com.googlecode.flyway.core.Flyway;
-import dk.nsi.sdm4.core.parser.DirectoryInbox;
-import dk.nsi.sdm4.core.parser.Inbox;
+
+import dk.nsi.sdm4.core.annotations.EnableStamdata;
+import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserExecutor;
 import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jndi.JndiObjectFactoryBean;
-import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.scheduling.annotation.EnableScheduling;
-
-import javax.sql.DataSource;
-import java.util.ArrayList;
+import dk.nsi.sdm4.core.util.Preconditions;
 
 @Configuration
 @EnableScheduling
 //@EnableTransactionManagement
 public class StamdataConfiguration {
-    @Bean
-    public Inbox inbox() throws Exception {
-        return new DirectoryInbox(
-                "/tmp", //TODO: property
-                "TODO.sample", //TODO: Read from @EnableStamdata.home
-                10); //TODO: Property
-    }
 
     @Bean
     public RecordPersisterEbean recordPersister() {
@@ -69,12 +62,12 @@ public class StamdataConfiguration {
         return factoryBean;
     }
 
-    @Bean
-    public Unmarshaller jaxbMarshaller() {
-        final Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setContextPaths(
-                "dk.nsi.sdm4.sample.parser"
-        );
-        return marshaller;
+    public static String getHome(Class clazz) {
+        Preconditions.checkNotNull(clazz, "Class");
+        Preconditions.checkArgument(clazz.isAnnotationPresent(EnableStamdata.class), "Parsers must be annotated with @EnableStamdata.");
+
+        EnableStamdata es = (EnableStamdata) clazz.getAnnotation(EnableStamdata.class);
+        return es.home();
     }
+
 }

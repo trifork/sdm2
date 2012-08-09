@@ -1,19 +1,53 @@
 package dk.nsi.sdm4.sample.parser;
 
-import dk.nsi.sdm4.core.parser.SimpleParser;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.xml.transform.stream.StreamSource;
+
+import org.springframework.oxm.Unmarshaller;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
+import dk.nsi.sdm4.core.annotations.EnableStamdata;
+import dk.nsi.sdm4.core.parser.Parser;
+import dk.nsi.sdm4.core.parser.ParserException;
+import dk.nsi.sdm4.core.persist.RecordPersister;
 
 @Repository
-public class SampleParser extends SimpleParser<SampleRecord, Samples, Sample> {
-    @Override
-    protected Collection<Sample> getContainedEntitiesFrom(Samples type) {
-        return type.getSampleList();
-    }
+public class SampleParser implements Parser {
+    
+    @Inject
+    Unmarshaller unmarshaller;
+
+    @Inject
+    RecordPersister recordPersister;
 
     @Override
-    public SampleRecord transform(Sample sample) {
-        return SampleRecord.createFrom(sample);
+    public void process(File dataSet) throws ParserException {
+        Samples samples = null;
+        try {
+            samples = (Samples) unmarshaller.unmarshal(new StreamSource(dataSet));
+        } catch (IOException e) {
+            throw new ParserException("Could not unmarshall", e);
+        }
+
+        List<SampleRecord> records = new ArrayList<SampleRecord>();
+        try {
+            for (Sample sample : samples.getSampleList()) {
+                records.add(SampleRecord.createFrom(sample));
+            }
+        } catch (Exception e) {
+            throw new ParserException("Error creating persister records", e);
+        }
+        
+        try {
+            recordPersister.persist(records);
+        } catch (SQLException e) {
+            throw new ParserException("Could not persist records", e);
+        }
     }
 }
