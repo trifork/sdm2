@@ -1,12 +1,9 @@
 package dk.nsi.sdm4.cpr.parser;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,11 +14,11 @@ import static org.junit.Assert.fail;
 public class CPRImporterTest {
 	@Rule
 	public TemporaryFolder tmpDir = new TemporaryFolder();
-	private CPRImporter parser;
+	private CPRParser parser;
 
 	@Before
 	public void instatiateParser() {
-		parser = new CPRImporter();
+		parser = new CPRParser();
 	}
 
 	@Test()

@@ -45,8 +45,8 @@ import java.util.regex.Pattern;
 /**
  *
  */
-public class CPRImporter implements Parser {
-	private static final Logger logger = Logger.getLogger(CPRImporter.class);
+public class CPRParser implements Parser {
+	private static final Logger logger = Logger.getLogger(CPRParser.class);
 
 	@Value("${spooler.cpr.file.pattern.person}")
 	private Pattern personFilePattern;

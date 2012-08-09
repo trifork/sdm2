@@ -44,7 +44,7 @@ import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
 
 /**
  * This class parses a single file from a cpr dump.
- * It acts as a utility class for the CPRImporter. It does not implements the Parser interface
+ * It acts as a utility class for the CPRParser. It does not implements the Parser interface
  */
 public class CprSingleFileImporter
 {
