@@ -93,6 +93,16 @@
                 <artifactId>nsp-util</artifactId>
                 <version>1.0.8</version>
             </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>3.1.1.RELEASE</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

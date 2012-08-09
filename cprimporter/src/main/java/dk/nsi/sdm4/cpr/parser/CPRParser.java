@@ -26,20 +26,20 @@
 
 package dk.nsi.sdm4.cpr.parser;
 
-import com.avaje.ebeaninternal.server.core.Persister;
+import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.SqlRow;
 import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
+import dk.nsi.sdm4.core.persist.RecordPersister;
 import dk.nsi.sdm4.core.util.Preconditions;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -55,7 +55,10 @@ public class CPRParser implements Parser {
 	private Pattern personFileDeltaPattern;
 
 	@Autowired
-	private Persister persister;
+	private RecordPersister persister;
+
+	@Autowired
+	private EbeanServer ebeanServer;
 
     @Override
     public void process(File dataset) throws ParserException {
@@ -176,14 +179,12 @@ public class CPRParser implements Parser {
         return personFileDeltaPattern.matcher(f.getName()).matches();
     }
 
-    static public Date getLatestVersion(Connection con) throws SQLException {
-        Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
+    public Date getLatestVersion() throws SQLException {
+	    List<SqlRow> rows = ebeanServer.createSqlQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft").findList();
 
-        if (rs.next()) return rs.getTimestamp("Ikraft");
+        if (!rows.isEmpty()) return rows.get(0).getTimestamp("Ikraft");
 
         // Returns null if no previous version of CPR has been imported.
-
         return null;
     }
 

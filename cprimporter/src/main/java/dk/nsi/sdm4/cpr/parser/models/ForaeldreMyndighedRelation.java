@@ -33,8 +33,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.Date;
 
-
-@Entity
 public class ForaeldreMyndighedRelation extends CPREntity
 {
 	public enum ForaeldreMyndighedRelationsType
