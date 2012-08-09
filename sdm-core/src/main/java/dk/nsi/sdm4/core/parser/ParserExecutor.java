@@ -19,7 +19,6 @@ public class ParserExecutor {
         //TODO: exception håndtering?
         inbox.update();
 
-        //TODO: parser.process(inbox.top());
-        System.out.println("Parse processing is temporary disabled for parser " + parser.getClass().getSimpleName());
+        parser.process(inbox.top());
     }
 }
