@@ -57,7 +57,6 @@ public class StamdataTestConfiguration extends StamdataConfiguration {
         return mock(Inbox.class);
     }
 
-    @Override
     public Unmarshaller jaxbMarshaller() {
         return mock(Unmarshaller.class);
     }
