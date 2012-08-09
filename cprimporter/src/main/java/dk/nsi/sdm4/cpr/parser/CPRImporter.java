@@ -29,6 +29,7 @@ package dk.nsi.sdm4.cpr.parser;
 import com.avaje.ebeaninternal.server.core.Persister;
 import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
+import dk.nsi.sdm4.core.util.Preconditions;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,7 +59,9 @@ public class CPRImporter implements Parser {
 
     @Override
     public void process(File dataset) throws ParserException {
-	    // TODO check that dataset is a directory
+	    Preconditions.checkNotNull(dataset, "dataset is null");
+	    Preconditions.checkState(dataset.isDirectory(), "dataset " + dataset.getAbsolutePath() + " is not a directory");
+	    Preconditions.checkState(dataset.canRead(), "dataset directory" + dataset.getAbsolutePath() + " is not readable");
 
 	    File[] input = dataset.listFiles();
         for (File personFile : input) {
