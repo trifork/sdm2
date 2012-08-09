@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>dk.nsi.stamdata2</groupId>
+        <groupId>dk.nsi.stamdata4</groupId>
         <artifactId>sdm-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -21,25 +21,6 @@
             </extension>
         </extensions>
         <plugins>
-            <!--plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>wagon-maven-plugin</artifactId>
-                <version>1.0-beta-4</version>
-                <executions>
-                    <execution>
-                        <id>deploy-sdm-sample</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>upload-single</goal>
-                        </goals>
-                        <configuration>
-                            <fromFile>${project.basedir}/../sdm-sample/target/sdm-sample-${project.version}.war </fromFile>
-                            <url>scp://jboss:bosshy@localhost:2222/pack/jboss</url>
-                            <toFile>sdm-sample.war</toFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin-->
             <plugin>
                 <groupId>org.codehaus.gmaven</groupId>
                 <artifactId>gmaven-plugin</artifactId>
@@ -55,36 +36,6 @@
                             <providerSelection>1.8</providerSelection>
                         </configuration>
                     </execution>
-                    <!--execution>
-                        <id>webapp-deployment</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>execute</goal>
-                        </goals>
-                        <configuration>
-                            <providerSelection>1.8</providerSelection>
-                            <scriptpath>
-                                <element>${project.basedir}/src/main/script</element>
-                            </scriptpath>
-                            <source><![CDATA[
-                                @groovy.transform.TimedInterrupt(40L)
-                                def waitForStatusOk() {
-                                    def statusUrl = new URL("${project.properties['integrationtest.urlprefix']}/status")
-                                    println("Checkin ${statusUrl}")
-                                    while (true) {
-                                        if (statusUrl.openConnection().responseCode == 200) {
-                                            break
-                                        }
-                                    }
-                                }
-
-                                DeploymentCommands.copyWarToJboss("localhost", 2222)
-
-                                Thread.sleep(5000) //Wait for jboss to undeploy existing application
-                                waitForStatusOk()
-                                ]]></source>
-                        </configuration>
-                    </execution-->
                 </executions>
             </plugin>
             <plugin>
@@ -113,7 +64,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>dk.nsi.stamdata2</groupId>
+                <groupId>dk.nsi.stamdata4</groupId>
                 <artifactId>maven-vagrant-plugin</artifactId>
                 <version>1.0-SNAPSHOT</version>
                 <executions>
@@ -160,7 +111,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>dk.nsi.stamdata2</groupId>
+            <groupId>dk.nsi.stamdata4</groupId>
             <artifactId>sdm-sample</artifactId>
             <version>${project.version}</version>
             <type>war</type>
