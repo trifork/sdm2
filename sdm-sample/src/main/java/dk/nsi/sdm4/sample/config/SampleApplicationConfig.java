@@ -18,15 +18,6 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 public class SampleApplicationConfig implements StamdataConfigurationSupport {
 
     @Bean
-    public Inbox inbox() throws Exception {
-        
-        return new DirectoryInbox(
-                "/tmp", //TODO: property
-                StamdataConfiguration.getHome(SampleApplicationConfig.class),
-                10); //TODO: Property
-    }
-
-    @Bean
     public Parser parser() {
         return new SampleParser();
     }

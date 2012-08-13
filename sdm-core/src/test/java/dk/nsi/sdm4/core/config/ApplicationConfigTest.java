@@ -16,6 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -52,9 +54,10 @@ public class ApplicationConfigTest {
         assertNotNull(inbox);
     }
 
-    @Test
-    @Ignore
+    @Test @Ignore
     public void inboxIsPopulatedWithHome() throws Exception {
-        assertEquals("/jbossHome/test_home", inbox.top().getAbsolutePath());
+        final File top = inbox.top();
+        assertNotNull(top);
+        assertEquals("test_home", top.getAbsolutePath());
     }
 }

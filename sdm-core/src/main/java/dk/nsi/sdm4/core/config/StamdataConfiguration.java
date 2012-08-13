@@ -1,27 +1,42 @@
 package dk.nsi.sdm4.core.config;
 
-import javax.sql.DataSource;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jndi.JndiObjectFactoryBean;
-import org.springframework.scheduling.annotation.EnableScheduling;
-
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 import com.googlecode.flyway.core.Flyway;
-
-import dk.nsi.sdm4.core.annotations.EnableStamdata;
-import dk.nsi.sdm4.core.parser.Parser;
+import dk.nsi.sdm4.core.parser.DirectoryInbox;
+import dk.nsi.sdm4.core.parser.Inbox;
 import dk.nsi.sdm4.core.parser.ParserExecutor;
 import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
-import dk.nsi.sdm4.core.util.Preconditions;
+import org.apache.log4j.Logger;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportAware;
+import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableScheduling
 //@EnableTransactionManagement
-public class StamdataConfiguration {
+public class StamdataConfiguration implements ImportAware {
+    private static Logger logger = Logger.getLogger(StamdataConfiguration.class);
+    String home;
+
+    @Override
+    public void setImportMetadata(AnnotationMetadata importMetadata) {
+        home = (String) importMetadata.getAnnotationAttributes("dk.nsi.sdm4.core.annotations.EnableStamdata").get("home");
+        logger.debug("Using home=" + home + " from @EnableStamdata");
+    }
+
+    @Bean
+    public Inbox inbox() throws Exception {
+        return new DirectoryInbox(
+                "/tmp", //TODO: property
+                home,
+                10); //TODO: Property
+    }
 
     @Bean
     public RecordPersisterEbean recordPersister() {
@@ -34,7 +49,7 @@ public class StamdataConfiguration {
     }
 
     @Bean
-    public DataSource dataSource() throws Exception{
+    public DataSource dataSource() throws Exception {
         JndiObjectFactoryBean factory = new JndiObjectFactoryBean();
         // TODO: property
         factory.setJndiName("java:/MySQLDS");
@@ -61,13 +76,4 @@ public class StamdataConfiguration {
         factoryBean.setServerConfig(serverConfig);
         return factoryBean;
     }
-
-    public static String getHome(Class clazz) {
-        Preconditions.checkNotNull(clazz, "Class");
-        Preconditions.checkArgument(clazz.isAnnotationPresent(EnableStamdata.class), "Parsers must be annotated with @EnableStamdata.");
-
-        EnableStamdata es = (EnableStamdata) clazz.getAnnotation(EnableStamdata.class);
-        return es.home();
-    }
-
 }
