@@ -26,11 +26,11 @@
 
 package dk.nsi.sdm4.cpr.parser;
 
-import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 import com.googlecode.flyway.core.Flyway;
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
@@ -38,22 +38,18 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.core.env.PropertySources;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -70,13 +66,12 @@ public class CPRIntegrationTest
 	@Configuration
 	@PropertySource("classpath:test.properties")
 	static class ContextConfiguration {
+		@Value("${test.mysql.port}")
+		private int mysqlPort;
+
 		@Bean
 		public static PropertySourcesPlaceholderConfigurer properties(){
-			PropertySourcesPlaceholderConfigurer props =
-					new PropertySourcesPlaceholderConfigurer();
-			PropertySources source;
-
-			return props;
+			return new PropertySourcesPlaceholderConfigurer();
 		}
 
 		@Bean
@@ -85,9 +80,22 @@ public class CPRIntegrationTest
 		}
 
 		@Bean
-		public DataSource dataSource() {
-			return new EmbeddedDatabaseBuilder().build();
+		public DataSource dataSource() throws Exception{
+			MysqlDataSource ds = new MysqlDataSource();
+
+			ds.setDatabaseName("sdm_warehouse");
+			ds.setCreateDatabaseIfNotExist(true);
+
+			ds.setServerName("127.0.0.1");
+			System.out.println("**** Using port " + mysqlPort);
+			ds.setPortNumber(mysqlPort);
+
+			ds.setUser("root");
+			ds.setPassword("papkasse");
+
+			return ds;
 		}
+
 
 		@Bean(initMethod = "migrate")
 		public Flyway flyway(DataSource dataSource) {
@@ -97,6 +105,12 @@ public class CPRIntegrationTest
 		}
 
 		@Bean
+		public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+			return new JdbcTemplate(dataSource);
+		}
+
+		@Bean
+		/** This is injected into the Class Under Test **/
 		public EbeanServerFactoryBean ebeanServer(DataSource dataSource) {
 			final EbeanServerFactoryBean factoryBean = new EbeanServerFactoryBean();
 			final ServerConfig serverConfig = new ServerConfig();
@@ -122,9 +136,6 @@ public class CPRIntegrationTest
 	public TemporaryFolder tmpDir = new TemporaryFolder();
 
 	@Autowired
-	EbeanServer ebeanServer;
-
-	@Autowired
 	private CPRParser parser;
 
 	@Test
@@ -133,7 +144,7 @@ public class CPRIntegrationTest
         Date latestVersionInitial = parser.getLatestVersion();
 		assertNull(latestVersionInitial);
 
-		// TODO importFile("data/testEtablering/D100313.L431102");
+		importFile("data/testEtablering/D100313.L431102");
 
 		// When running a full load (file doesn't ends on 01) of CPR no
 		// LatestIkraft should be written to the db.
@@ -142,21 +153,16 @@ public class CPRIntegrationTest
 		assertNull(latestIkraft);
 	}
 
-
 /*
 	@Test
 	public void canImportAnUpdate() throws Exception
 	{
 		importFile("data/D100315.L431101");
 
-		Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
-		assertTrue(rs.next());
-		assertEquals("Hjalte", rs.getString("Fornavn"));
-		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
-		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
-		assertFalse(rs.next());
-
+		Map<String,Object> rs = jdbcTemplate.queryForMap("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
+		assertEquals("Hjalte", rs.get("Fornavn"));
+		assertEquals("2010-03-15 00:00:00.0", rs.get("validFrom"));
+		assertEquals("2999-12-31 00:00:00.0", rs.get("validTo"));
 		importFile("data/D100317.L431101");
 
 		rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
@@ -440,12 +446,18 @@ public class CPRIntegrationTest
 */
 
 
-	private void importFile(String fileName) throws Exception
+	private void importFile(String filePath) throws Exception
 	{
-		URL resource = getClass().getClassLoader().getResource(fileName);
+		URL resource = getClass().getClassLoader().getResource(filePath);
 		File datasetDir = tmpDir.newFolder();
-		FileUtils.copyURLToFile(resource, new File(datasetDir, fileName));
+		FileUtils.copyURLToFile(resource, new File(datasetDir, lastPathSegment(filePath)));
 
 		parser.process(datasetDir);
+	}
+
+	private String lastPathSegment(String filePath) {
+		String[] segments = filePath.split("/");
+
+		return segments[segments.length-1];
 	}
 }
