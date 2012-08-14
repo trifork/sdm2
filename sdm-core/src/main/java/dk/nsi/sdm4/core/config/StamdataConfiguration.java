@@ -2,8 +2,11 @@ package dk.nsi.sdm4.core.config;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -22,6 +25,7 @@ import dk.nsi.sdm4.core.util.Preconditions;
 @EnableScheduling
 //@EnableTransactionManagement
 public class StamdataConfiguration {
+    
 
     @Bean
     public RecordPersisterEbean recordPersister() {
@@ -31,16 +35,6 @@ public class StamdataConfiguration {
     @Bean
     public ParserExecutor parserExecutor() {
         return new ParserExecutor();
-    }
-
-    @Bean
-    public DataSource dataSource() throws Exception{
-        JndiObjectFactoryBean factory = new JndiObjectFactoryBean();
-        // TODO: property
-        factory.setJndiName("java:/MySQLDS");
-        factory.setExpectedType(DataSource.class);
-        factory.afterPropertiesSet();
-        return (DataSource) factory.getObject();
     }
 
     @Bean(initMethod = "migrate")
@@ -70,4 +64,9 @@ public class StamdataConfiguration {
         return es.home();
     }
 
+    // this is not automatically registered, see https://jira.springsource.org/browse/SPR-8539
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 }
