@@ -38,6 +38,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -65,6 +66,9 @@ public class CPRIntegrationTest
 	@Configuration
 	@PropertySource("classpath:test.properties")
 	static class ContextConfiguration {
+		@Value("${test.mysql.port}")
+		private int mysqlPort;
+
 		@Bean
 		public static PropertySourcesPlaceholderConfigurer properties(){
 			return new PropertySourcesPlaceholderConfigurer();
@@ -83,7 +87,7 @@ public class CPRIntegrationTest
 			ds.setCreateDatabaseIfNotExist(true);
 
 			ds.setServerName("127.0.0.1");
-			ds.setPortNumber(3307);
+			ds.setPortNumber(mysqlPort);
 
 			ds.setUser("root");
 			ds.setPassword("papkasse");
