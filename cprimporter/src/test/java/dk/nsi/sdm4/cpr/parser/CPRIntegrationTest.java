@@ -87,6 +87,7 @@ public class CPRIntegrationTest
 			ds.setCreateDatabaseIfNotExist(true);
 
 			ds.setServerName("127.0.0.1");
+			System.out.println("**** Using port " + mysqlPort);
 			ds.setPortNumber(mysqlPort);
 
 			ds.setUser("root");
