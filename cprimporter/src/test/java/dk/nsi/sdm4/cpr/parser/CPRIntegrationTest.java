@@ -42,18 +42,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.env.MutablePropertySources;
-import org.springframework.core.env.PropertySources;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.AbstractPlatformTransactionManager;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -72,11 +67,7 @@ public class CPRIntegrationTest
 	static class ContextConfiguration {
 		@Bean
 		public static PropertySourcesPlaceholderConfigurer properties(){
-			PropertySourcesPlaceholderConfigurer props =
-					new PropertySourcesPlaceholderConfigurer();
-			PropertySources source;
-
-			return props;
+			return new PropertySourcesPlaceholderConfigurer();
 		}
 
 		@Bean
