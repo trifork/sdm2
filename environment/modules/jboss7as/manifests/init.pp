@@ -80,6 +80,44 @@ class jboss7as() {
         require => File["/pack/jboss"]
     }
 
+    file {"/pack/jboss/modules/sdm4":
+        ensure => directory,
+        owner => "jboss",
+        require => File["/pack/jboss"],
+    }
+
+    file {"/pack/jboss/modules/sdm4/config":
+        ensure => directory,
+        owner => "jboss",
+        require => File["/pack/jboss/modules/sdm4"],
+    }
+
+    file {"/pack/jboss/modules/sdm4/config/main":
+        ensure => directory,
+        owner => "jboss",
+        require => File["/pack/jboss/modules/sdm4"],
+    }
+
+    file {"/pack/jboss/modules/sdm4/config/main/module.xml":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/sdm-module.xml",
+        owner => "jboss",
+        require => File["/pack/jboss/modules/sdm4/config/main"]
+    }
+
+    file {"/pack/jboss/modules/sdm4/config/main/sdm-sample.properties":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/sdm-sample.properties",
+        owner => "jboss",
+        require => File["/pack/jboss/modules/sdm4/config/main/module.xml"]
+    }
+
+    file {"/pack/jboss/domain/data/sdm4":
+        ensure => directory,
+        owner => "jboss",
+        require => File["/pack/jboss"],
+    }
+
     service {"jboss":
         ensure => running,
         name => "jboss-as",

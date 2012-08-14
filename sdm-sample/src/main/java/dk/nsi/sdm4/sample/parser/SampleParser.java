@@ -1,7 +1,6 @@
 package dk.nsi.sdm4.sample.parser;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import javax.xml.transform.stream.StreamSource;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.stereotype.Repository;
 
-import dk.nsi.sdm4.core.annotations.EnableStamdata;
 import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.core.persist.RecordPersister;
@@ -31,7 +29,7 @@ public class SampleParser implements Parser {
         Samples samples = null;
         try {
             samples = (Samples) unmarshaller.unmarshal(new StreamSource(dataSet));
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ParserException("Could not unmarshall", e);
         }
 

@@ -1,24 +1,27 @@
 package dk.nsi.sdm4.core.config;
 
+import javax.sql.DataSource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
 import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 import com.googlecode.flyway.core.Flyway;
+
 import dk.nsi.sdm4.core.annotations.EnableStamdata;
 import dk.nsi.sdm4.core.parser.ParserExecutor;
 import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
 import dk.nsi.sdm4.core.util.Preconditions;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jndi.JndiObjectFactoryBean;
-import org.springframework.scheduling.annotation.EnableScheduling;
-
-import javax.sql.DataSource;
 
 @Configuration
 @EnableScheduling
 //@EnableTransactionManagement
 public class StamdataConfiguration {
+    
 
     @Bean
     public RecordPersisterEbean recordPersister() {
@@ -28,16 +31,6 @@ public class StamdataConfiguration {
     @Bean
     public ParserExecutor parserExecutor() {
         return new ParserExecutor();
-    }
-
-    @Bean
-    public DataSource dataSource() throws Exception{
-        JndiObjectFactoryBean factory = new JndiObjectFactoryBean();
-        // TODO: property
-        factory.setJndiName("java:/MySQLDS");
-        factory.setExpectedType(DataSource.class);
-        factory.afterPropertiesSet();
-        return (DataSource) factory.getObject();
     }
 
     @Bean(initMethod = "migrate")
@@ -68,4 +61,9 @@ public class StamdataConfiguration {
         return es.home();
     }
 
+    // this is not automatically registered, see https://jira.springsource.org/browse/SPR-8539
+    @Bean
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+        return new PropertySourcesPlaceholderConfigurer();
+    }
 }
