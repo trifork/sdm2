@@ -24,7 +24,7 @@ class mysql() {
 		notify => Service["mysql"],
 	}
 
-  $mysql_password = "papkasse"
+    $mysql_password = "papkasse"
 
     exec { "bootstrap-db":
         command => "mysql -u root < /tmp/bootstrap.sql",
@@ -32,13 +32,13 @@ class mysql() {
         onlyif => "test `mysql -uroot -p$mysql_password -e 'SHOW DATABASES;' | grep sdmsample | wc -l` -eq 0"
     }
 
-  exec { "set-mysql-root-password":
-	unless => "mysqladmin -uroot -p$mysql_password status",
-	command => "mysqladmin -uroot password $mysql_password",
-	path => ["/bin", "/usr/bin"],
-	subscribe => Service["mysql"],
-	refreshonly => true,
-  }
+    exec { "set-mysql-root-password":
+    	unless => "mysqladmin -uroot -p$mysql_password status",
+    	command => "mysqladmin -uroot password $mysql_password",
+    	path => ["/bin", "/usr/bin"],
+    	subscribe => Service["mysql"],
+    	refreshonly => true,
+    }
 
   exec { "enable-root-network-access":
   	path => ["/bin", "/usr/bin"],
