@@ -133,7 +133,7 @@ public class CPRIntegrationTest
         Date latestVersionInitial = parser.getLatestVersion();
 		assertNull(latestVersionInitial);
 
-		// TODO importFile("data/testEtablering/D100313.L431102");
+		importFile("data/testEtablering/D100313.L431102");
 
 		// When running a full load (file doesn't ends on 01) of CPR no
 		// LatestIkraft should be written to the db.
@@ -440,12 +440,18 @@ public class CPRIntegrationTest
 */
 
 
-	private void importFile(String fileName) throws Exception
+	private void importFile(String filePath) throws Exception
 	{
-		URL resource = getClass().getClassLoader().getResource(fileName);
+		URL resource = getClass().getClassLoader().getResource(filePath);
 		File datasetDir = tmpDir.newFolder();
-		FileUtils.copyURLToFile(resource, new File(datasetDir, fileName));
+		FileUtils.copyURLToFile(resource, new File(datasetDir, lastPathSegment(filePath)));
 
 		parser.process(datasetDir);
+	}
+
+	private String lastPathSegment(String filePath) {
+		String[] segments = filePath.split("/");
+
+		return segments[segments.length-1];
 	}
 }
