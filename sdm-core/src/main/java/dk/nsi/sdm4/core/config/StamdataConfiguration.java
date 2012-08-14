@@ -1,22 +1,19 @@
 package dk.nsi.sdm4.core.config;
 
-import javax.sql.DataSource;
-
+import com.avaje.ebean.config.ServerConfig;
+import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
+import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
+import com.googlecode.flyway.core.Flyway;
+import dk.nsi.sdm4.core.annotations.EnableStamdata;
+import dk.nsi.sdm4.core.parser.ParserExecutor;
+import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
+import dk.nsi.sdm4.core.util.Preconditions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
-import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
-import com.googlecode.flyway.core.Flyway;
-
-import dk.nsi.sdm4.core.annotations.EnableStamdata;
-import dk.nsi.sdm4.core.parser.Parser;
-import dk.nsi.sdm4.core.parser.ParserExecutor;
-import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
-import dk.nsi.sdm4.core.util.Preconditions;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableScheduling
@@ -62,6 +59,7 @@ public class StamdataConfiguration {
         return factoryBean;
     }
 
+    @SuppressWarnings("unchecked")
     public static String getHome(Class clazz) {
         Preconditions.checkNotNull(clazz, "Class");
         Preconditions.checkArgument(clazz.isAnnotationPresent(EnableStamdata.class), "Parsers must be annotated with @EnableStamdata.");
