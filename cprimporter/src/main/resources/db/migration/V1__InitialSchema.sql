@@ -49,3 +49,4 @@ CREATE TABLE PersonIkraft (
 
 	IkraftDato DATETIME NOT NULL
 ) ENGINE=InnoDB COLLATE=utf8_bin;
+

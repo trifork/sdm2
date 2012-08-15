@@ -28,11 +28,6 @@ package dk.nsi.sdm4.cpr.parser.models;
 
 import org.joda.time.DateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.util.Date;
-
 public class ForaeldreMyndighedRelation extends CPREntity
 {
 	public enum ForaeldreMyndighedRelationsType

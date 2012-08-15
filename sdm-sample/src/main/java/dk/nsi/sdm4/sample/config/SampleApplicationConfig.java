@@ -8,6 +8,8 @@ import dk.nsi.sdm4.core.config.StamdataConfigurationSupport;
 import dk.nsi.sdm4.core.parser.DirectoryInbox;
 import dk.nsi.sdm4.core.parser.Inbox;
 import dk.nsi.sdm4.core.parser.Parser;
+import dk.nsi.sdm4.sample.dao.SampleDao;
+import dk.nsi.sdm4.sample.dao.SampleDaoJdbcImpl;
 import dk.nsi.sdm4.sample.parser.SampleParser;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -58,4 +60,9 @@ public class SampleApplicationConfig implements StamdataConfigurationSupport {
         );
         return marshaller;
     }
+
+	@Bean
+	public SampleDao sampleDao() {
+		return new SampleDaoJdbcImpl();
+	}
 }

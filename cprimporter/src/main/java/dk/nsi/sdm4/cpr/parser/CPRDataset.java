@@ -1,9 +1,11 @@
 package dk.nsi.sdm4.cpr.parser;
 
+import com.google.common.collect.Lists;
 import dk.nsi.sdm4.cpr.parser.models.CPREntity;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CPRDataset {
@@ -20,5 +22,9 @@ public class CPRDataset {
 
 	public void addEntity(CPREntity entity) {
 		entities.add(entity);
+	}
+
+	public List<CPREntity> getEntities() {
+		return Collections.unmodifiableList(entities);
 	}
 }

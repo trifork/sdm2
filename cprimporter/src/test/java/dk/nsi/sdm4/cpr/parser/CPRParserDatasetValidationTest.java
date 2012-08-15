@@ -11,7 +11,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class CPRImporterTest {
+public class CPRParserDatasetValidationTest {
 	@Rule
 	public TemporaryFolder tmpDir = new TemporaryFolder();
 	private CPRParser parser;

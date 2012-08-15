@@ -2,14 +2,7 @@ package dk.nsi.sdm4.core.domain;
 
 import org.joda.time.DateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-
-@Entity
-@MappedSuperclass
 public abstract class AbstractRecord {
-    @Id
     private Long id;
 
     protected DateTime validFrom;

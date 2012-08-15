@@ -262,9 +262,9 @@ public class CprSingleFileImporter
 	}
 
 
-	protected Personoplysninger personoplysninger(String line)
+	protected Person personoplysninger(String line)
 	{
-		Personoplysninger p = new Personoplysninger();
+		Person p = new Person();
 
 		p.setCpr(cut(line, 3, 13));
 		p.setGaeldendeCpr(cut(line, 13, 23).trim());

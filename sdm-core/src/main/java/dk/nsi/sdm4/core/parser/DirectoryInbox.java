@@ -35,6 +35,8 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.Instant;
 
@@ -66,8 +68,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @author Thomas Børlum <thb@trifork.com>
  */
 public class DirectoryInbox implements Inbox, InitializingBean {
-    private static final ConcurrentMap<String, InboxState> sizeHistory = new MapMaker().expireAfterAccess(10,
-            TimeUnit.MINUTES).makeMap();
+	private Cache<String, InboxState> sizeHistory = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build();
 
     private final File inboxDirectory;
     private final File lockFile;
@@ -168,7 +169,7 @@ public class DirectoryInbox implements Inbox, InitializingBean {
             if (element.isFile())
                 continue;
 
-            InboxState previousState = sizeHistory.get(element.getPath());
+            InboxState previousState = sizeHistory.getIfPresent(element.getPath());
             InboxState currentState = createState(element);
 
             if (previousState == null || currentState.size != previousState.size) {

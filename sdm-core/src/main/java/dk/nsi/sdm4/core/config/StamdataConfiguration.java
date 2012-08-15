@@ -1,33 +1,20 @@
 package dk.nsi.sdm4.core.config;
 
-import javax.sql.DataSource;
-
+import com.googlecode.flyway.core.Flyway;
+import dk.nsi.sdm4.core.annotations.EnableStamdata;
+import dk.nsi.sdm4.core.parser.ParserExecutor;
+import dk.nsi.sdm4.core.util.Preconditions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.springsupport.factory.EbeanServerFactoryBean;
-import com.avaje.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
-import com.googlecode.flyway.core.Flyway;
-
-import dk.nsi.sdm4.core.annotations.EnableStamdata;
-import dk.nsi.sdm4.core.parser.ParserExecutor;
-import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
-import dk.nsi.sdm4.core.util.Preconditions;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableScheduling
 //@EnableTransactionManagement
 public class StamdataConfiguration {
-    
-
-    @Bean
-    public RecordPersisterEbean recordPersister() {
-        return new RecordPersisterEbean();
-    }
-
     @Bean
     public ParserExecutor parserExecutor() {
         return new ParserExecutor();
@@ -38,18 +25,6 @@ public class StamdataConfiguration {
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         return flyway;
-    }
-
-    @Bean
-    public EbeanServerFactoryBean ebeanServer(DataSource dataSource) throws Exception {
-        final EbeanServerFactoryBean factoryBean = new EbeanServerFactoryBean();
-        final ServerConfig serverConfig = new ServerConfig();
-        serverConfig.setName("localhostConfig");
-        //serverConfig.setClasses(new ArrayList<Class<?>>(new Reflections("dk.nsi").getTypesAnnotatedWith(Entity.class)));
-        serverConfig.setDataSource(dataSource);
-        serverConfig.setExternalTransactionManager(new SpringAwareJdbcTransactionManager());
-        factoryBean.setServerConfig(serverConfig);
-        return factoryBean;
     }
 
     @SuppressWarnings("unchecked")

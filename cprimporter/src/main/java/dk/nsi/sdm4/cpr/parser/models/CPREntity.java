@@ -30,9 +30,6 @@ import dk.nsi.sdm4.core.domain.AbstractRecord;
 import dk.nsi.sdm4.cpr.parser.CPRDataset;
 import org.joda.time.DateTime;
 
-import javax.persistence.MappedSuperclass;
-
-@MappedSuperclass
 public abstract class CPREntity extends AbstractRecord
 {
 	CPRDataset dataset;

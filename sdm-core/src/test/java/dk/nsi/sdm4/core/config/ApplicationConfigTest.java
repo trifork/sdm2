@@ -3,7 +3,6 @@ package dk.nsi.sdm4.core.config;
 import dk.nsi.sdm4.core.annotations.EnableStamdata;
 import dk.nsi.sdm4.core.parser.Inbox;
 import dk.nsi.sdm4.core.parser.Parser;
-import dk.nsi.sdm4.core.persist.RecordPersisterEbean;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,9 +26,6 @@ public class ApplicationConfigTest {
     Parser parser;
 
     @Inject
-    RecordPersisterEbean recordPersister;
-
-    @Inject
     Inbox inbox;
 
     @Inject
@@ -48,7 +44,6 @@ public class ApplicationConfigTest {
     @Test
     public void canCreateStamdataConfiguration() throws Exception {
         assertNotNull(parser);
-        assertNotNull(recordPersister);
         assertNotNull(inbox);
     }
 

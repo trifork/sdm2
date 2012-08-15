@@ -28,10 +28,10 @@ package dk.nsi.sdm4.cpr.parser.models;
 
 import org.joda.time.DateTime;
 
-import javax.persistence.Column;
-import java.util.Date;
-
-public class Personoplysninger extends CPREntity
+/**
+ * This class is called Personoplysninger in SDM3
+ */
+public class Person extends CPREntity
 {
 	String cpr;
 	String gaeldendeCpr;
@@ -72,7 +72,6 @@ public class Personoplysninger extends CPREntity
 		this.gaeldendeCpr = gaeldendeCpr;
 	}
 
-	@Column
 	public String getStatus()
 	{
 		return status;

@@ -28,8 +28,6 @@ package dk.nsi.sdm4.cpr.parser.models;
 
 import org.joda.time.DateTime;
 
-import java.util.Date;
-
 
 public class Navneoplysninger extends CPREntity
 {

@@ -26,11 +26,6 @@
 
 package dk.nsi.sdm4.cpr.parser.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-
 public class BarnRelation extends CPREntity
 {
 	String cpr;

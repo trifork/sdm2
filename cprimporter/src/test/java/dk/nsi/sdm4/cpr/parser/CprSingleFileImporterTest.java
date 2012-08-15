@@ -33,7 +33,7 @@ import static dk.nsi.sdm4.core.util.Dates.yyyyMMddHHmm;
 import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
 import static org.junit.Assert.assertEquals;
 
-public class CprParserTest
+public class CprSingleFileImporterTest
 {
 	private CprSingleFileImporter parser;
 
@@ -47,7 +47,7 @@ public class CprParserTest
 	{
 		String LINE = "0010101965058010196505901200012240000*K1896-01-01*1997-09-09*2007-09-09*Pensionist";
 
-		Personoplysninger record = parser.personoplysninger(LINE);
+		Person record = parser.personoplysninger(LINE);
 
 		assertEquals("0101965058", record.getCpr());
 		assertEquals("0101965059", record.getGaeldendeCpr());

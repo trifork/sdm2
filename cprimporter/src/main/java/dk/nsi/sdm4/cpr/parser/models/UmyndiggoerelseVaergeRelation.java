@@ -28,10 +28,6 @@ package dk.nsi.sdm4.cpr.parser.models;
 
 import org.joda.time.DateTime;
 
-import javax.persistence.Id;
-import java.util.Date;
-
-
 public class UmyndiggoerelseVaergeRelation extends CPREntity
 {
 	public enum VaergeRelationType
