@@ -27,7 +27,7 @@ class mysql() {
     $mysql_password = "papkasse"
 
     exec { "bootstrap-db":
-        command => "mysql -u root < /tmp/bootstrap.sql",
+        command => "mysql -u root -p$mysql_password < /tmp/bootstrap.sql",
         require => [File["/tmp/bootstrap.sql"], Service["mysql"], Exec["set-mysql-root-password"]],
         onlyif => "test `mysql -uroot -p$mysql_password -e 'SHOW DATABASES;' | grep sdmsample | wc -l` -eq 0"
     }
@@ -43,6 +43,6 @@ class mysql() {
   exec { "enable-root-network-access":
   	path => ["/bin", "/usr/bin"],
   	command => "mysql -uroot -p$mysql_password -e \"use mysql; update user set host='%' where user='root' and host='localhost'; flush privileges;\"",
-    require => Service["mysql"],
+    require => [Service["mysql"], Exec["set-mysql-root-password"]]
   }
 }
