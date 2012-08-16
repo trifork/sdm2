@@ -24,28 +24,24 @@
  */
 package dk.nsi.sdm4.core.parser;
 
-import static dk.nsi.sdm4.core.util.Preconditions.checkArgument;
-import static dk.nsi.sdm4.core.util.Preconditions.checkState;
+import com.google.common.base.Preconditions;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
+import org.apache.commons.io.FileUtils;
+import org.joda.time.Instant;
+import org.springframework.beans.factory.InitializingBean;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import org.apache.commons.io.FileUtils;
-import org.joda.time.Instant;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.MapMaker;
-import com.google.common.collect.Ordering;
-
-import dk.nsi.sdm4.core.util.Preconditions;
-import org.springframework.beans.factory.InitializingBean;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Uses a file system directory as inbox.

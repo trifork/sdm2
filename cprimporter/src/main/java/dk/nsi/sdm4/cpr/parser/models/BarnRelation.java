@@ -26,17 +26,25 @@
 
 package dk.nsi.sdm4.cpr.parser.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+
+@Entity
 public class BarnRelation extends CPREntity
 {
 	String cpr;
 	String barnCpr;
 
-	@Override
-	public String getIdentifier()
+	@Id
+	@Column
+	public String getId()
 	{
 		return cpr + "-" + barnCpr;
 	}
 
+	@Column
 	public String getCpr()
 	{
 		return cpr;
@@ -47,6 +55,7 @@ public class BarnRelation extends CPREntity
 		this.cpr = cpr;
 	}
 
+	@Column
 	public String getBarnCpr()
 	{
 		return barnCpr;

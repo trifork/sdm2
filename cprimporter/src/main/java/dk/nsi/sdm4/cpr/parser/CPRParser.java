@@ -26,13 +26,20 @@
 
 package dk.nsi.sdm4.cpr.parser;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import dk.nsi.sdm4.core.domain.Dataset;
+import dk.nsi.sdm4.core.domain.Entities;
+import dk.nsi.sdm4.core.domain.TemporalEntity;
 import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
-import dk.nsi.sdm4.core.util.Preconditions;
-import dk.nsi.sdm4.cpr.dao.PersonDao;
-import dk.nsi.sdm4.cpr.parser.models.*;
+import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.core.util.Dates;
+import dk.nsi.sdm4.cpr.parser.models.Klarskriftadresse;
+import dk.nsi.sdm4.cpr.parser.models.NavneBeskyttelse;
+import dk.nsi.sdm4.cpr.parser.models.Navneoplysninger;
+import dk.nsi.sdm4.cpr.parser.models.Personoplysninger;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 import dk.sdsd.nsp.slalog.api.SLALogger;
 import org.apache.log4j.Logger;
@@ -40,7 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.File;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -62,7 +69,7 @@ public class CPRParser implements Parser {
 	private CprSingleFileImporter cprSingleFileImpoter;
 
 	@Autowired
-	private PersonDao personDao;
+	Persister persister;
 
     @Override
     public void process(File dataset) throws ParserException {
@@ -84,84 +91,83 @@ public class CPRParser implements Parser {
 
             ArrayList<String> cprWithChanges = Lists.newArrayList();
 
-            for (File personFile : input) {
-                SLALogItem slaLogItemFile = slaLogger.createLogItem("CPRImport of file", personFile.getName());
-                logger.info("Started parsing CPR file. file=" + personFile.getAbsolutePath());
+	        for (File personFile : input) {
+		        SLALogItem slaLogItemFile = slaLogger.createLogItem("CPRImport of file", personFile.getName());
+		        logger.info("Started parsing CPR file. file=" + personFile.getAbsolutePath());
 
-                CPRDataset changes = cprSingleFileImpoter.parse(personFile);
+		        CPRDataset changes = cprSingleFileImpoter.parse(personFile);
 
-                if (isDeltaFile(personFile)) {
-                    Date previousVersion = getLatestVersion();
+		        if (isDeltaFile(personFile)) {
+			        Date previousVersion = getLatestVersion();
 
-                    if (previousVersion == null) {
-                        logger.warn("Didn't find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
-                    }
-                }
+			        if (previousVersion == null) {
+				        logger.warn("Didn't find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
+			        }
+		        }
 
-                // All these entities affect the person table.
+		        // All these entities affect the person table.
 
-                Set<Class<?>> classesObservedByPVIT = Sets.newHashSet();
-                classesObservedByPVIT.add(Navneoplysninger.class);
-                classesObservedByPVIT.add(Klarskriftadresse.class);
-                classesObservedByPVIT.add(Person.class);
-                classesObservedByPVIT.add(NavneBeskyttelse.class);
+		        Set<Class<?>> classesObservedByPVIT = Sets.newHashSet();
+		        classesObservedByPVIT.add(Navneoplysninger.class);
+		        classesObservedByPVIT.add(Klarskriftadresse.class);
+		        classesObservedByPVIT.add(Personoplysninger.class);
+		        classesObservedByPVIT.add(NavneBeskyttelse.class);
 
-                // TODO erstat persister.persist(changes.getEntities());
+		        for (Dataset<? extends TemporalEntity> changesDataset : changes.getDatasets()) {
+			        persister.persistDeltaDataset(changesDataset);
 
-                // The GOS/CPR component requires a table with
-                // a combination columns (CPR, ModifiedDate).
-                //
-                // The key for all CPR entities is the CPR and thus
-                // we can safely case the key value.
+			        // The GOS/CPR component requires a table with
+			        // a combination columns (CPR, ModifiedDate).
+			        //
+			        // The key for all CPR entities is the CPR and thus
+			        // we can safely case the key value.
 
-                for (CPREntity record : changes.getEntities()) {
-                    if (!classesObservedByPVIT.contains(record.getClass())) continue;
+			        for (TemporalEntity record : changesDataset.getEntities()) {
+				        if (!classesObservedByPVIT.contains(record.getClass())) continue;
 
-                    // It does not matter that the same CPR is added
-                    // multiple times. It is a set and only contains
-                    // distinct entries.
+				        // It does not matter that the same CPR is added
+				        // multiple times. It is a set and only contains
+				        // distinct entries.
 
-                    String cpr = record.getCpr();
+				        String cpr = Entities.getEntityID(record).toString();
 
-                    try {
-                        Preconditions.checkState(cpr.length() == 10, "Invalid key used in the CPR parser. Only CPR keys are supported.");
-                    } catch (Exception e) {
-                        slaLogItemFile.setCallResultError("CPR Import failed importing file " + personFile.getName() + " - Cause: " + e.getMessage());
-                        slaLogItemFile.store();
+				        try {
+					        Preconditions.checkState(cpr.length() == 10, "Invalid key used in the CPR parser. Only CPR keys are supported.");
+				        } catch (Exception e) {
+					        slaLogItemFile.setCallResultError("CPR Import failed importing file " + personFile.getName() + " - Cause: " + e.getMessage());
+					        slaLogItemFile.store();
 
-                        throw new RuntimeException(e);
-                    }
+					        throw new RuntimeException(e);
+				        }
 
-                    cprWithChanges.add(cpr);
-                }
+				        cprWithChanges.add(cpr);
+			        }
+		        }
 
-                // Add latest 'version' date to database if we are not importing
-                // a full set.
+		        // Add latest 'version' date to database if we are not importing
+		        // a full set.
 
-                if (isDeltaFile(personFile)) {
-                    insertVersion(changes.getValidFrom().toDate());
-                }
+		        if (isDeltaFile(personFile)) {
+			        insertVersion(changes.getValidFrom());
+		        }
 
-                slaLogItemFile.setCallResultOk();
-                slaLogItemFile.store();
-            }
+		        slaLogItemFile.setCallResultOk();
+		        slaLogItemFile.store();
+	        }
 
-            // Update the GOS/CPR table with the current time stamp and
+	        // Update the GOS/CPR table with the current time stamp and
             // CPR numbers.
 
-
-            // TODO erstat SqlUpdate updateChangesTable = ebeanServer.createSqlUpdate("REPLACE INTO ChangesToCPR (CPR, ModifiedDate) VALUES (?,?)");
+            PreparedStatement updateChangesTable = persister.getConnection().prepareStatement("REPLACE INTO ChangesToCPR (CPR, ModifiedDate) VALUES (?,?)");
             Date modifiedDate = new Date();
 
             for (String cpr : cprWithChanges) {
-/*
-TODO erstat
-                updateChangesTable.setParameter(1, cpr);
-                updateChangesTable.setParameter(2, modifiedDate);
-                updateChangesTable.execute();
-*/
+                updateChangesTable.setObject(1, cpr);
+                updateChangesTable.setObject(2, modifiedDate);
+                updateChangesTable.executeUpdate();
             }
 
+            updateChangesTable.close();
             slaLogItem.setCallResultOk();
             slaLogItem.store();
 
@@ -182,23 +188,21 @@ TODO erstat
     }
 
     public Date getLatestVersion() throws SQLException {
-/*
-TODO erstat
-	    List<SqlRow> rows = ebeanServer.createSqlQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft").findList();
+	    Connection con = persister.getConnection();
+        Statement stm = con.createStatement();
+        ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
 
-        if (!rows.isEmpty()) return rows.get(0).getTimestamp("Ikraft");
-*/
+        if (rs.next()) return rs.getTimestamp("Ikraft");
 
         // Returns null if no previous version of CPR has been imported.
+
         return null;
     }
 
     void insertVersion(Date calendar) throws SQLException {
-/*
-TODO erstat
-	    SqlUpdate update = ebeanServer.createSqlUpdate("INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toSqlDate(calendar) + "');");
-
-	    update.execute();
-*/
+	    Connection con = persister.getConnection();
+	    Statement stm = con.createStatement();
+        String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toSqlDate(calendar) + "');";
+        stm.execute(query);
     }
 }

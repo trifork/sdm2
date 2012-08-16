@@ -26,9 +26,9 @@
 
 package dk.nsi.sdm4.cpr.parser;
 
+import dk.nsi.sdm4.core.persistence.AuditingPersister;
+import dk.nsi.sdm4.core.persistence.Persister;
 import dk.nsi.sdm4.cpr.CprTestConfiguration;
-import dk.nsi.sdm4.cpr.dao.PersonDao;
-import dk.nsi.sdm4.cpr.dao.PersonDaoJdbcImpl;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,16 +43,22 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Date;
+import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
+@TransactionConfiguration(defaultRollback = true)
 @ContextConfiguration(loader=AnnotationConfigContextLoader.class)
 public class CPRIntegrationTest
 {
@@ -71,8 +77,8 @@ public class CPRIntegrationTest
 		}
 
 		@Bean
-		public PersonDao personDao() {
-			return new PersonDaoJdbcImpl(); // TODO mock
+		public Persister persister() throws SQLException {
+			return new AuditingPersister();
 		}
 	}
 
@@ -100,16 +106,19 @@ public class CPRIntegrationTest
 		assertNull(latestIkraft);
 	}
 
-/*
 	@Test
 	public void canImportAnUpdate() throws Exception
 	{
+		assertEquals("Nothing in database initially", 0, jdbcTemplate.queryForInt("SELECT Count(*) from Person WHERE cpr='1312095098'"));
+
 		importFile("data/D100315.L431101");
 
 		Map<String,Object> rs = jdbcTemplate.queryForMap("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
 		assertEquals("Hjalte", rs.get("Fornavn"));
-		assertEquals("2010-03-15 00:00:00.0", rs.get("validFrom"));
-		assertEquals("2999-12-31 00:00:00.0", rs.get("validTo"));
+		assertEquals("2010-03-15 00:00:00.0", rs.get("validFrom").toString());
+		assertEquals("2999-12-31 00:00:00.0", rs.get("validTo").toString());
+
+/*
 		importFile("data/D100317.L431101");
 
 		rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
@@ -122,8 +131,8 @@ public class CPRIntegrationTest
 		assertEquals("2010-03-17 00:00:00.0", rs.getString("validFrom"));
 		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
 		assertFalse(rs.next());
-	}
 */
+	}
 
 		/*
 

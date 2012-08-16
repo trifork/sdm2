@@ -26,6 +26,7 @@
 
 package dk.nsi.sdm4.core.util;
 
+import com.google.common.base.Preconditions;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -36,20 +37,22 @@ import java.util.Date;
 
 public class Dates
 {
-	public static final DateTime THE_END_OF_TIME = new DateTime().withYear(2999).withMonthOfYear(12).withDayOfMonth(31);
+	public static final Date THE_END_OF_TIME = toDate(2999, 12, 31);
+
+
 
 	public static final DateTimeFormatter yyyyMMddHHmm = DateTimeFormat.forPattern("yyyyMMddHHmm");
 	public static final DateTimeFormatter yyyy_MM_dd = DateTimeFormat.forPattern("yyyy-MM-dd");
-	
+
 	public static String toDateStringISO8601(Date date)
-    {
-	    DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
-        return formatter.print(date.getTime());
-    }
+	{
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+		return formatter.print(date.getTime());
+	}
 
 	public static String toFilenameDatetime(Date date)
 	{
-	    DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH-mm-ss");
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH-mm-ss");
 		return formatter.print(date.getTime());
 	}
 
@@ -69,7 +72,7 @@ public class Dates
 		return cal.getTime();
 	}
 
-    @Deprecated
+	@Deprecated
 	public static Date toCalendar(java.sql.Date date)
 	{
 		if (date == null) return null;
@@ -79,11 +82,11 @@ public class Dates
 		return cal.getTime();
 	}
 
-    @Deprecated
+	@Deprecated
 	public static String toSqlDate(Date date)
 	{
 		Preconditions.checkNotNull(date);
-	    DateTimeFormatter df = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+		DateTimeFormatter df = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 		return df.print(date.getTime());
 	}
 }

@@ -47,22 +47,23 @@ public class CprSingleFileImporterTest
 	{
 		String LINE = "0010101965058010196505901200012240000*K1896-01-01*1997-09-09*2007-09-09*Pensionist";
 
-		Person record = parser.personoplysninger(LINE);
+		Personoplysninger record = parser.personoplysninger(LINE);
 
 		assertEquals("0101965058", record.getCpr());
 		assertEquals("0101965059", record.getGaeldendeCpr());
 		assertEquals("01", record.getStatus());
-		assertEquals(yyyyMMddHHmm.parseDateTime("200012240000"), record.getStatusDato());
+		assertEquals(yyyyMMddHHmm.parseDateTime("200012240000").toDate(), record.getStatusDato());
 		assertEquals("*", record.getStatusMakering());
 		assertEquals("K", record.getKoen());
-		assertEquals(yyyy_MM_dd.parseDateTime("1896-01-01"), record.getFoedselsdato());
+		assertEquals(yyyy_MM_dd.parseDateTime("1896-01-01").toDate(), record.getFoedselsdato());
 		assertEquals(true, record.getFoedselsdatoMarkering());
-		assertEquals(yyyy_MM_dd.parseDateTime("1997-09-09"), record.getStartDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("1997-09-09").toDate(), record.getStartDato());
 		assertEquals("*", record.getStartDatoMarkering());
-		assertEquals(yyyy_MM_dd.parseDateTime("2007-09-09"), record.getSlutDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2007-09-09").toDate(), record.getSlutDato());
 		assertEquals("*", record.getSlutDatoMarkering());
 		assertEquals("Pensionist", record.getStilling());
 	}
+
 
 	@Test
 	public void testRecord03() throws Exception
@@ -83,7 +84,7 @@ public class CprSingleFileImporterTest
 		assertEquals("2", record.getEtage());
 		assertEquals("mf", record.getSideDoerNummer());
 		assertEquals("12", record.getBygningsNummer());
-		assertEquals("Industrivænget", record.getVejNavn()); // This is not completely right. This is the short version.
+		assertEquals("Industrivænget", record.getVejNavn()); // TODO: This is not completely right. This is the short version.
 		assertEquals("Henriksen,Klaus", record.getNavnTilAdressering());
 		assertEquals("Industrivænget", record.getVejnavnTilAdressering());
 	}
@@ -97,8 +98,8 @@ public class CprSingleFileImporterTest
 		NavneBeskyttelse record = parser.navneBeskyttelse(LINE);
 
 		assertEquals("2802363039", record.getCpr());
-		assertEquals(yyyy_MM_dd.parseDateTime("1997-09-09"), record.getNavneBeskyttelseStartDato());
-		assertEquals(yyyy_MM_dd.parseDateTime("2001-02-20"), record.getNavneBeskyttelseSletteDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("1997-09-09").toDate(), record.getNavneBeskyttelseStartDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2001-02-20").toDate(), record.getNavneBeskyttelseSletteDato());
 	}
 
 
@@ -116,7 +117,7 @@ public class CprSingleFileImporterTest
 		assertEquals("*", record.getMellemnavnMarkering());
 		assertEquals("Wicker", record.getEfternavn());
 		assertEquals("*", record.getEfternavnMarkering());
-		assertEquals(yyyyMMddHHmm.parseDateTime("197902152000"), record.getStartDato());
+		assertEquals(yyyyMMddHHmm.parseDateTime("197902152000").toDate(), record.getStartDato());
 		assertEquals(" ", record.getStartDatoMarkering());
 		assertEquals("Wicker,Hans-Martin", record.getAdresseringsNavn());
 	}
@@ -138,6 +139,7 @@ public class CprSingleFileImporterTest
 	@Test
 	public void testRecord16() throws Exception
 	{
+
 		// Arrange
 		String LINE = "016311297002800032008-01-01*2009-01-0106016412762008-06-01";
 
@@ -148,12 +150,13 @@ public class CprSingleFileImporterTest
 		assertEquals("3112970028", record.getCpr());
 		assertEquals("0003", record.getTypeKode());
 		assertEquals("Mor", record.getTypeTekst());
-		assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01"), record.getForaeldreMyndighedStartDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), record.getForaeldreMyndighedStartDato());
 		assertEquals("*", record.getForaeldreMyndighedMarkering());
-		assertEquals(yyyy_MM_dd.parseDateTime("2009-01-01"), record.getForaeldreMyndighedSlettedato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2009-01-01").toDate(), record.getForaeldreMyndighedSlettedato());
 		assertEquals("0601641276", record.getRelationCpr());
-		assertEquals(yyyy_MM_dd.parseDateTime("2008-06-01"), record.getRelationCprStartDato());
-		assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01"), record.getValidFrom());
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-06-01").toDate(), record.getRelationCprStartDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), record.getValidFrom());
+		assertEquals(yyyy_MM_dd.parseDateTime("2009-01-01").toDate(), record.getValidTo());
 	}
 
 	@Test
@@ -166,15 +169,15 @@ public class CprSingleFileImporterTest
 		record.setDataset(cpr);
 
 		assertEquals("0709614126", record.getCpr());
-		assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28"), record.getUmyndigStartDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), record.getUmyndigStartDato());
 		assertEquals("*", record.getUmyndigStartDatoMarkering());
-		assertEquals(yyyy_MM_dd.parseDateTime("2008-02-28"), record.getUmyndigSletteDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-02-28").toDate(), record.getUmyndigSletteDato());
 		assertEquals("0001", record.getTypeKode());
 		assertEquals("Værges CPR findes", record.getTypeTekst());
 		assertEquals("0904414131", record.getRelationCpr());
-		assertEquals(yyyy_MM_dd.parseDateTime("2008-06-01"), record.getRelationCprStartDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-06-01").toDate(), record.getRelationCprStartDato());
 		assertEquals("Roberto Andersen", record.getVaergesNavn());
-		assertEquals(yyyy_MM_dd.parseDateTime("2007-01-01"), record.getVaergesNavnStartDato());
+		assertEquals(yyyy_MM_dd.parseDateTime("2007-01-01").toDate(), record.getVaergesNavnStartDato());
 		assertEquals("99 Tarragon Ln, Edgewater, MD, USA", record.getRelationsTekst1());
 		assertEquals("", record.getRelationsTekst2());
 		assertEquals("", record.getRelationsTekst3());
@@ -184,7 +187,7 @@ public class CprSingleFileImporterTest
 		// Insert a date into the 'DataSet' before 'UmyndigStartDato' and test
 		// that we get the date from the record.
 
-		cpr.setValidFrom(yyyy_MM_dd.parseDateTime("2000-02-27"));
-		assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28"), record.getValidFrom());
+		cpr.setValidFrom(yyyy_MM_dd.parseDateTime("2000-02-27").toDate());
+		assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), record.getValidFrom());
 	}
 }

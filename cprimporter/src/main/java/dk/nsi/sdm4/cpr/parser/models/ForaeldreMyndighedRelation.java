@@ -26,8 +26,13 @@
 
 package dk.nsi.sdm4.cpr.parser.models;
 
-import org.joda.time.DateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.Date;
 
+
+@Entity
 public class ForaeldreMyndighedRelation extends CPREntity
 {
 	public enum ForaeldreMyndighedRelationsType
@@ -38,21 +43,24 @@ public class ForaeldreMyndighedRelation extends CPREntity
 	String cpr;
 	String typeKode;
 	ForaeldreMyndighedRelationsType type;
-	DateTime foraeldreMyndighedStartDato;
+	Date foraeldreMyndighedStartDato;
 	String foraeldreMyndighedMarkering;
-	DateTime foraeldreMyndighedSlettedato;
+	Date foraeldreMyndighedSlettedato;
 	String relationCpr; // Hvis relationstypen ikke er mor eller far
-	DateTime relationCprStartDato;
+	Date relationCprStartDato;
 
-	@Override
-	public String getIdentifier()
+	@Id
+	@Column
+	public String getId()
 	{
+
 		if (type == ForaeldreMyndighedRelationsType.mor)
 			return cpr + "-mor";
 		else if (type == ForaeldreMyndighedRelationsType.far) return cpr + "-far";
 		return cpr + "-" + relationCpr;
 	}
 
+	@Column
 	public String getCpr()
 	{
 
@@ -65,6 +73,7 @@ public class ForaeldreMyndighedRelation extends CPREntity
 		this.cpr = cpr;
 	}
 
+	@Column
 	public String getTypeTekst()
 	{
 
@@ -80,6 +89,7 @@ public class ForaeldreMyndighedRelation extends CPREntity
 		return null;
 	}
 
+	@Column
 	public String getTypeKode()
 	{
 
@@ -103,12 +113,12 @@ public class ForaeldreMyndighedRelation extends CPREntity
 		this.typeKode = type;
 	}
 
-	public DateTime getForaeldreMyndighedStartDato()
+	public Date getForaeldreMyndighedStartDato()
 	{
 		return foraeldreMyndighedStartDato;
 	}
 
-	public void setForaeldreMyndighedStartDato(DateTime foraeldreMyndighedStartDato)
+	public void setForaeldreMyndighedStartDato(Date foraeldreMyndighedStartDato)
 	{
 		this.foraeldreMyndighedStartDato = foraeldreMyndighedStartDato;
 	}
@@ -123,16 +133,17 @@ public class ForaeldreMyndighedRelation extends CPREntity
 		this.foraeldreMyndighedMarkering = foraeldreMyndighedMarkering;
 	}
 
-	public DateTime getForaeldreMyndighedSlettedato()
+	public Date getForaeldreMyndighedSlettedato()
 	{
 		return foraeldreMyndighedSlettedato;
 	}
 
-	public void setForaeldreMyndighedSlettedato(DateTime foraeldreMyndighedSlettedato)
+	public void setForaeldreMyndighedSlettedato(Date foraeldreMyndighedSlettedato)
 	{
 		this.foraeldreMyndighedSlettedato = foraeldreMyndighedSlettedato;
 	}
 
+	@Column
 	public String getRelationCpr()
 	{
 		return relationCpr;
@@ -143,19 +154,25 @@ public class ForaeldreMyndighedRelation extends CPREntity
 		this.relationCpr = relationCpr;
 	}
 
-	public DateTime getRelationCprStartDato()
+	public Date getRelationCprStartDato()
 	{
 		return relationCprStartDato;
 	}
 
-	public void setRelationCprStartDato(DateTime relationCprStartDato)
+	public void setRelationCprStartDato(Date relationCprStartDato)
 	{
 		this.relationCprStartDato = relationCprStartDato;
 	}
 
 	@Override
-	public DateTime getValidFrom()
+	public Date getValidFrom()
 	{
 		return (foraeldreMyndighedStartDato == null) ? super.getValidFrom() : foraeldreMyndighedStartDato;
+	}
+
+	@Override
+	public Date getValidTo()
+	{
+		return (foraeldreMyndighedSlettedato == null) ? super.getValidTo() : foraeldreMyndighedSlettedato;
 	}
 }

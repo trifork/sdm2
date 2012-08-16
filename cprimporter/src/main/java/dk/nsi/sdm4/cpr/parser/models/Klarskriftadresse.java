@@ -26,6 +26,12 @@
 
 package dk.nsi.sdm4.cpr.parser.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+
+@Entity(name = "Person")
 public class Klarskriftadresse extends CPREntity
 {
 	String cpr;
@@ -44,11 +50,8 @@ public class Klarskriftadresse extends CPREntity
 	String bygningsNummer;
 	String vejNavn;
 
-	@Override
-	public String getIdentifier() {
-		return getCpr();
-	}
-
+	@Id
+	@Column
 	public String getCpr()
 	{
 		return cpr;
@@ -59,6 +62,7 @@ public class Klarskriftadresse extends CPREntity
 		this.cpr = cpr;
 	}
 
+	@Column
 	public String getNavnTilAdressering()
 	{
 		return adresseringsNavn;
@@ -69,6 +73,7 @@ public class Klarskriftadresse extends CPREntity
 		this.adresseringsNavn = adresseringsNavn;
 	}
 
+	@Column
 	public String getCoNavn()
 	{
 		return coNavn;
@@ -79,6 +84,7 @@ public class Klarskriftadresse extends CPREntity
 		this.coNavn = coNavn;
 	}
 
+	@Column
 	public String getLokalitet()
 	{
 		return lokalitet;
@@ -89,6 +95,7 @@ public class Klarskriftadresse extends CPREntity
 		this.lokalitet = lokalitet;
 	}
 
+	@Column
 	public String getVejnavnTilAdressering()
 	{
 		return adresseringsVejnavn;
@@ -99,6 +106,7 @@ public class Klarskriftadresse extends CPREntity
 		this.adresseringsVejnavn = adresse;
 	}
 
+	@Column
 	public String getByNavn()
 	{
 		return byNavn;
@@ -109,6 +117,7 @@ public class Klarskriftadresse extends CPREntity
 		this.byNavn = byNavn;
 	}
 
+	@Column
 	public Long getPostNummer()
 	{
 		return postNummer;
@@ -119,6 +128,7 @@ public class Klarskriftadresse extends CPREntity
 		this.postNummer = postNummer;
 	}
 
+	@Column
 	public String getPostDistrikt()
 	{
 		return postDistrikt;
@@ -129,6 +139,7 @@ public class Klarskriftadresse extends CPREntity
 		this.postDistrikt = postDistrikt;
 	}
 
+	@Column
 	public Long getKommuneKode()
 	{
 		return kommuneKode;
@@ -139,6 +150,7 @@ public class Klarskriftadresse extends CPREntity
 		this.kommuneKode = kommuneKode;
 	}
 
+	@Column
 	public Long getVejKode()
 	{
 		return vejKode;
@@ -149,6 +161,7 @@ public class Klarskriftadresse extends CPREntity
 		this.vejKode = vejKode;
 	}
 
+	@Column
 	public String getHusNummer()
 	{
 		return husNummer;
@@ -159,6 +172,7 @@ public class Klarskriftadresse extends CPREntity
 		this.husNummer = husNummer;
 	}
 
+	@Column
 	public String getEtage()
 	{
 		return etage;
@@ -169,6 +183,7 @@ public class Klarskriftadresse extends CPREntity
 		this.etage = etage;
 	}
 
+	@Column
 	public String getSideDoerNummer()
 	{
 		return sideDoerNummer;
@@ -179,6 +194,7 @@ public class Klarskriftadresse extends CPREntity
 		this.sideDoerNummer = sideDoerNummer;
 	}
 
+	@Column
 	public String getBygningsNummer()
 	{
 		return bygningsNummer;
@@ -189,6 +205,7 @@ public class Klarskriftadresse extends CPREntity
 		this.bygningsNummer = bygningsNummer;
 	}
 
+	@Column
 	public String getVejNavn()
 	{
 		return vejNavn;

@@ -29,12 +29,13 @@ package dk.nsi.sdm4.cpr.parser;
 import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.cpr.parser.models.*;
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,7 +45,8 @@ import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
 
 /**
  * This class parses a single file from a cpr dump.
- * It acts as a utility class for the CPRParser. It does not implements the Parser interface
+ * It acts as a utility class for the CPRParser. It does not implements the Parser interface.
+ * The class was called CPRParser in SDM3
  */
 public class CprSingleFileImporter
 {
@@ -262,9 +264,9 @@ public class CprSingleFileImporter
 	}
 
 
-	protected Person personoplysninger(String line)
+	protected Personoplysninger personoplysninger(String line)
 	{
-		Person p = new Person();
+		Personoplysninger p = new Personoplysninger();
 
 		p.setCpr(cut(line, 3, 13));
 		p.setGaeldendeCpr(cut(line, 13, 23).trim());
@@ -333,7 +335,7 @@ public class CprSingleFileImporter
 	}
 
 
-	private static DateTime parseDate(DateTimeFormatter format, String line, int from, int to)
+	private static Date parseDate(DateTimeFormatter format, String line, int from, int to)
 	{
 		String dateString = cut(line, from, to);
 		if (dateString != null && dateString.trim().length() == to - from && !dateString.equals(EMPTY_DATE_STRING))
@@ -344,10 +346,15 @@ public class CprSingleFileImporter
 	}
 
 
-	private static DateTime getValidFrom(String line)
+	private static Date getValidFrom(String line)
 	{
-		DateTimeFormatter sdf = DateTimeFormat.forPattern("yyyyMMdd");
-		return sdf.parseDateTime(cut(line, 19, 27));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String dateFromLine = cut(line, 19, 27);
+		try {
+			return sdf.parse(dateFromLine);
+		} catch (ParseException e) {
+			throw new RuntimeException("Could not parse date part " + dateFromLine + " from line " + dateFromLine, e);
+		}
 	}
 
 
@@ -449,7 +456,7 @@ public class CprSingleFileImporter
 	}
 
 
-	private static DateTime parseDateAndCheckValidity(String dateString, DateTimeFormatter format, String line)
+	private static Date parseDateAndCheckValidity(String dateString, DateTimeFormatter format, String line)
 	{
 		dateString = fixWeirdDate(dateString);
 		LocalDateTime date = format.parseLocalDateTime(dateString);
@@ -469,6 +476,6 @@ public class CprSingleFileImporter
 			}
 		}
 
-		return date.toDateTime();
+		return date.toDate();
 	}
 }

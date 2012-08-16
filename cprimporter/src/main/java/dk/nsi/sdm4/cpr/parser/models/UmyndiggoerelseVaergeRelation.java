@@ -26,8 +26,13 @@
 
 package dk.nsi.sdm4.cpr.parser.models;
 
-import org.joda.time.DateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.Date;
 
+
+@Entity
 public class UmyndiggoerelseVaergeRelation extends CPREntity
 {
 	public enum VaergeRelationType
@@ -36,29 +41,32 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 	}
 
 	String cpr;
-	DateTime umyndigStartDato;
+	Date umyndigStartDato;
 	String umyndigStartDatoMarkering;
-	DateTime umyndigSletteDato;
+	Date umyndigSletteDato;
 	String typeKode;
 	VaergeRelationType type;
 	String relationCpr;
-	DateTime relationCprStartDato;
+	Date relationCprStartDato;
 	String vaergesNavn;
-	DateTime vaergesNavnStartDato;
+	Date vaergesNavnStartDato;
 	String relationsTekst1;
 	String relationsTekst2;
 	String relationsTekst3;
 	String relationsTekst4;
 	String relationsTekst5;
 
-	@Override
-	public String getIdentifier()
+	@Id
+	@Column
+	public String getId()
 	{
 		return cpr + "-" + typeKode;
 	}
 
+	@Column
 	public String getCpr()
 	{
+
 		return cpr;
 	}
 
@@ -67,12 +75,12 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.cpr = cpr;
 	}
 
-	public DateTime getUmyndigStartDato()
+	public Date getUmyndigStartDato()
 	{
 		return umyndigStartDato;
 	}
 
-	public void setUmyndigStartDato(DateTime umyndigStartDato)
+	public void setUmyndigStartDato(Date umyndigStartDato)
 	{
 		this.umyndigStartDato = umyndigStartDato;
 	}
@@ -87,16 +95,17 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.umyndigStartDatoMarkering = umyndigStartDatoMarkering;
 	}
 
-	public DateTime getUmyndigSletteDato()
+	public Date getUmyndigSletteDato()
 	{
 		return umyndigSletteDato;
 	}
 
-	public void setUmyndigSletteDato(DateTime umyndigSletteDato)
+	public void setUmyndigSletteDato(Date umyndigSletteDato)
 	{
 		this.umyndigSletteDato = umyndigSletteDato;
 	}
 
+	@Column
 	public String getTypeTekst()
 	{
 		if (type == null)
@@ -110,6 +119,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		return null;
 	}
 
+	@Column
 	public String getTypeKode()
 	{
 		return typeKode;
@@ -129,6 +139,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.typeKode = type;
 	}
 
+	@Column
 	public String getRelationCpr()
 	{
 		return relationCpr;
@@ -140,16 +151,18 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.relationCpr = relationCpr;
 	}
 
-	public DateTime getRelationCprStartDato()
+	@Column
+	public Date getRelationCprStartDato()
 	{
 		return relationCprStartDato;
 	}
 
-	public void setRelationCprStartDato(DateTime relationCprStartDato)
+	public void setRelationCprStartDato(Date relationCprStartDato)
 	{
 		this.relationCprStartDato = relationCprStartDato;
 	}
 
+	@Column
 	public String getVaergesNavn()
 	{
 		return vaergesNavn;
@@ -160,16 +173,18 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.vaergesNavn = vaergesNavn;
 	}
 
-	public DateTime getVaergesNavnStartDato()
+	@Column
+	public Date getVaergesNavnStartDato()
 	{
 		return vaergesNavnStartDato;
 	}
 
-	public void setVaergesNavnStartDato(DateTime vaergesNavnStartDato)
+	public void setVaergesNavnStartDato(Date vaergesNavnStartDato)
 	{
 		this.vaergesNavnStartDato = vaergesNavnStartDato;
 	}
 
+	@Column
 	public String getRelationsTekst1()
 	{
 
@@ -182,6 +197,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.relationsTekst1 = relationsTekst1;
 	}
 
+	@Column
 	public String getRelationsTekst2()
 	{
 		return relationsTekst2;
@@ -192,6 +208,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.relationsTekst2 = relationsTekst2;
 	}
 
+	@Column
 	public String getRelationsTekst3()
 	{
 		return relationsTekst3;
@@ -202,6 +219,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.relationsTekst3 = relationsTekst3;
 	}
 
+	@Column
 	public String getRelationsTekst4()
 	{
 		return relationsTekst4;
@@ -212,6 +230,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.relationsTekst4 = relationsTekst4;
 	}
 
+	@Column
 	public String getRelationsTekst5()
 	{
 		return relationsTekst5;
@@ -223,8 +242,14 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 	}
 
 	@Override
-	public DateTime getValidFrom()
+	public Date getValidFrom()
 	{		
 		return (umyndigStartDato == null) ? super.getValidFrom() : umyndigStartDato;
+	}
+
+	@Override
+	public Date getValidTo()
+	{
+		return (umyndigSletteDato == null) ? super.getValidTo() : umyndigSletteDato;
 	}
 }

@@ -1,9 +1,9 @@
 package dk.nsi.sdm4.core.config;
 
+import com.google.common.base.Preconditions;
 import com.googlecode.flyway.core.Flyway;
 import dk.nsi.sdm4.core.annotations.EnableStamdata;
 import dk.nsi.sdm4.core.parser.ParserExecutor;
-import dk.nsi.sdm4.core.util.Preconditions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;

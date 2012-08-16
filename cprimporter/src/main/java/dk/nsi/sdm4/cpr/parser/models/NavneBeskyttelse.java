@@ -26,40 +26,44 @@
 
 package dk.nsi.sdm4.cpr.parser.models;
 
-import org.joda.time.DateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.Date;
 
+
+@Entity(name = "Person")
 public class NavneBeskyttelse extends CPREntity
 {
-	DateTime navneBeskyttelseStartDato;
-	DateTime navneBeskyttelseSletteDato;
+	Date navneBeskyttelseStartDato;
+	Date navneBeskyttelseSletteDato;
 
-	@Override
-	public String getIdentifier() {
-		return getCpr();
-	}
-
+	@Id
+	@Column
 	@Override
 	public String getCpr()
 	{
 		return cpr;
 	}
 
-	public DateTime getNavneBeskyttelseStartDato()
+	@Column
+	public Date getNavneBeskyttelseStartDato()
 	{
 		return navneBeskyttelseStartDato;
 	}
 
-	public void setNavneBeskyttelseStartDato(DateTime startDato)
+	public void setNavneBeskyttelseStartDato(Date startDato)
 	{
 		this.navneBeskyttelseStartDato = startDato;
 	}
 
-	public DateTime getNavneBeskyttelseSletteDato()
+	@Column
+	public Date getNavneBeskyttelseSletteDato()
 	{
 		return navneBeskyttelseSletteDato;
 	}
 
-	public void setNavneBeskyttelseSletteDato(DateTime sletteDato)
+	public void setNavneBeskyttelseSletteDato(Date sletteDato)
 	{
 		this.navneBeskyttelseSletteDato = sletteDato;
 	}

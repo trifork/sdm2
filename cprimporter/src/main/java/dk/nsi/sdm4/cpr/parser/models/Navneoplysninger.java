@@ -26,9 +26,13 @@
 
 package dk.nsi.sdm4.cpr.parser.models;
 
-import org.joda.time.DateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.util.Date;
 
 
+@Entity(name = "Person")
 public class Navneoplysninger extends CPREntity
 {
 	String cpr;
@@ -38,15 +42,12 @@ public class Navneoplysninger extends CPREntity
 	String mellemnavnMarkering;
 	String efternavn;
 	String efternavnMarkering;
-	DateTime startDato;
+	Date startDato;
 	String startDatoMarkering;
 	String adresseringsNavn;
 
-	@Override
-	public String getIdentifier() {
-		return getCpr();
-	}
-
+	@Id
+	@Column
 	public String getCpr()
 	{
 		return cpr;
@@ -57,6 +58,7 @@ public class Navneoplysninger extends CPREntity
 		this.cpr = cpr;
 	}
 
+	@Column
 	public String getFornavn()
 	{
 		return fornavn;
@@ -77,6 +79,7 @@ public class Navneoplysninger extends CPREntity
 		this.fornavnMarkering = fornavnMarkering;
 	}
 
+	@Column
 	public String getMellemnavn()
 	{
 		return mellemnavn;
@@ -97,6 +100,7 @@ public class Navneoplysninger extends CPREntity
 		this.mellemnavnMarkering = mellemnavnMarkering;
 	}
 
+	@Column
 	public String getEfternavn()
 	{
 		return efternavn;
@@ -117,12 +121,12 @@ public class Navneoplysninger extends CPREntity
 		this.efternavnMarkering = efternavnMarkering;
 	}
 
-	public DateTime getStartDato()
+	public Date getStartDato()
 	{
 		return startDato;
 	}
 
-	public void setStartDato(DateTime startDato)
+	public void setStartDato(Date startDato)
 	{
 		this.startDato = startDato;
 	}

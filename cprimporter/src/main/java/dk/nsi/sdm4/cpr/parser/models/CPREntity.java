@@ -26,14 +26,18 @@
 
 package dk.nsi.sdm4.cpr.parser.models;
 
-import dk.nsi.sdm4.core.domain.AbstractRecord;
+import dk.nsi.sdm4.core.domain.AbstractStamdataEntity;
+import dk.nsi.sdm4.core.util.Dates;
 import dk.nsi.sdm4.cpr.parser.CPRDataset;
-import org.joda.time.DateTime;
+import org.apache.log4j.Logger;
 
-public abstract class CPREntity extends AbstractRecord
+import java.util.Date;
+
+public abstract class CPREntity extends AbstractStamdataEntity
 {
 	CPRDataset dataset;
 	String cpr;
+	private static final Logger logger = Logger.getLogger(CPREntity.class);
 
 	public String getCpr()
 	{
@@ -43,6 +47,12 @@ public abstract class CPREntity extends AbstractRecord
 	public void setCpr(String cpr)
 	{
 		this.cpr = cpr;
+	}
+
+	@Override
+	public Date getValidTo()
+	{
+		return Dates.THE_END_OF_TIME;
 	}
 
 	public CPRDataset getDataset()
@@ -56,11 +66,8 @@ public abstract class CPREntity extends AbstractRecord
 	}
 
 	@Override
-	public DateTime getValidFrom()
+	public Date getValidFrom()
 	{
 		return dataset.getValidFrom();
 	}
-
-	// temporary method to make sure we don't lose the string-identifier from the sdm3-migrated CprEntities
-	public abstract String getIdentifier();
 }

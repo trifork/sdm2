@@ -50,3 +50,70 @@ CREATE TABLE PersonIkraft (
 	IkraftDato DATETIME NOT NULL
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
+CREATE TABLE UmyndiggoerelseVaergeRelation (
+	UmyndiggoerelseVaergeRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	Id VARCHAR(21) NOT NULL,
+	CPR VARCHAR(10) NOT NULL,
+	TypeKode VARCHAR(4) NOT NULL,
+	TypeTekst VARCHAR(50) NOT NULL,
+	RelationCpr VARCHAR(10),
+	RelationCprStartDato DATETIME,
+	VaergesNavn VARCHAR(50),
+	VaergesNavnStartDato DATETIME,
+	RelationsTekst1 VARCHAR(50),
+	RelationsTekst2 VARCHAR(50),
+	RelationsTekst3 VARCHAR(50),
+	RelationsTekst4 VARCHAR(50),
+	RelationsTekst5 VARCHAR(50),
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (UmyndiggoerelseVaergeRelationPID, ModifiedDate),
+	INDEX (Id, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+CREATE TABLE ForaeldreMyndighedRelation (
+	ForaeldreMyndighedRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	Id VARCHAR(21) NOT NULL,
+
+	CPR VARCHAR(10) NOT NULL,
+	TypeKode VARCHAR(4) NOT NULL,
+	TypeTekst VARCHAR(50) NOT NULL,
+	RelationCpr VARCHAR(10),
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (ForaeldreMyndighedRelationPID, ModifiedDate),
+	INDEX (Id, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+CREATE TABLE BarnRelation (
+	BarnRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	Id CHAR(21) NOT NULL,
+
+	CPR CHAR(10) NOT NULL,
+	BarnCPR CHAR(10) NOT NULL,
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (BarnRelationPID, ModifiedDate),
+	INDEX (Id, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+CREATE TABLE ChangesToCPR (
+	CPR CHAR(10) PRIMARY KEY,
+	ModifiedDate TIMESTAMP NOT NULL,
+	INDEX (ModifiedDate)
+);
