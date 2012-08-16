@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
@@ -53,8 +54,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -118,20 +118,18 @@ public class CPRIntegrationTest
 		assertEquals("2010-03-15 00:00:00.0", rs.get("validFrom").toString());
 		assertEquals("2999-12-31 00:00:00.0", rs.get("validTo").toString());
 
-/*
 		importFile("data/D100317.L431101");
 
-		rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
-		assertTrue(rs.next());
-		assertEquals("Hjalte", rs.getString("Fornavn"));
-		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
-		assertEquals("2010-03-17 00:00:00.0", rs.getString("validTo"));
-		assertTrue(rs.next());
-		assertEquals("Hjalts", rs.getString("Fornavn"));
-		assertEquals("2010-03-17 00:00:00.0", rs.getString("validFrom"));
-		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
-		assertFalse(rs.next());
-*/
+		SqlRowSet updatedRows = jdbcTemplate.queryForRowSet("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
+		assertTrue(updatedRows.next());
+		assertEquals("Hjalte", updatedRows.getString("Fornavn"));
+		assertEquals("2010-03-15 00:00:00.0", updatedRows.getString("validFrom"));
+		assertEquals("2010-03-17 00:00:00.0", updatedRows.getString("validTo"));
+		assertTrue(updatedRows.next());
+		assertEquals("Hjalts", updatedRows.getString("Fornavn"));
+		assertEquals("2010-03-17 00:00:00.0", updatedRows.getString("validFrom"));
+		assertEquals("2999-12-31 00:00:00.0", updatedRows.getString("validTo"));
+		assertFalse(updatedRows.next());
 	}
 
 		/*
