@@ -1,9 +1,0 @@
-<jboss-web>
-
-  <!-- A security domain that restricts access
-  <security-domain>java:/jaas/JBossWS</security-domain>
-  -->
-
-    <context-root>sdm-sample</context-root>
-
-</jboss-web>

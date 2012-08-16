@@ -10,11 +10,6 @@ class mysql() {
         hasstatus => true
     }
 
-    file {"/tmp/bootstrap.sql":
-        ensure => present,
-        content => template('mysql/bootstrap.sql')
-    }
-
     file {"/etc/mysql/my.cnf":
         ensure => present,
 		source => "puppet:///modules/mysql/my.cnf",
@@ -25,12 +20,6 @@ class mysql() {
 	}
 
     $mysql_password = "papkasse"
-
-    exec { "bootstrap-db":
-        command => "mysql -u root -p$mysql_password < /tmp/bootstrap.sql",
-        require => [File["/tmp/bootstrap.sql"], Service["mysql"], Exec["set-mysql-root-password"]],
-        onlyif => "test `mysql -uroot -p$mysql_password -e 'SHOW DATABASES;' | grep sdmsample | wc -l` -eq 0"
-    }
 
     exec { "set-mysql-root-password":
     	unless => "mysqladmin -uroot -p$mysql_password status",

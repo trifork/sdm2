@@ -105,13 +105,6 @@ class jboss7as() {
         require => File["/pack/jboss/modules/sdm4/config/main"]
     }
 
-    file {"/pack/jboss/modules/sdm4/config/main/sdm-sample.properties":
-        ensure => present,
-        source => "puppet:///modules/jboss7as/sdm-sample.properties",
-        owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4/config/main/module.xml"]
-    }
-
     file {"/pack/jboss/domain/data/sdm4":
         ensure => directory,
         owner => "jboss",
@@ -122,22 +115,5 @@ class jboss7as() {
         ensure => running,
         name => "jboss-as",
         require => [Exec["unpack-jboss"], Class["jdk"], File["jboss-init-script"]],
-    }
-
-    file {"/tmp/sdm-sample.war":
-        ensure => present,
-        source => ["puppet:///modules/jboss7as/sdm-sample.war", "puppet:///modules/jboss7as/sdm-sample-placeholder.war"],
-        require => Service["jboss"]
-    }
-
-    exec {"deploy-sample":
-        command => "/pack/jboss/bin/jboss-cli.sh -c --commands='deploy --force /tmp/sdm-sample.war' --user=sdmadmin --password=trifork",
-        user => "jboss",
-        require => [
-            File["/tmp/sdm-sample.war"],
-            Service["jboss"],
-            File["/pack/jboss/standalone/configuration/mgmt-users.properties"]
-        ],
-		logoutput => "on_failure",
     }
 }

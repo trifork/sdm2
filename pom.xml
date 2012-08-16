@@ -45,8 +45,6 @@
 
     <modules>
         <module>sdm-core</module>
-        <module>sdm-sample</module>
-        <module>sdm-integrationtest</module>
         <module>maven-vagrant-plugin</module>
         <module>cprimporter</module>
     </modules>
