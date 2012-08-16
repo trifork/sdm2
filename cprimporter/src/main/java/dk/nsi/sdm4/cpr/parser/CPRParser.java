@@ -171,15 +171,21 @@ public class CPRParser implements Parser {
             slaLogItem.setCallResultOk();
             slaLogItem.store();
 
+        } catch (ParserException e) {
+	        markAsFailed(slaLogItem, e);
+	        throw e;
         } catch (Exception e) {
-            slaLogItem.setCallResultError("CPR Import failed - Cause: " + e.getMessage());
-            slaLogItem.store();
-
+	        markAsFailed(slaLogItem, e);
             throw new RuntimeException(e);
         }
     }
 
-    private boolean isPersonFile(File f) {
+	private void markAsFailed(SLALogItem slaLogItem, Exception e) {
+		slaLogItem.setCallResultError("CPR Import failed - Cause: " + e.getMessage());
+		slaLogItem.store();
+	}
+
+	private boolean isPersonFile(File f) {
         return personFilePattern.matcher(f.getName()).matches();
     }
 
@@ -201,8 +207,17 @@ public class CPRParser implements Parser {
 
     void insertVersion(Date calendar) throws SQLException {
 	    Connection con = persister.getConnection();
-	    Statement stm = con.createStatement();
-        String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toSqlDate(calendar) + "');";
-        stm.execute(query);
+		try {
+	        Statement stm = con.createStatement();
+	        String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toSqlDate(calendar) + "');";
+	        stm.execute(query);
+		} finally {
+			if (con != null) {
+				try {
+					con.close();
+				} catch (Exception ignore) {
+				}
+			}
+		}
     }
 }

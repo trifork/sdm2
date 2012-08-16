@@ -26,6 +26,7 @@
 
 package dk.nsi.sdm4.cpr.parser;
 
+import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
 import dk.nsi.sdm4.cpr.CprTestConfiguration;
@@ -165,24 +166,13 @@ public class CPRIntegrationTest
 			  assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
 			  assertFalse(rs.next());
 		  }
-	/*
 
-
-		  // Helper method to inspect a resultset
-		  private void printResultset(ResultSet rs) throws SQLException {
-			  ResultSetMetaData metaData = rs.getMetaData();
-			  for (int i=1; i <= metaData.getColumnCount(); i++) {
-				  System.out.println(metaData.getColumnName(i)+ ": "+ rs.getObject(i));
-			  }
-		  }
-
-
-		  @Test(expected = Exception.class)
-		  public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception
-		  {
+		  @Test(expected = ParserException.class)
+		  public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception {
 			  importFile("data/endRecords/D100314.L431101");
 		  }
 
+	/*
 
 		  @Test(expected = Exception.class)
 		  public void failsWhenNoEndRecordExists() throws Exception

@@ -105,7 +105,7 @@ public class CprSingleFileImporter
 				}
 				else if (endRecordReached)
 				{
-					throw new RuntimeException("Slut-record midt i cpr-filen");
+					throw new ParserException("Slut-record midt i cpr-filen");
 				}
 				else
 				{
