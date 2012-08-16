@@ -150,15 +150,12 @@ public class CPRIntegrationTest
 		  assertFalse(rs.next());
 	  }
 
-	/*
-
 		  @Test
 		  public void jiraNSPSUPPORT_53_ErrorInUpdate2() throws Exception
 		  {
 			  importFile("data/D120128.L431101");
 
-			  Statement stmt = connection.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * from Person WHERE cpr='1005400925'");
+			  SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * from Person WHERE cpr='1005400925'");
 			  assertTrue(rs.next());
 			  assertEquals("M", rs.getString("Koen"));
 			  assertEquals("1005400925", rs.getString("CPR"));
@@ -168,6 +165,7 @@ public class CPRIntegrationTest
 			  assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
 			  assertFalse(rs.next());
 		  }
+	/*
 
 
 		  // Helper method to inspect a resultset
