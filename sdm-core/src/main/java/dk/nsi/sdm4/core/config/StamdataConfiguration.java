@@ -39,6 +39,9 @@ public class StamdataConfiguration {
     // this is not automatically registered, see https://jira.springsource.org/browse/SPR-8539
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
+        PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
+        propertySourcesPlaceholderConfigurer.setIgnoreResourceNotFound(true);
+        propertySourcesPlaceholderConfigurer.setIgnoreUnresolvablePlaceholders(false);
+        return propertySourcesPlaceholderConfigurer;
     }
 }

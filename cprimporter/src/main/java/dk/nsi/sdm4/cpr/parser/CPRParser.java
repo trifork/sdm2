@@ -29,6 +29,8 @@ package dk.nsi.sdm4.cpr.parser;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+
+import dk.nsi.sdm4.core.annotations.EnableStamdata;
 import dk.nsi.sdm4.core.domain.Dataset;
 import dk.nsi.sdm4.core.domain.Entities;
 import dk.nsi.sdm4.core.domain.TemporalEntity;
@@ -53,6 +55,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+@EnableStamdata(home = "cpr")
 public class CPRParser implements Parser {
 	private static final Logger logger = Logger.getLogger(CPRParser.class);
 
