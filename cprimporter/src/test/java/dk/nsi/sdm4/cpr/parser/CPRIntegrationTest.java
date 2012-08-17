@@ -29,6 +29,7 @@ package dk.nsi.sdm4.cpr.parser;
 import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.core.util.Dates;
 import dk.nsi.sdm4.cpr.CprTestConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
@@ -48,22 +49,24 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Map;
 
+import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 @TransactionConfiguration(defaultRollback = true)
-@ContextConfiguration(loader=AnnotationConfigContextLoader.class)
-public class CPRIntegrationTest
-{
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+public class CPRIntegrationTest {
 	@Configuration
 	@PropertySource("classpath:test.properties")
 	@Import(CprTestConfiguration.class)
@@ -94,9 +97,8 @@ public class CPRIntegrationTest
 	private JdbcTemplate jdbcTemplate;
 
 	@Test
-	public void canEstablishData() throws Exception
-	{
-        Date latestVersionInitial = parser.getLatestVersion();
+	public void canEstablishData() throws Exception {
+		Date latestVersionInitial = parser.getLatestVersion();
 		assertNull(latestVersionInitial);
 
 		importFile("data/testEtablering/D100313.L431102");
@@ -109,13 +111,12 @@ public class CPRIntegrationTest
 	}
 
 	@Test
-	public void canImportAnUpdate() throws Exception
-	{
+	public void canImportAnUpdate() throws Exception {
 		assertEquals("Nothing in database initially", 0, jdbcTemplate.queryForInt("SELECT Count(*) from Person WHERE cpr='1312095098'"));
 
 		importFile("data/D100315.L431101");
 
-		Map<String,Object> rs = jdbcTemplate.queryForMap("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
+		Map<String, Object> rs = jdbcTemplate.queryForMap("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
 		assertEquals("Hjalte", rs.get("Fornavn"));
 		assertEquals("2010-03-15 00:00:00.0", rs.get("validFrom").toString());
 		assertEquals("2999-12-31 00:00:00.0", rs.get("validTo").toString());
@@ -135,265 +136,247 @@ public class CPRIntegrationTest
 	}
 
 
-	  @Test
-	  public void jiraNSPSUPPORT_53_ErrorInUpdate() throws Exception
-	  {
-		  importFile("data/D120127.L431101");
+	@Test
+	public void jiraNSPSUPPORT_53_ErrorInUpdate() throws Exception {
+		importFile("data/D120127.L431101");
 
-		  SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * from Person WHERE cpr='0101595072'");
-		  assertTrue(rs.next());
-		  assertEquals("K", rs.getString("Koen"));
-		  assertEquals("0101595072", rs.getString("CPR"));
-		  assertEquals("Yyyyyyyyyy", rs.getString("Efternavn"));
-		  assertEquals("Yyyyyy Yyyyy Yyyyyy", rs.getString("Fornavn"));
-		  assertEquals("2012-01-27 00:00:00.0", rs.getString("validFrom"));
-		  assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
-		  assertFalse(rs.next());
-	  }
+		SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * from Person WHERE cpr='0101595072'");
+		assertTrue(rs.next());
+		assertEquals("K", rs.getString("Koen"));
+		assertEquals("0101595072", rs.getString("CPR"));
+		assertEquals("Yyyyyyyyyy", rs.getString("Efternavn"));
+		assertEquals("Yyyyyy Yyyyy Yyyyyy", rs.getString("Fornavn"));
+		assertEquals("2012-01-27 00:00:00.0", rs.getString("validFrom"));
+		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
+		assertFalse(rs.next());
+	}
 
-		  @Test
-		  public void jiraNSPSUPPORT_53_ErrorInUpdate2() throws Exception
-		  {
-			  importFile("data/D120128.L431101");
+	@Test
+	public void jiraNSPSUPPORT_53_ErrorInUpdate2() throws Exception {
+		importFile("data/D120128.L431101");
 
-			  SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * from Person WHERE cpr='1005400925'");
-			  assertTrue(rs.next());
-			  assertEquals("M", rs.getString("Koen"));
-			  assertEquals("1005400925", rs.getString("CPR"));
-			  assertEquals("Jensen", rs.getString("Efternavn"));
-			  assertEquals("Pål", rs.getString("Fornavn"));
-			  assertEquals("2012-01-27 00:00:00.0", rs.getString("validFrom"));
-			  assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
-			  assertFalse(rs.next());
-		  }
+		SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * from Person WHERE cpr='1005400925'");
+		assertTrue(rs.next());
+		assertEquals("M", rs.getString("Koen"));
+		assertEquals("1005400925", rs.getString("CPR"));
+		assertEquals("Jensen", rs.getString("Efternavn"));
+		assertEquals("Pål", rs.getString("Fornavn"));
+		assertEquals("2012-01-27 00:00:00.0", rs.getString("validFrom"));
+		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
+		assertFalse(rs.next());
+	}
 
-		  @Test(expected = ParserException.class)
-		  public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception {
-			  importFile("data/endRecords/D100314.L431101");
-		  }
+	@Test(expected = ParserException.class)
+	public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception {
+		importFile("data/endRecords/D100314.L431101");
+	}
 
 
-		  @Test(expected = ParserException.class)
-		  public void failsWhenNoEndRecordExists() throws Exception
-		  {
-			  importFile("data/endRecords/D100315.L431101");
-		  }
+	@Test(expected = ParserException.class)
+	public void failsWhenNoEndRecordExists() throws Exception {
+		importFile("data/endRecords/D100315.L431101");
+	}
 
-	/*
+	@Test
+	public void canImportPersonNavnebeskyttelse() throws Exception {
+		importFile("data/testCPR1/D100314.L431101");
 
-		  @Test
-		  public void canImportPersonNavnebeskyttelse() throws Exception
-		  {
-			  importFile("data/testCPR1/D100314.L431101");
+		SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * FROM Person WHERE CPR = '0101965058'");
+		rs.next();
 
-			  Statement stmt = connection.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * FROM Person WHERE CPR = '0101965058'");
-			  rs.next();
+		assertEquals("K", rs.getString("Koen"));
+		assertEquals("Ude Ulrike", rs.getString("Fornavn"));
+		assertEquals("", rs.getString("Mellemnavn"));
+		assertEquals("Udtzen", rs.getString("Efternavn"));
+		assertEquals("", rs.getString("CoNavn"));
+		assertEquals("", rs.getString("Lokalitet"));
+		assertEquals("Søgade", rs.getString("Vejnavn"));
+		assertEquals("", rs.getString("Bygningsnummer"));
+		assertEquals("16", rs.getString("Husnummer"));
+		assertEquals("1", rs.getString("Etage"));
+		assertEquals("", rs.getString("SideDoerNummer"));
+		assertEquals("Vodskov", rs.getString("Bynavn"));
+		assertEquals("9000", rs.getString("Postnummer"));
+		assertEquals("Aalborg", rs.getString("PostDistrikt"));
+		assertEquals("01", rs.getString("Status"));
+		assertEquals(yyyy_MM_dd.parseDateTime("1997-09-09").toDate(), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2001-02-20").toDate(), rs.getDate("NavneBeskyttelseSletteDato"));
+		assertEquals("", rs.getString("GaeldendeCPR"));
+		assertEquals(yyyy_MM_dd.parseDateTime("1896-01-01").toDate(), rs.getDate("Foedselsdato"));
+		assertEquals("Pensionist", rs.getString("Stilling"));
+		assertEquals("8511", rs.getString("VejKode"));
+		assertEquals("851", rs.getString("KommuneKode"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
+		assertTrue(rs.last());
+	}
 
-			  assertEquals("K", rs.getString("Koen"));
-			  assertEquals("Ude Ulrike", rs.getString("Fornavn"));
-			  assertEquals("", rs.getString("Mellemnavn"));
-			  assertEquals("Udtzen", rs.getString("Efternavn"));
-			  assertEquals("", rs.getString("CoNavn"));
-			  assertEquals("", rs.getString("Lokalitet"));
-			  assertEquals("Søgade", rs.getString("Vejnavn"));
-			  assertEquals("", rs.getString("Bygningsnummer"));
-			  assertEquals("16", rs.getString("Husnummer"));
-			  assertEquals("1", rs.getString("Etage"));
-			  assertEquals("", rs.getString("SideDoerNummer"));
-			  assertEquals("Vodskov", rs.getString("Bynavn"));
-			  assertEquals("9000", rs.getString("Postnummer"));
-			  assertEquals("Aalborg", rs.getString("PostDistrikt"));
-			  assertEquals("01", rs.getString("Status"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("1997-09-09").toDate(), rs.getDate("NavneBeskyttelseStartDato"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2001-02-20").toDate(), rs.getDate("NavneBeskyttelseSletteDato"));
-			  assertEquals("", rs.getString("GaeldendeCPR"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("1896-01-01").toDate(), rs.getDate("Foedselsdato"));
-			  assertEquals("Pensionist", rs.getString("Stilling"));
-			  assertEquals("8511", rs.getString("VejKode"));
-			  assertEquals("851", rs.getString("KommuneKode"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), rs.getDate("ValidFrom"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
-			  assertTrue(rs.last());
-		  }
+	@Test
+	public void canImportForaeldreMyndighedBarn() throws Exception {
+		importFile("data/testForaeldremyndighed/D100314.L431101");
 
+		SqlRowSet rs = jdbcTemplate.queryForRowSet("Select * from Person where CPR='3112970028'");
 
-		  @Test
-		  public void canImportForaeldreMyndighedBarn() throws Exception
-		  {
-			  importFile("data/testForaeldremyndighed/D100314.L431101");
+		rs.next();
 
-			  Statement stmt = connection.createStatement();
-			  ResultSet rs = stmt.executeQuery("Select * from Person where CPR='3112970028'");
+		assertTrue(rs.last());
 
-			  rs.next();
+		rs = jdbcTemplate.queryForRowSet("SELECT * FROM BarnRelation WHERE BarnCPR='3112970028'");
 
-			  assertTrue(rs.last());
+		rs.next();
 
-			  rs = stmt.executeQuery("SELECT * FROM BarnRelation WHERE BarnCPR='3112970028'");
+		assertEquals("0702614082", rs.getString("CPR"));
+		assertTrue(rs.last());
 
-			  rs.next();
+		rs = jdbcTemplate.queryForRowSet("SELECT * FROM ForaeldreMyndighedRelation WHERE CPR='3112970028' ORDER BY TypeKode");
 
-			  assertEquals("0702614082", rs.getString("CPR"));
-			  assertTrue(rs.last());
+		rs.next();
 
-			  rs = stmt.executeQuery("SELECT * FROM ForaeldreMyndighedRelation WHERE CPR='3112970028' ORDER BY TypeKode");
+		assertEquals("0003", rs.getString("TypeKode"));
+		assertEquals("Mor", rs.getString("TypeTekst"));
+		assertEquals("", rs.getString("RelationCpr"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 
-			  rs.next();
+		rs.next();
 
-			  assertEquals("0003", rs.getString("TypeKode"));
-			  assertEquals("Mor", rs.getString("TypeTekst"));
-			  assertEquals("", rs.getString("RelationCpr"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
+		assertEquals("0004", rs.getString("TypeKode"));
+		assertEquals("Far", rs.getString("TypeTekst"));
+		assertEquals("", rs.getString("RelationCpr"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 
-			  rs.next();
-
-			  assertEquals("0004", rs.getString("TypeKode"));
-			  assertEquals("Far", rs.getString("TypeTekst"));
-			  assertEquals("", rs.getString("RelationCpr"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
-
-			  assertTrue(rs.last());
-		  }
+		assertTrue(rs.last());
+	}
 
 
-		  @Test
-		  public void canImportUmyndighedVaerge() throws Exception
-		  {
-			  importFile("data/testUmyndigVaerge/D100314.L431101");
+	@Test
+	public void canImportUmyndighedVaerge() throws Exception {
+		importFile("data/testUmyndigVaerge/D100314.L431101");
 
-			  Statement stmt = connection.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * FROM UmyndiggoerelseVaergeRelation WHERE CPR='0709614126'");
+		SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * FROM UmyndiggoerelseVaergeRelation WHERE CPR='0709614126'");
 
-			  rs.next();
+		rs.next();
 
-			  assertEquals("0001", rs.getString("TypeKode"));
-			  assertEquals("Værges CPR findes", rs.getString("TypeTekst"));
-			  assertEquals("0904414131", rs.getString("RelationCpr"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("RelationCprStartDato"));
-			  assertEquals("", rs.getString("VaergesNavn"));
-			  assertEquals(null, rs.getDate("VaergesNavnStartDato"));
-			  assertEquals("", rs.getString("RelationsTekst1"));
-			  assertEquals("", rs.getString("RelationsTekst2"));
-			  assertEquals("", rs.getString("RelationsTekst3"));
-			  assertEquals("", rs.getString("RelationsTekst4"));
-			  assertEquals("", rs.getString("RelationsTekst5"));
-			  assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("ValidFrom"));
-			  assertEquals(Dates.THE_END_OF_TIME, rs.getDate("ValidTo"));
-			  assertTrue(rs.last());
-		  }
+		assertEquals("0001", rs.getString("TypeKode"));
+		assertEquals("Værges CPR findes", rs.getString("TypeTekst"));
+		assertEquals("0904414131", rs.getString("RelationCpr"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("RelationCprStartDato"));
+		assertEquals("", rs.getString("VaergesNavn"));
+		assertEquals(null, rs.getDate("VaergesNavnStartDato"));
+		assertEquals("", rs.getString("RelationsTekst1"));
+		assertEquals("", rs.getString("RelationsTekst2"));
+		assertEquals("", rs.getString("RelationsTekst3"));
+		assertEquals("", rs.getString("RelationsTekst4"));
+		assertEquals("", rs.getString("RelationsTekst5"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(Dates.THE_END_OF_TIME, rs.getDate("ValidTo"));
+		assertTrue(rs.last());
+	}
 
 
-		  @Test
-		  public void ImportU12160Test() throws Exception
-		  {
-			  importFile("data/D100312.L431101");
+	@Test
+	public void ImportU12160Test() throws Exception {
+		importFile("data/D100312.L431101");
 
-			  Statement stmt = connection.createStatement();
-			  ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
-			  rs.next();
-			  assertEquals(100, rs.getInt(1));
+		SqlRowSet rs = jdbcTemplate.queryForRowSet("Select COUNT(*) from Person");
+		rs.next();
+		assertEquals(100, rs.getInt(1));
 
-			  rs = stmt.executeQuery("Select COUNT(*) from BarnRelation");
-			  rs.next();
-			  assertEquals(30, rs.getInt(1));
+		rs = jdbcTemplate.queryForRowSet("Select COUNT(*) from BarnRelation");
+		rs.next();
+		assertEquals(30, rs.getInt(1));
 
-			  rs = stmt.executeQuery("Select COUNT(*) from ForaeldreMyndighedRelation");
-			  rs.next();
-			  assertEquals(4, rs.getInt(1));
+		rs = jdbcTemplate.queryForRowSet("Select COUNT(*) from ForaeldreMyndighedRelation");
+		rs.next();
+		assertEquals(4, rs.getInt(1));
 
-			  rs = stmt.executeQuery("Select COUNT(*) from UmyndiggoerelseVaergeRelation");
-			  rs.next();
-			  assertEquals(1, rs.getInt(1));
+		rs = jdbcTemplate.queryForRowSet("Select COUNT(*) from UmyndiggoerelseVaergeRelation");
+		rs.next();
+		assertEquals(1, rs.getInt(1));
 
-			  // Check Address protection
+		// Check Address protection
 
-			  rs = stmt.executeQuery("SELECT COUNT(*) FROM Person WHERE NavneBeskyttelseStartDato < NOW() AND NavneBeskyttelseSletteDato > NOW()");
-			  rs.next();
-			  assertEquals(1, rs.getInt(1));
-		  }
+		rs = jdbcTemplate.queryForRowSet("SELECT COUNT(*) FROM Person WHERE NavneBeskyttelseStartDato < NOW() AND NavneBeskyttelseSletteDato > NOW()");
+		rs.next();
+		assertEquals(1, rs.getInt(1));
+	}
 
 
-		  @Test
-		  public void ImportU12170Test() throws Exception
-		  {
-			  importFile("data/D100313.L431101");
+	@Test
+	public void ImportU12170Test() throws Exception {
+		importFile("data/D100313.L431101");
 
-			  Statement stmt = connection.createStatement();
-			  ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
-			  rs.next();
-			  assertEquals(80, rs.getInt(1));
+		SqlRowSet rs = jdbcTemplate.queryForRowSet("Select COUNT(*) from Person");
+		rs.next();
+		assertEquals(80, rs.getInt(1));
 
-			  rs = stmt.executeQuery("SELECT COUNT(*) FROM BarnRelation");
-			  rs.next();
-			  assertEquals(29, rs.getInt(1));
+		rs = jdbcTemplate.queryForRowSet("SELECT COUNT(*) FROM BarnRelation");
+		rs.next();
+		assertEquals(29, rs.getInt(1));
 
-			  rs = stmt.executeQuery("SELECT COUNT(*) FROM ForaeldreMyndighedRelation");
-			  rs.next();
-			  assertEquals(5, rs.getInt(1));
+		rs = jdbcTemplate.queryForRowSet("SELECT COUNT(*) FROM ForaeldreMyndighedRelation");
+		rs.next();
+		assertEquals(5, rs.getInt(1));
 
-			  rs = stmt.executeQuery("SELECT COUNT(*) FROM UmyndiggoerelseVaergeRelation");
-			  rs.next();
-			  assertEquals(2, rs.getInt(1));
+		rs = jdbcTemplate.queryForRowSet("SELECT COUNT(*) FROM UmyndiggoerelseVaergeRelation");
+		rs.next();
+		assertEquals(2, rs.getInt(1));
 
-			  // Check Address protection
-			  rs = stmt.executeQuery("SELECT COUNT(*) FROM Person WHERE NavneBeskyttelseStartDato < NOW() AND NavneBeskyttelseSletteDato > NOW()");
-			  rs.next();
-			  assertEquals(1, rs.getInt(1));
-		  }
+		// Check Address protection
+		rs = jdbcTemplate.queryForRowSet("SELECT COUNT(*) FROM Person WHERE NavneBeskyttelseStartDato < NOW() AND NavneBeskyttelseSletteDato > NOW()");
+		rs.next();
+		assertEquals(1, rs.getInt(1));
+	}
 
 
-		  @Test
-		  public void shouldUpdateTheCPRChangesTableForTheCPRGOSService() throws Exception
-		  {
-			  importFile("data/PVIT/D100314.L431101");
+/*
+	@Test
+	public void shouldUpdateTheCPRChangesTableForTheCPRGOSService() throws Exception {
+		importFile("data/PVIT/D100314.L431101");
 
-			  Statement stmt = connection.createStatement();
-			  ResultSet rs = stmt.executeQuery("SELECT * FROM ChangesToCPR ORDER BY CPR");
-			  rs.next();
+		SqlRowSet rs = jdbcTemplate.queryForRowSet("SELECT * FROM ChangesToCPR ORDER BY CPR");
+		rs.next();
 
-			  assertThat(rs.getString("CPR"), is("0705314543"));
-			  assertThat(rs.getTimestamp("ModifiedDate"), is(notNullValue()));
-			  Timestamp t1 = rs.getTimestamp("ModifiedDate");
+		assertThat(rs.getString("CPR"), is("0705314543"));
+		assertThat(rs.getTimestamp("ModifiedDate"), is(notNullValue()));
+		Timestamp t1 = rs.getTimestamp("ModifiedDate");
 
-			  rs.next();
+		rs.next();
 
-			  assertThat(rs.getString("CPR"), is("0705314545"));
-			  assertThat(rs.getTimestamp("ModifiedDate"), is(notNullValue()));
-			  Timestamp t2 = rs.getTimestamp("ModifiedDate");
+		assertThat(rs.getString("CPR"), is("0705314545"));
+		assertThat(rs.getTimestamp("ModifiedDate"), is(notNullValue()));
+		Timestamp t2 = rs.getTimestamp("ModifiedDate");
 
-			  // To make sure the timestamp is updated we wait a second
-			  // since the granularity is 1 sec.
+		// To make sure the timestamp is updated we wait a second
+		// since the granularity is 1 sec.
 
-			  Thread.sleep(1000);
+		Thread.sleep(1000);
 
-			  importFile("data/PVIT/D100315.L431101");
+		importFile("data/PVIT/D100315.L431101");
 
-			  rs = stmt.executeQuery("SELECT * FROM ChangesToCPR ORDER BY CPR");
-			  rs.next();
+		rs = jdbcTemplate.queryForRowSet("SELECT * FROM ChangesToCPR ORDER BY CPR");
+		rs.next();
 
-			  assertThat(rs.getString("CPR"), is("0705314543"));
-			  assertThat(rs.getTimestamp("ModifiedDate"), is(t1));
+		assertThat(rs.getString("CPR"), is("0705314543"));
+		assertThat(rs.getTimestamp("ModifiedDate"), is(t1));
 
-			  rs.next();
+		rs.next();
 
-			  assertThat(rs.getString("CPR"), is("0705314545"));
-			  assertTrue(rs.getTimestamp("ModifiedDate").after(t2));
+		assertThat(rs.getString("CPR"), is("0705314545"));
+		assertTrue(rs.getTimestamp("ModifiedDate").after(t2));
 
-			  rs.next();
+		rs.next();
 
-			  assertThat(rs.getString("CPR"), is("0705314547"));
-			  assertThat(rs.getTimestamp("ModifiedDate"), is(notNullValue()));
+		assertThat(rs.getString("CPR"), is("0705314547"));
+		assertThat(rs.getTimestamp("ModifiedDate"), is(notNullValue()));
 
-			  assertFalse(rs.next());
-		  }
-	  */
+		assertFalse(rs.next());
+	}
 
+*/
 
-	private void importFile(String filePath) throws Exception
-	{
+	private void importFile(String filePath) throws Exception {
 		URL resource = getClass().getClassLoader().getResource(filePath);
 		File datasetDir = tmpDir.newFolder();
 		FileUtils.copyURLToFile(resource, new File(datasetDir, lastPathSegment(filePath)));
@@ -404,6 +387,6 @@ public class CPRIntegrationTest
 	private String lastPathSegment(String filePath) {
 		String[] segments = filePath.split("/");
 
-		return segments[segments.length-1];
+		return segments[segments.length - 1];
 	}
 }
