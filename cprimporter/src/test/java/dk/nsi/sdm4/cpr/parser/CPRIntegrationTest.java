@@ -172,14 +172,14 @@ public class CPRIntegrationTest
 			  importFile("data/endRecords/D100314.L431101");
 		  }
 
-	/*
 
-		  @Test(expected = Exception.class)
+		  @Test(expected = ParserException.class)
 		  public void failsWhenNoEndRecordExists() throws Exception
 		  {
 			  importFile("data/endRecords/D100315.L431101");
 		  }
 
+	/*
 
 		  @Test
 		  public void canImportPersonNavnebeskyttelse() throws Exception

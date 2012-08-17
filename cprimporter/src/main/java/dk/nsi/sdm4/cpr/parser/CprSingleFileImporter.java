@@ -116,7 +116,7 @@ public class CprSingleFileImporter
 
 		if (!endRecordReached)
 		{
-			throw new RuntimeException("Slut-record mangler i cpr-filen");
+			throw new ParserException("Slut-record mangler i cpr-filen");
 		}
 
 		return cpr;
