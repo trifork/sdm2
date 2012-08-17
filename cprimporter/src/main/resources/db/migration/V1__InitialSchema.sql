@@ -1,5 +1,3 @@
-USE sdm_warehouse;
-
 CREATE TABLE Person (
 	PersonPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 
