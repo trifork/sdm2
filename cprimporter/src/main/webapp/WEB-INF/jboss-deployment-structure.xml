@@ -4,8 +4,11 @@
     <dependencies>
       <module name="sdm4.config.cpr" />
     </dependencies>
+    <!-- disable jboss logging -->
     <exclusions>
       <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
     </exclusions>
   </deployment>
 </jboss-deployment-structure>

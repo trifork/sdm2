@@ -43,7 +43,7 @@ class jboss7as() {
     file {"/pack/jboss/standalone/configuration/mgmt-users.properties":
         ensure => present,
         owner => "jboss",
-        content => "sdmadmin=75d10a01dff4e8332cf34a70811946c7",
+        source => "puppet:///modules/jboss7as/mgmt-users.properties",
         require => File["/pack/jboss"]
     }
 
@@ -92,6 +92,19 @@ class jboss7as() {
         source => "puppet:///modules/jboss7as/sdm-cpr-module.xml",
         owner => "jboss",
         require => File["/pack/jboss/modules/sdm4/config/cpr/main"]
+    }
+
+    file {"/pack/jboss/modules/sdm4/config/cpr/main/log4j.properties":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/log4j-cpr.properties",
+        owner => "jboss",
+        require => File["/pack/jboss/modules/sdm4/config/cpr/main"]
+    }
+
+    file {"/home/vagrant/.bash_history":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/.bash_history",
+        owner => "jboss",
     }
 
     file {"/pack/jboss/domain/data/sdm4":
