@@ -1,3 +1,4 @@
-less +F /pack/jboss/standalone/log/server.log
 mysql -uroot -ppapkasse
-sudo cp /pack/jboss/standalone/configuration/mgmt-users.properties /vagrant/environment/modules/jboss7as/files/
+sudo cp /vagrant/cprimporter/target/cprimporter-1.0-SNAPSHOT.war /pack/jboss/standalone/deployments/
+less +F /pack/jboss/standalone/log/server.log
+less +F /pack/jboss/standalone/log/cpr.log

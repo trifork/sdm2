@@ -103,7 +103,7 @@ class jboss7as() {
     file {"/home/vagrant/.bash_history":
         ensure => present,
         source => "puppet:///modules/jboss7as/.bash_history",
-        owner => "jboss",
+        owner => "vagrant",
     }
 
     file {"/pack/jboss/domain/data/sdm4":
