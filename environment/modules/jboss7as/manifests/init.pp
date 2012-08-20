@@ -80,9 +80,8 @@ class jboss7as() {
         require => File["/pack/jboss"]
     }
 
-    file {"/pack/jboss/modules/sdm4/config/cpr/main":
+    file {["/pack/jboss/modules", "/pack/jboss/modules/sdm4", "/pack/jboss/modules/sdm4/config", "/pack/jboss/modules/sdm4/config/cpr", "/pack/jboss/modules/sdm4/config/cpr/main"]:
         ensure => directory,
-        recurse => true,
         owner => "jboss",
         require => File["/pack/jboss"],
     }
