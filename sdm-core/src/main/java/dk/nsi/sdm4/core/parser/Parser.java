@@ -59,4 +59,6 @@ public interface Parser
      * @throws ParserException if anything parser specific error happens or unexpected happens.
      */
     void process(File dataSet) throws ParserException;
+    
+    String getHome();
 }

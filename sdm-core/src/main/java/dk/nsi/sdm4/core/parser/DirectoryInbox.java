@@ -29,7 +29,10 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Ordering;
+
+
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.joda.time.Instant;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -65,6 +68,7 @@ import static com.google.common.base.Preconditions.checkState;
  */
 public class DirectoryInbox implements Inbox, InitializingBean {
 	private Cache<String, InboxState> sizeHistory = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build();
+    private static final Logger logger = Logger.getLogger(DirectoryInbox.class);
 
     private final File inboxDirectory;
     private final File lockFile;
@@ -104,7 +108,11 @@ public class DirectoryInbox implements Inbox, InitializingBean {
     public File top() {
         checkState(!isLocked(), "The inbox is locked.");
 
-        return dataSets.peek();
+        File peek = dataSets.peek();
+        if(logger.isDebugEnabled()) {
+            logger.debug("InboxPeek="+ peek);
+        }
+        return peek;
     }
 
     @Override
@@ -118,7 +126,8 @@ public class DirectoryInbox implements Inbox, InitializingBean {
         // directory physically.
         //
         FileUtils.forceDelete(element);
-
+        logger.debug("advance removedDirectory=" + element.getAbsolutePath());
+        
         // Then we can pop it from the input queue.
         //
         dataSets.poll();
@@ -157,6 +166,16 @@ public class DirectoryInbox implements Inbox, InitializingBean {
         File[] directories = inboxDirectory.listFiles();
         Arrays.sort(directories, FILENAME_ORDERING);
 
+        
+        if(logger.isDebugEnabled()) {
+            StringBuilder sb = new StringBuilder();
+            for (File file : directories) {
+                sb.append(file.getName() +", ");
+            }
+            logger.debug("InboxPath="+ inboxDirectory.getAbsolutePath() + ", directories=" + sb.toString());
+        }
+        
+
         boolean unstableEntryFound = false;
 
         for (File element : directories) {
@@ -173,6 +192,10 @@ public class DirectoryInbox implements Inbox, InitializingBean {
                 //
                 sizeHistory.put(element.getPath(), currentState);
 
+                if(logger.isDebugEnabled()) {
+                    logger.debug("UnstableDirectory="+ element + ", currentState="+currentState);
+                }
+
                 // Ensure that only stable directories (top down)
                 // makes it into the dataSets queue.
                 //
@@ -185,6 +208,9 @@ public class DirectoryInbox implements Inbox, InitializingBean {
                     && previousState.timestamp.plus(stabilizationPeriod).isBefore(currentState.timestamp)) {
                 // If the content is stable add the element.
                 //
+                if(logger.isDebugEnabled()) {
+                    logger.debug("StableElement="+ element);
+                }
                 dataSets.add(element);
             }
         }

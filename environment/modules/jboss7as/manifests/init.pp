@@ -80,29 +80,18 @@ class jboss7as() {
         require => File["/pack/jboss"]
     }
 
-    file {"/pack/jboss/modules/sdm4":
+    file {"/pack/jboss/modules/sdm4/config/cpr/main":
         ensure => directory,
+        recurse => true,
         owner => "jboss",
         require => File["/pack/jboss"],
     }
 
-    file {"/pack/jboss/modules/sdm4/config":
-        ensure => directory,
-        owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4"],
-    }
-
-    file {"/pack/jboss/modules/sdm4/config/main":
-        ensure => directory,
-        owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4"],
-    }
-
-    file {"/pack/jboss/modules/sdm4/config/main/module.xml":
+    file {"/pack/jboss/modules/sdm4/config/cpr/main/module.xml":
         ensure => present,
-        source => "puppet:///modules/jboss7as/sdm-module.xml",
+        source => "puppet:///modules/jboss7as/sdm-cpr-module.xml",
         owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4/config/main"]
+        require => File["/pack/jboss/modules/sdm4/config/cpr/main"]
     }
 
     file {"/pack/jboss/domain/data/sdm4":

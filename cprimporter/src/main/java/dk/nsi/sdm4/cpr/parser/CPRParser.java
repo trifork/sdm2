@@ -26,11 +26,25 @@
 
 package dk.nsi.sdm4.cpr.parser;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import dk.nsi.sdm4.core.annotations.EnableStamdata;
 import dk.nsi.sdm4.core.domain.Dataset;
 import dk.nsi.sdm4.core.domain.Entities;
 import dk.nsi.sdm4.core.domain.TemporalEntity;
@@ -44,18 +58,7 @@ import dk.nsi.sdm4.cpr.parser.models.Navneoplysninger;
 import dk.nsi.sdm4.cpr.parser.models.Personoplysninger;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 import dk.sdsd.nsp.slalog.api.SLALogger;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.io.File;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-@EnableStamdata(home = "cpr")
 public class CPRParser implements Parser {
 	private static final Logger logger = Logger.getLogger(CPRParser.class);
 
@@ -222,5 +225,10 @@ public class CPRParser implements Parser {
 				}
 			}
 		}
+    }
+
+    @Override
+    public String getHome() {
+        return "cpr";
     }
 }

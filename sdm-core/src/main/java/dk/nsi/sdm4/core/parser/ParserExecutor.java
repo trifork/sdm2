@@ -2,6 +2,7 @@ package dk.nsi.sdm4.core.parser;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +27,17 @@ public class ParserExecutor {
     @Scheduled(fixedDelay = 1000)
     public void run() {
         // TODO logging
-        String parserIdentifier = StamdataConfiguration.getHome(parser.getClass());
+        String parserIdentifier = parser.getHome();
         SLALogItem slaLogItem = slaLogger.createLogItem("ParserExecutor", "Executing parser " + parserIdentifier);
-
+        
+//        URL resource = this.getClass().getResource("/log4j.xml");
+//        if(resource != null) {
+//            System.out.println(resource.toExternalForm());
+//            logger.fatal(resource.toExternalForm());
+//        } else {
+//            logger.fatal("log4j.properties not found");
+//        }
+        
         try {
             runParserOnInbox();
             
@@ -42,6 +51,10 @@ public class ParserExecutor {
     }
 
     private void runParserOnInbox() throws IOException {
+        if(logger.isDebugEnabled()) {
+            logger.debug("Running parser " + parser.getHome());
+        }
+        
         inbox.update();
         File dataSet = inbox.top();
 

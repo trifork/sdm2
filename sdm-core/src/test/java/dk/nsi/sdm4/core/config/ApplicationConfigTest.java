@@ -1,8 +1,12 @@
 package dk.nsi.sdm4.core.config;
 
-import dk.nsi.sdm4.core.annotations.EnableStamdata;
-import dk.nsi.sdm4.core.parser.Inbox;
-import dk.nsi.sdm4.core.parser.Parser;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+
+import javax.inject.Inject;
+import javax.sql.DataSource;
+
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,12 +16,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.inject.Inject;
-import javax.sql.DataSource;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
+import dk.nsi.sdm4.core.parser.Inbox;
+import dk.nsi.sdm4.core.parser.Parser;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ApplicationConfigTest.TestConfiguration.class})
@@ -31,7 +31,6 @@ public class ApplicationConfigTest {
     @Inject
     DataSource dataSource;
 
-    @EnableStamdata(home = "test_home")
     @Configuration
     @Import({StamdataTestConfiguration.class})
     static class TestConfiguration implements StamdataConfigurationSupport {

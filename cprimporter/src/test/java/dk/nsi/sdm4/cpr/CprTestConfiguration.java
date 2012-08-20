@@ -68,5 +68,4 @@ public class CprTestConfiguration {
 	public SLALogger slaLogger() {
 		return new SLALoggerDummyImpl();
 	}
-
 }

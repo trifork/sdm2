@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure>
+  <deployment>
+    <dependencies>
+      <module name="sdm4.config.cpr" />
+    </dependencies>
+    <exclusions>
+      <module name="org.apache.log4j" />
+    </exclusions>
+  </deployment>
+</jboss-deployment-structure>

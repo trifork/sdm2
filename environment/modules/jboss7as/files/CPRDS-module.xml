@@ -1,0 +1,14 @@
+<datasources>
+   <datasource jndi-name="jdbc/CPRDS">
+      <connection-url>jdbc:mysql://localhost:3306/sdm_warehouse</connection-url>
+      <driver>com.mysql.jdbc.Driver</driver>
+      <pool>
+        <min-pool-size>1</min-pool-size>
+        <max-pool-size>5</max-pool-size>
+      </pool>
+      <security>
+        <user-name>root</user-name>
+        <password>papkasse</password>
+      </security>
+    </datasource>
+</datasources>

@@ -90,17 +90,17 @@
         <subsystem xmlns="urn:jboss:domain:configadmin:1.0"/>
         <subsystem xmlns="urn:jboss:domain:datasources:1.0">
             <datasources>
-                <datasource jndi-name="java:/MySQLDS" pool-name="MySQLPool" enabled="true" jta="true" use-java-context="true" use-ccm="true">
-                    <connection-url>jdbc:mysql://localhost:3306/sdmsample</connection-url>
+                <datasource jndi-name="java:/SDMDS" pool-name="MySQLPool" enabled="true" jta="true" use-java-context="true" use-ccm="true">
+                    <connection-url>jdbc:mysql://localhost:3306/sdm_warehouse</connection-url>
                     <driver>mysql</driver>
                     <transaction-isolation>TRANSACTION_READ_COMMITTED</transaction-isolation>
                     <pool>
-                        <min-pool-size>100</min-pool-size>
-                        <max-pool-size>200</max-pool-size>
+                        <min-pool-size>1</min-pool-size>
+                        <max-pool-size>5</max-pool-size>
                     </pool>
                     <security>
-                        <user-name>sdmsample</user-name>
-                        <password></password>
+                        <user-name>sdm4</user-name>
+                        <password>sdm4</password>
                     </security>
                     <statement>
                         <prepared-statement-cache-size>100</prepared-statement-cache-size>

@@ -1,15 +1,19 @@
 package dk.nsi.sdm4.core.config;
 
-import com.google.common.base.Preconditions;
-import com.googlecode.flyway.core.Flyway;
-import dk.nsi.sdm4.core.annotations.EnableStamdata;
-import dk.nsi.sdm4.core.parser.ParserExecutor;
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import javax.sql.DataSource;
+import com.googlecode.flyway.core.Flyway;
+
+import dk.nsi.sdm4.core.parser.ParserExecutor;
+import dk.sdsd.nsp.slalog.api.SLALogger;
+import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
 
 @Configuration
 @EnableScheduling
@@ -27,21 +31,21 @@ public class StamdataConfiguration {
         return flyway;
     }
 
-    @SuppressWarnings("unchecked")
-    public static String getHome(Class clazz) {
-        Preconditions.checkNotNull(clazz, "Class");
-        Preconditions.checkArgument(clazz.isAnnotationPresent(EnableStamdata.class), "Parsers must be annotated with @EnableStamdata.");
-
-        EnableStamdata es = (EnableStamdata) clazz.getAnnotation(EnableStamdata.class);
-        return es.home();
-    }
-
     // this is not automatically registered, see https://jira.springsource.org/browse/SPR-8539
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer = new PropertySourcesPlaceholderConfigurer();
         propertySourcesPlaceholderConfigurer.setIgnoreResourceNotFound(true);
         propertySourcesPlaceholderConfigurer.setIgnoreUnresolvablePlaceholders(false);
+
+        propertySourcesPlaceholderConfigurer.setLocations(new Resource[]{new ClassPathResource("default-config.properties"),new ClassPathResource("config.properties")});
+        
         return propertySourcesPlaceholderConfigurer;
+    }
+    
+    @Bean
+    public SLALogger slaLogger() {
+        // TODO: brug rigtig SLALogger
+        return new SLALoggerDummyImpl();
     }
 }
