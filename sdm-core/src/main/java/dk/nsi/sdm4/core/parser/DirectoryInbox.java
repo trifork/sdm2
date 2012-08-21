@@ -250,4 +250,9 @@ public class DirectoryInbox implements Inbox, InitializingBean {
         final long size;
         final Instant timestamp = Instant.now();
     }
+
+	@Override
+	public String toString() {
+		return "Inbox[" + inboxDirectory + "]";
+	}
 }
