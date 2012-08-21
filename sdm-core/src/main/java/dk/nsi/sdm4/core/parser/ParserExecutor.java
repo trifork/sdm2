@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 import dk.sdsd.nsp.slalog.api.SLALogger;
+import org.springframework.transaction.annotation.Transactional;
 
 public class ParserExecutor {
     @Autowired
@@ -20,9 +21,9 @@ public class ParserExecutor {
     private SLALogger slaLogger;
 
     private static final Logger logger = Logger.getLogger(ParserExecutor.class);
-    
-    
+
     @Scheduled(fixedDelay = 1000)
+    @Transactional
     public void run() {
         String parserIdentifier = parser.getHome();
         SLALogItem slaLogItem = slaLogger.createLogItem("ParserExecutor", "Executing parser " + parserIdentifier);
@@ -55,7 +56,8 @@ public class ParserExecutor {
 
             slaLogItem.setCallResultError("Parser " + parserIdentifier + " failed - Cause: " + e.getMessage());
             slaLogItem.store();
-            logger.error("runParserOnInbox on parser "+parserIdentifier+" failed", e);
+
+	        throw new RuntimeException("runParserOnInbox on parser " + parserIdentifier +" failed", e); // to make sure the transaction rolls back
         }
     }
 }

@@ -58,6 +58,8 @@ import dk.nsi.sdm4.cpr.parser.models.Navneoplysninger;
 import dk.nsi.sdm4.cpr.parser.models.Personoplysninger;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 import dk.sdsd.nsp.slalog.api.SLALogger;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 public class CPRParser implements Parser {
 	private static final Logger logger = Logger.getLogger(CPRParser.class);
@@ -76,6 +78,9 @@ public class CPRParser implements Parser {
 
 	@Autowired
 	Persister persister;
+
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
     @Override
     public void process(File dataset) throws ParserException {
@@ -164,16 +169,11 @@ public class CPRParser implements Parser {
 	        // Update the GOS/CPR table with the current time stamp and
             // CPR numbers.
 
-            PreparedStatement updateChangesTable = persister.getConnection().prepareStatement("REPLACE INTO ChangesToCPR (CPR, ModifiedDate) VALUES (?,?)");
-            Date modifiedDate = new Date();
-
+	        Date modifiedDate = new Date();
             for (String cpr : cprWithChanges) {
-                updateChangesTable.setObject(1, cpr);
-                updateChangesTable.setObject(2, modifiedDate);
-                updateChangesTable.executeUpdate();
+	            jdbcTemplate.update("REPLACE INTO ChangesToCPR (CPR, ModifiedDate) VALUES (?,?)", cpr, modifiedDate);
             }
 
-            updateChangesTable.close();
             slaLogItem.setCallResultOk();
             slaLogItem.store();
 
@@ -200,31 +200,16 @@ public class CPRParser implements Parser {
     }
 
     public Date getLatestVersion() throws SQLException {
-	    Connection con = persister.getConnection();
-        Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
-
-        if (rs.next()) return rs.getTimestamp("Ikraft");
-
-        // Returns null if no previous version of CPR has been imported.
-
-        return null;
+	    try {
+            return jdbcTemplate.queryForObject("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft", Date.class);
+	    } catch (EmptyResultDataAccessException ignored) {
+            // We just return null if no previous version of CPR has been imported.
+		    return null;
+	    }
     }
 
     void insertVersion(Date calendar) throws SQLException {
-	    Connection con = persister.getConnection();
-		try {
-	        Statement stm = con.createStatement();
-	        String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toSqlDate(calendar) + "');";
-	        stm.execute(query);
-		} finally {
-			if (con != null) {
-				try {
-					con.close();
-				} catch (Exception ignore) {
-				}
-			}
-		}
+		jdbcTemplate.update("INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toSqlDate(calendar) + "')");
     }
 
     @Override

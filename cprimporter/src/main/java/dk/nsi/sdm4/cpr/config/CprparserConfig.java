@@ -1,21 +1,5 @@
 package dk.nsi.sdm4.cpr.config;
 
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
-import dk.sdsd.nsp.slalog.api.SLALogConfig;
-import dk.sdsd.nsp.slalog.api.SLALogger;
-import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jndi.JndiObjectFactoryBean;
-
 import dk.nsi.sdm4.core.config.StamdataConfigurationSupport;
 import dk.nsi.sdm4.core.parser.DirectoryInbox;
 import dk.nsi.sdm4.core.parser.Inbox;
@@ -24,6 +8,22 @@ import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
 import dk.nsi.sdm4.cpr.parser.CPRParser;
 import dk.nsi.sdm4.cpr.parser.CprSingleFileImporter;
+import dk.sdsd.nsp.slalog.api.SLALogConfig;
+import dk.sdsd.nsp.slalog.api.SLALogger;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
 
 @Configuration
 @Import({dk.nsi.sdm4.core.config.StamdataConfiguration.class})
@@ -42,7 +42,17 @@ public class CprparserConfig implements StamdataConfigurationSupport {
         return (DataSource) factory.getObject();
     }
 
-    @Bean
+	@Bean
+	public PlatformTransactionManager transactionManager(DataSource ds) {
+		return new DataSourceTransactionManager(ds);
+	}
+
+	@Bean
+	public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
+	}
+
+	@Bean
     public Inbox inbox() throws Exception {
         return new DirectoryInbox(
                 dataDir,

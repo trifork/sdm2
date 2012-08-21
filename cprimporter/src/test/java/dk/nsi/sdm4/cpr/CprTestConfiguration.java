@@ -43,8 +43,7 @@ public class CprTestConfiguration {
 		adminJdbc.update("DROP DATABASE IF EXISTS " + testDbName); // will be created automatically by the "normal" datasource
 		System.out.println("Drop db took " + (System.currentTimeMillis()-startMillis) + " ms");
 
-		DataSource ds = new SimpleDriverDataSource(new Driver(), jdbcUrlPrefix + testDbName + "?createDatabaseIfNotExist=true", db_username, db_password);
-		return new SingleConnectionDataSource(ds.getConnection(), true); // workaround for the Persister not taking part in Spring transactions
+		return new SimpleDriverDataSource(new Driver(), jdbcUrlPrefix + testDbName + "?createDatabaseIfNotExist=true", db_username, db_password);
 	}
 
 	@Bean(initMethod = "migrate")

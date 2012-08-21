@@ -29,7 +29,9 @@ import com.google.common.base.Preconditions;
 import dk.nsi.sdm4.core.domain.Entities;
 import dk.nsi.sdm4.core.domain.TemporalEntity;
 import dk.nsi.sdm4.core.util.Dates;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 
+import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.ArrayList;
@@ -52,8 +54,9 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
     private final PreparedStatement updateValidFromStmt;
 
     private final Connection connection;
+	private final DataSource datasource;
 
-    private ResultSet currentRS;
+	private ResultSet currentRS;
     private Class<T> type;
     private String tablename;
     private Method idMethod;
@@ -61,13 +64,14 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
     private List<Method> outputMethods;
     private List<String> notUpdatedColumns;
 
-    public DatabaseTableWrapper(Connection connection, Class<T> type) throws SQLException
+    public DatabaseTableWrapper(DataSource datasource, Class<T> type) throws SQLException
     {
         this.tablename = Entities.getEntityTypeDisplayName(type);
         this.type = type;
-        this.connection = connection;
-        
-        this.idMethod = Entities.getIdMethod(type);
+	    this.datasource = datasource;
+	    this.connection = DataSourceUtils.getConnection(datasource); // gets the transactionmanager's connection, not just a new one
+
+	    this.idMethod = Entities.getIdMethod(type);
         this.outputMethods = Entities.getOutputMethods(type);
         
         this.notUpdatedColumns = findNotUpdatedColumns();
@@ -540,7 +544,7 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
         selectConflictsStmt.close();
         updateValidToStmt.close();
         updateValidFromStmt.close();
-	    connection.close();
+	    DataSourceUtils.releaseConnection(connection, datasource);
         
         System.gc();
     }

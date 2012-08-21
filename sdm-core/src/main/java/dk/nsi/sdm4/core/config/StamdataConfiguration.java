@@ -1,23 +1,20 @@
 package dk.nsi.sdm4.core.config;
 
-import javax.sql.DataSource;
-
-import dk.sdsd.nsp.slalog.api.SLALogConfig;
+import com.googlecode.flyway.core.Flyway;
+import dk.nsi.sdm4.core.parser.ParserExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.googlecode.flyway.core.Flyway;
-
-import dk.nsi.sdm4.core.parser.ParserExecutor;
-import dk.sdsd.nsp.slalog.api.SLALogger;
-import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableScheduling
+@EnableTransactionManagement
 public class StamdataConfiguration {
     @Bean
     public ParserExecutor parserExecutor() {

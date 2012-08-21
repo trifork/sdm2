@@ -288,7 +288,7 @@ public class AuditingPersister implements Persister
 
 	public <T extends TemporalEntity> DatabaseTableWrapper<T> getTable(Class<T> clazz) throws SQLException
 	{
-		return new DatabaseTableWrapper<T>(dataSource.getConnection(), clazz);
+		return new DatabaseTableWrapper<T>(dataSource, clazz);
 	}
 
 	/**
@@ -313,10 +313,6 @@ public class AuditingPersister implements Persister
 		}
 
 		logger.info("Done updating validTo.");
-	}
-
-	public Connection getConnection() throws SQLException {
-		return dataSource.getConnection();
 	}
 
     @Override

@@ -6,12 +6,14 @@ import dk.nsi.sdm4.core.parser.ParserExecutor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.Unmarshaller;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
 import static org.mockito.Mockito.mock;
 
 @Configuration
+@EnableTransactionManagement
 public class StamdataTestConfiguration extends StamdataConfiguration {
     //Make sure to override all methods on StamdataConfiguration with mock methods
 

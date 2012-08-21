@@ -62,16 +62,6 @@ public interface Persister
 	 * Persist the records in the dataset.
 	 */
 	public <T extends TemporalEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception;
-
-	/**
-	 * HACK: This method returns the connection used by the persister.
-	 * 
-	 * DO NOT use this. It is implemented to allow the CPR parser to access its
-	 * version table in the database. In the future the persister should allow
-	 * the parsers access to a key/value store.
-	 */
-	public Connection getConnection() throws SQLException;
-	
 	
 	void persist(Object entity) throws SQLException, IllegalArgumentException, java.lang.IllegalAccessException, InvocationTargetException;
 }
