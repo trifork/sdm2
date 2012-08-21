@@ -4,6 +4,9 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import dk.sdsd.nsp.slalog.api.SLALogConfig;
+import dk.sdsd.nsp.slalog.api.SLALogger;
+import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -73,4 +76,11 @@ public class CprparserConfig implements StamdataConfigurationSupport {
     public Persister persister() throws SQLException {
         return new AuditingPersister();
     }
+
+
+	@Bean
+	public SLALogger slaLogger() {
+		// TODO: brug rigtig SLALogger
+		return new SLALogConfig("Stamdata CPR-importer", "cprimporter").getSLALogger();
+	}
 }

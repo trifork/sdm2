@@ -229,6 +229,6 @@ public class CPRParser implements Parser {
 
     @Override
     public String getHome() {
-        return "cpr";
+        return "cprimporter";
     }
 }

@@ -80,24 +80,24 @@ class jboss7as() {
         require => File["/pack/jboss"]
     }
 
-    file {["/pack/jboss/modules", "/pack/jboss/modules/sdm4", "/pack/jboss/modules/sdm4/config", "/pack/jboss/modules/sdm4/config/cpr", "/pack/jboss/modules/sdm4/config/cpr/main"]:
+    file {["/pack/jboss/modules", "/pack/jboss/modules/sdm4", "/pack/jboss/modules/sdm4/config", "/pack/jboss/modules/sdm4/config/cprimporter", "/pack/jboss/modules/sdm4/config/cprimporter/main"]:
         ensure => directory,
         owner => "jboss",
         require => File["/pack/jboss"],
     }
 
-    file {"/pack/jboss/modules/sdm4/config/cpr/main/module.xml":
+    file {"/pack/jboss/modules/sdm4/config/cprimporter/main/module.xml":
         ensure => present,
         source => "puppet:///modules/jboss7as/sdm-cpr-module.xml",
         owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4/config/cpr/main"]
+        require => File["/pack/jboss/modules/sdm4/config/cprimporter/main"]
     }
 
-    file {"/pack/jboss/modules/sdm4/config/cpr/main/log4j.properties":
+    file {"/pack/jboss/modules/sdm4/config/cprimporter/main/log4j.properties":
         ensure => present,
         source => "puppet:///modules/jboss7as/log4j-cpr.properties",
         owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4/config/cpr/main"]
+        require => File["/pack/jboss/modules/sdm4/config/cprimporter/main"]
     }
 
     file {"/home/vagrant/.bash_history":
@@ -116,5 +116,25 @@ class jboss7as() {
         ensure => running,
         name => "jboss-as",
         require => [Exec["unpack-jboss"], Class["jdk"], File["jboss-init-script"]],
+    }
+
+    file {"/pack/jboss/domain/slalog-conf":
+    	ensure => directory,
+    	owner => "jboss",
+    	require => File["/pack/jboss"],
+    }
+
+    file {"/pack/jboss/domain/slalog-conf/nspslalog-cprimporter.properties":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/nspslalog-cprimporter.properties",
+        owner => "jboss",
+        require => File["/pack/jboss/domain/slalog-conf"]
+    }
+
+    file {"/pack/jboss/domain/slalog-conf/log4j-nspslalog-cprimporter.properties":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/log4j-nspslalog-cprimporter.properties",
+        owner => "jboss",
+        require => File["/pack/jboss/domain/slalog-conf"]
     }
 }

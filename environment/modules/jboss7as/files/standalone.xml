@@ -26,6 +26,9 @@
         <extension module="org.jboss.as.webservices"/>
         <extension module="org.jboss.as.weld"/>
     </extensions>
+    <system-properties>
+        <property name="dk.sdsd.nsp.slalog.config.dir" value="/pack/jboss/domain/slalog-conf"/>
+    </system-properties>
     <management>
         <security-realms>
             <security-realm name="ManagementRealm">

@@ -2,6 +2,7 @@ package dk.nsi.sdm4.core.config;
 
 import javax.sql.DataSource;
 
+import dk.sdsd.nsp.slalog.api.SLALogConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -17,7 +18,6 @@ import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
 
 @Configuration
 @EnableScheduling
-//@EnableTransactionManagement
 public class StamdataConfiguration {
     @Bean
     public ParserExecutor parserExecutor() {
@@ -41,11 +41,5 @@ public class StamdataConfiguration {
         propertySourcesPlaceholderConfigurer.setLocations(new Resource[]{new ClassPathResource("default-config.properties"),new ClassPathResource("config.properties")});
         
         return propertySourcesPlaceholderConfigurer;
-    }
-    
-    @Bean
-    public SLALogger slaLogger() {
-        // TODO: brug rigtig SLALogger
-        return new SLALoggerDummyImpl();
     }
 }
