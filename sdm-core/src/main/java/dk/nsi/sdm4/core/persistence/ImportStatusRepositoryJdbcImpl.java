@@ -51,6 +51,11 @@ public class ImportStatusRepositoryJdbcImpl implements ImportStatusRepository {
 		}
 	}
 
+	@Override
+	public boolean isOverdue() {
+		return false;
+	}
+
 
 	private class ImportStatusRowMapper implements RowMapper<ImportStatus> {
 

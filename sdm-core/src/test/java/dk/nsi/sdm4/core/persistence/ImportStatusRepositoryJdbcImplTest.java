@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -56,6 +57,11 @@ public class ImportStatusRepositoryJdbcImplTest {
 				@Override
 				public String getHome() {
 					return "fakeParser";
+				}
+
+				@Override
+				public int getMaxHoursBetweenRuns() {
+					return 10;
 				}
 			};
 		}
@@ -146,8 +152,13 @@ public class ImportStatusRepositoryJdbcImplTest {
 		assertEquals(startTimeNewest, dbStatus.getStartTime());
 		assertNotNull(dbStatus.getEndTime());
 
-		// check that some open status exists (which must the be the oldest)
+		// check that some open status exists (which we can then conclude must be the oldest of the two test statuses)
 		assertEquals(1, jdbcTemplate.queryForInt("SELECT COUNT(*) from fakeParserImportStatus WHERE EndTime IS NULL"));
+	}
+
+	@Test
+	public void jobIsNotOverdueWhenItHasNotRun() {
+		assertFalse(repository.isOverdue());
 	}
 
 	private ImportStatus insertStatusInDb(ImportStatus.Outcome outcome) {
@@ -161,5 +172,4 @@ public class ImportStatusRepositoryJdbcImplTest {
 		expectedStatus.setOutcome(outcome);
 		return expectedStatus;
 	}
-
 }
