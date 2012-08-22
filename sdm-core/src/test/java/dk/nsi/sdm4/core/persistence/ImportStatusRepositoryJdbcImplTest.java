@@ -69,6 +69,9 @@ public class ImportStatusRepositoryJdbcImplTest {
 	@Autowired
 	private ImportStatusRepositoryJdbcImpl repository;
 
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
 	@Test
 	public void returnsNoStatusWhenTableIsEmpty() {
 		assertNull(repository.getLatestStatus());
@@ -125,6 +128,26 @@ public class ImportStatusRepositoryJdbcImplTest {
 
 		ImportStatus latestStatus = repository.getLatestStatus();
 		assertEquals(expectedStatus, latestStatus);
+	}
+
+	@Test
+	public void whenTwoOpenStatusesExistsInDbEndingOnlyUpdatesTheLatest() {
+		DateTime startTimeOldest = new DateTime();
+		repository.importStartedAt(startTimeOldest);
+		// The reason for this not being closed would be some kind of program error or outage
+
+		DateTime startTimeNewest = new DateTime();
+		repository.importStartedAt(startTimeNewest);
+
+		repository.importEndedAt(new DateTime(), ImportStatus.Outcome.FAILURE);
+
+		// check that the newest was closed
+		ImportStatus dbStatus = repository.getLatestStatus();
+		assertEquals(startTimeNewest, dbStatus.getStartTime());
+		assertNotNull(dbStatus.getEndTime());
+
+		// check that some open status exists (which must the be the oldest)
+		assertEquals(1, jdbcTemplate.queryForInt("SELECT COUNT(*) from fakeParserImportStatus WHERE EndTime IS NULL"));
 	}
 
 	private ImportStatus insertStatusInDb(ImportStatus.Outcome outcome) {
