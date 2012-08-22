@@ -46,8 +46,6 @@ public class DirectoryInboxTest {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
-    private final int stabilizationPeriod = 50;
-
     private final String dataOwnerId = "foo";
 
     private File inboxDir;
@@ -56,7 +54,7 @@ public class DirectoryInboxTest {
     @Before
     public void setUp() throws Exception {
         inboxDir = folder.newFolder(dataOwnerId);
-        inbox = new DirectoryInbox(folder.getRoot().getAbsolutePath(), dataOwnerId, stabilizationPeriod);
+        inbox = new DirectoryInbox(folder.getRoot().getAbsolutePath(), dataOwnerId);
     }
 
     @Test
@@ -237,7 +235,7 @@ public class DirectoryInboxTest {
     private void waitForStabilizationPeriodToPass() throws InterruptedException {
         // We wait twice as long, so the test is less likely to fail.
         //
-        Thread.sleep(stabilizationPeriod * 2);
+        Thread.sleep(DirectoryInbox.STABILIZATION_PERIOD * 2);
     }
 
     private File anEntryNamed(String name) {
