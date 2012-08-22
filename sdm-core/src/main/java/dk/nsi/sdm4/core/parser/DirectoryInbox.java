@@ -24,17 +24,8 @@
  */
 package dk.nsi.sdm4.core.parser;
 
-import com.google.common.base.Preconditions;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
-
-
-import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
-import org.joda.time.Instant;
-import org.springframework.beans.factory.InitializingBean;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,8 +34,15 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+import org.joda.time.Instant;
+import org.springframework.beans.factory.InitializingBean;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 
 /**
  * Uses a file system directory as inbox.
@@ -77,11 +75,9 @@ public class DirectoryInbox implements Inbox, InitializingBean {
      * The dataSets in the current found by the latest call to {@code update}.
      */
     private Queue<File> dataSets = Lists.newLinkedList();
-    private final int stabilizationPeriod;
+    public static final int STABILIZATION_PERIOD = 10;
 
-    public DirectoryInbox(String root, String dataOwnerId, int stabilizationPeriod) throws IOException {
-        Preconditions.checkArgument(stabilizationPeriod >= 0, "stabilizationPeriod must be a non-negative number.");
-        this.stabilizationPeriod = stabilizationPeriod;
+    public DirectoryInbox(String root, String dataOwnerId) throws IOException {
 
         this.inboxDirectory = new File(root, dataOwnerId);
         this.lockFile = new File(inboxDirectory, "LOCKED");
@@ -205,7 +201,7 @@ public class DirectoryInbox implements Inbox, InitializingBean {
                 //
                 unstableEntryFound = true;
             } else if (!unstableEntryFound
-                    && previousState.timestamp.plus(stabilizationPeriod).isBefore(currentState.timestamp)) {
+                    && previousState.timestamp.plus(STABILIZATION_PERIOD).isBefore(currentState.timestamp)) {
                 // If the content is stable add the element.
                 //
                 if(logger.isDebugEnabled()) {

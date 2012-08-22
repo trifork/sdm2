@@ -31,7 +31,6 @@ public class CprparserConfig implements StamdataConfigurationSupport {
 
     @Value("${jdbc.JNDIName}") private String jdbcJNDIName;
     @Value("${sdm.dataDir}") private String dataDir;
-    @Value("${sdm.stabilizationPeriod}") private int stabilizationPeriod;
 
     @Bean
     public DataSource dataSource() throws Exception{
@@ -56,8 +55,7 @@ public class CprparserConfig implements StamdataConfigurationSupport {
     public Inbox inbox() throws Exception {
         return new DirectoryInbox(
                 dataDir,
-                parser().getHome(),
-                stabilizationPeriod); 
+                parser().getHome()); 
     }
 
     @Bean
