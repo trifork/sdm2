@@ -85,6 +85,13 @@ public class ImportStatusRepositoryJdbcImplTest {
 	}
 
 	@Test
+	public void callingEndedAtWithAnEmptyDatabaseDoesNothing() {
+		// this can happen in the ParserExecutor, if some exception occurs before we reach the call to importStartedAt
+		repository.importEndedAt(new DateTime(), ImportStatus.Outcome.FAILURE);
+		assertNull(repository.getLatestStatus());
+	}
+
+	@Test
 	public void returnsClosedStatusWhenOnlyOneStatusInDb() {
 		ImportStatus expectedStatus = insertStatusInDb(ImportStatus.Outcome.SUCCESS);
 

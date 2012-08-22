@@ -3,7 +3,10 @@ package dk.nsi.sdm4.core.parser;
 import java.io.File;
 import java.io.IOException;
 
+import dk.nsi.sdm4.core.persistence.ImportStatus;
+import dk.nsi.sdm4.core.persistence.ImportStatusRepository;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -14,8 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class ParserExecutor {
     @Autowired
     Parser parser;
+
     @Autowired
     Inbox inbox;
+
+	@Autowired
+	ImportStatusRepository importStatusRepo;
 
     @Autowired
     private SLALogger slaLogger;
@@ -37,6 +44,7 @@ public class ParserExecutor {
 	        File dataSet = inbox.top();
 
 	        if (dataSet != null && !inbox.isLocked()) {
+		        importStatusRepo.importStartedAt(new DateTime());
 	            parser.process(dataSet);
 
 	            // Once the import is complete
@@ -44,8 +52,11 @@ public class ParserExecutor {
 	            // from the inbox.
 	            inbox.advance();
 
+
 		        slaLogItem.setCallResultOk();
 		        slaLogItem.store();
+
+		        importStatusRepo.importEndedAt(new DateTime(), ImportStatus.Outcome.SUCCESS);
 	        } // if there is no data and no error, we never call store on the log item, which is okay
         } catch (Exception e) {
 	        try {
@@ -54,8 +65,10 @@ public class ParserExecutor {
 		        logger.error("Unable to lock " + inbox, lockExc);
 	        }
 
-            slaLogItem.setCallResultError("Parser " + parserIdentifier + " failed - Cause: " + e.getMessage());
+	        slaLogItem.setCallResultError("Parser " + parserIdentifier + " failed - Cause: " + e.getMessage());
             slaLogItem.store();
+
+	        importStatusRepo.importEndedAt(new DateTime(), ImportStatus.Outcome.FAILURE);
 
 	        throw new RuntimeException("runParserOnInbox on parser " + parserIdentifier +" failed", e); // to make sure the transaction rolls back
         }
