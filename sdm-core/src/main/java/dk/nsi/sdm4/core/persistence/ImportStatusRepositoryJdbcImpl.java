@@ -37,7 +37,7 @@ public class ImportStatusRepositoryJdbcImpl implements ImportStatusRepository {
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void importEndedAt(DateTime endTime, ImportStatus.Outcome outcome) {
-		jdbcTemplate.update("UPDATE " + statusTableName + " SET EndTime=?, Outcome=? WHERE EndTime IS NULL AND StartTime = (SELECT Max(StartTime) FROM " + statusTableName + ")", endTime.toDate(), outcome.toString());
+		jdbcTemplate.update("UPDATE " + statusTableName + " SET EndTime=?, Outcome=? WHERE EndTime IS NULL", endTime.toDate(), outcome.toString());
 	}
 
 	@Override
