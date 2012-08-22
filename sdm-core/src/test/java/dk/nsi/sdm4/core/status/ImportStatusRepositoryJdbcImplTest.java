@@ -1,7 +1,10 @@
-package dk.nsi.sdm4.core.persistence;
+package dk.nsi.sdm4.core.status;
 
 import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
+import dk.nsi.sdm4.core.status.ImportStatus;
+import dk.nsi.sdm4.core.status.ImportStatusRepositoryJdbcImpl;
+
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;

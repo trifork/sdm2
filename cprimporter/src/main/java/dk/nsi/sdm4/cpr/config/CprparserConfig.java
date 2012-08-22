@@ -1,17 +1,9 @@
 package dk.nsi.sdm4.cpr.config;
 
-import dk.nsi.sdm4.core.config.StamdataConfigurationSupport;
-import dk.nsi.sdm4.core.parser.DirectoryInbox;
-import dk.nsi.sdm4.core.parser.Inbox;
-import dk.nsi.sdm4.core.parser.Parser;
-import dk.nsi.sdm4.core.persistence.AuditingPersister;
-import dk.nsi.sdm4.core.persistence.ImportStatusRepository;
-import dk.nsi.sdm4.core.persistence.ImportStatusRepositoryJdbcImpl;
-import dk.nsi.sdm4.core.persistence.Persister;
-import dk.nsi.sdm4.cpr.parser.CPRParser;
-import dk.nsi.sdm4.cpr.parser.CprSingleFileImporter;
-import dk.sdsd.nsp.slalog.api.SLALogConfig;
-import dk.sdsd.nsp.slalog.api.SLALogger;
+import java.sql.SQLException;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,8 +16,18 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.sql.DataSource;
-import java.sql.SQLException;
+import dk.nsi.sdm4.core.config.StamdataConfigurationSupport;
+import dk.nsi.sdm4.core.parser.DirectoryInbox;
+import dk.nsi.sdm4.core.parser.Inbox;
+import dk.nsi.sdm4.core.parser.Parser;
+import dk.nsi.sdm4.core.persistence.AuditingPersister;
+import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.core.status.ImportStatusRepository;
+import dk.nsi.sdm4.core.status.ImportStatusRepositoryJdbcImpl;
+import dk.nsi.sdm4.cpr.parser.CPRParser;
+import dk.nsi.sdm4.cpr.parser.CprSingleFileImporter;
+import dk.sdsd.nsp.slalog.api.SLALogConfig;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
 @Configuration
 @Import({dk.nsi.sdm4.core.config.StamdataConfiguration.class})

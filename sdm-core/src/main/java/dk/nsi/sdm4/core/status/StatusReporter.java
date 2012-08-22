@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.core.web;
+package dk.nsi.sdm4.core.status;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,16 +8,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public abstract class StatusControllerBase {
+public class StatusReporter {
 
-    @RequestMapping("/status")
-    public ResponseEntity<String> ping() {
+    @RequestMapping(value = "/status")
+    public ResponseEntity<String> reportStatus() {
         HttpHeaders headers = new HttpHeaders();
         String body = "OK";
         HttpStatus status = HttpStatus.OK;
 
         try {
-            doHealthCheck();
+            // TODO doHealthCheck();
         } catch (Exception e) {
             //todo: logger.warn("Health check failed", e)
             body = e.getMessage();
@@ -27,6 +27,4 @@ public abstract class StatusControllerBase {
         headers.setContentType(MediaType.TEXT_PLAIN);
         return new ResponseEntity<String>(body, headers, status);
     }
-
-    protected abstract void doHealthCheck();
 }
