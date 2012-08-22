@@ -45,10 +45,4 @@ public class ApplicationConfigTest {
         assertNotNull(parser);
         assertNotNull(inbox);
     }
-
-    @Test
-    @Ignore
-    public void inboxIsPopulatedWithHome() throws Exception {
-        assertEquals("/jbossHome/test_home", inbox.top().getAbsolutePath());
-    }
 }
