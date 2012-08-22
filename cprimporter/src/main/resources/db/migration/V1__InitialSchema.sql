@@ -120,7 +120,7 @@ CREATE TABLE CprimporterImportStatus (
     Id BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
     StartTime DATETIME NOT NULL,
     EndTime DATETIME,
-    Status VARCHAR(20) NOT NULL,
+    Outcome VARCHAR(20) NOT NULL,
 
     INDEX (StartTime)
 );

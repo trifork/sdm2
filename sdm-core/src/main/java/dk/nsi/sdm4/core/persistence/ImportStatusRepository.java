@@ -1,5 +1,6 @@
 package dk.nsi.sdm4.core.persistence;
 
+import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,10 +8,10 @@ import java.util.Date;
 
 public interface ImportStatusRepository {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	void importStartedAt(Date startTime);
+	void importStartedAt(DateTime startTime);
 
 	@Transactional(propagation = Propagation.MANDATORY)
-	void importEndedAt(Date endTime);
+	void importEndedAt(DateTime endTime, ImportStatus.Outcome outcome);
 
 	ImportStatus getLatestStatus();
 }
