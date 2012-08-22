@@ -64,7 +64,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@TransactionConfiguration(defaultRollback = true)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class CPRIntegrationTest {
 	@Configuration
