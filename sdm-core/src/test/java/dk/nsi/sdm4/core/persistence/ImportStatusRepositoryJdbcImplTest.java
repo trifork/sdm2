@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -161,6 +160,18 @@ public class ImportStatusRepositoryJdbcImplTest {
 
 	@Test
 	public void jobIsNotOverdueWhenItHasNotRun() {
+		assertFalse(repository.isOverdue());
+	}
+
+	@Test
+	public void jobIsNotOverdueWhenItHasJustRunWithSucces() {
+		insertStatusInDb(ImportStatus.Outcome.SUCCESS);
+		assertFalse(repository.isOverdue());
+	}
+
+	@Test
+	public void jobIsNotOverdueWhenItHasJustRunWithError() {
+		insertStatusInDb(ImportStatus.Outcome.FAILURE);
 		assertFalse(repository.isOverdue());
 	}
 
