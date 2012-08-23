@@ -74,12 +74,6 @@ class jboss7as() {
         owner => "vagrant",
     }
 
-    file {"/pack/jboss/domain/data/sdm4":
-        ensure => directory,
-        owner => "jboss",
-        require => File["/pack/jboss"],
-    }
-
     service {"jboss":
         ensure => running,
         name => "jboss-as",

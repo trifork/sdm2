@@ -9,7 +9,13 @@ class jboss7as::importerdirectories {
     	ensure => directory,
     }
 
-    file { ["/pack/jboss/domain", "/pack/jboss/domain/slalog-conf"]:
+	# For NSP-Util SLA log config
+    file { ["/pack/jboss/domain/slalog-conf"]:
     	ensure => directory,
     }
+
+    # For the sample data dir
+	file {"/pack/jboss/domain/data/sdm4":
+		ensure => directory,
+	}
 }
