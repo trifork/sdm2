@@ -3,6 +3,7 @@ package dk.nsi.sdm4.core.persistence;
 import dk.nsi.sdm4.core.parser.Parser;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -16,6 +17,9 @@ import java.sql.SQLException;
 
 @Repository
 public class ImportStatusRepositoryJdbcImpl implements ImportStatusRepository {
+	@Value("${spooler.max.days.between.runs}")
+	private int maxHoursBetweenRuns;
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 

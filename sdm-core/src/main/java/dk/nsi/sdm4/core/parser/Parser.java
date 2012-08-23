@@ -63,6 +63,4 @@ public interface Parser
     void process(File dataSet) throws ParserException;
     
     String getHome();
-
-	int getMaxHoursBetweenRuns();
 }

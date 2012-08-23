@@ -66,9 +66,6 @@ public class CPRParser implements Parser {
 	@Value("${spooler.cpr.file.pattern.person.delta}")
 	private Pattern personFileDeltaPattern;
 
-	@Value("${spooler.max.days.between.runs}")
-	private int maxHoursBetweenRuns;
-
 	@Autowired
 	private SLALogger slaLogger;
 
@@ -215,9 +212,4 @@ public class CPRParser implements Parser {
     public String getHome() {
         return "cprimporter";
     }
-
-	@Override
-	public int getMaxHoursBetweenRuns() {
-		return maxHoursBetweenRuns;
-	}
 }

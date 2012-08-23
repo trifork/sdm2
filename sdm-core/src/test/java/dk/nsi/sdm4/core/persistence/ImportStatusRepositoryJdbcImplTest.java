@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -28,6 +30,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class ImportStatusRepositoryJdbcImplTest {
 	@Configuration
+	@PropertySource("classpath:test.properties")
 	static class ContextConfiguration {
 		@Bean
 		public ImportStatusRepositoryJdbcImpl repository() {
@@ -58,17 +61,17 @@ public class ImportStatusRepositoryJdbcImplTest {
 				public String getHome() {
 					return "fakeParser";
 				}
-
-				@Override
-				public int getMaxHoursBetweenRuns() {
-					return 10;
-				}
 			};
 		}
 
 		@Bean
 		public PlatformTransactionManager transactionManager(DataSource ds) {
 			return new DataSourceTransactionManager(ds);
+		}
+
+		@Bean
+		public static PropertySourcesPlaceholderConfigurer properties(){
+			return new PropertySourcesPlaceholderConfigurer();
 		}
 	}
 
