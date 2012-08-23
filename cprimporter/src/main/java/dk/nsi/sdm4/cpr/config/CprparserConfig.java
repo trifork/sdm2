@@ -97,7 +97,6 @@ public class CprparserConfig implements StamdataConfigurationSupport {
 
 	@Bean
 	public SLALogger slaLogger() {
-		// TODO: brug rigtig SLALogger
 		return new SLALogConfig("Stamdata CPR-importer", "cprimporter").getSLALogger();
 	}
 }
