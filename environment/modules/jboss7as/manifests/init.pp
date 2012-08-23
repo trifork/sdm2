@@ -144,31 +144,12 @@ class jboss7as() {
     	require => File["/pack/jboss"],
     }
 
-    file {"/pack/jboss/domain/slalog-conf/nspslalog-cprimporter.properties":
-        ensure => present,
-        source => "puppet:///modules/jboss7as/nspslalog-cprimporter.properties",
-        owner => "jboss",
-        require => File["/pack/jboss/domain/slalog-conf"]
-    }
-
-    file {"/pack/jboss/domain/slalog-conf/log4j-nspslalog-cprimporter.properties":
-        ensure => present,
-        source => "puppet:///modules/jboss7as/log4j-nspslalog-cprimporter.properties",
-        owner => "jboss",
-        require => File["/pack/jboss/domain/slalog-conf"]
-    }
-
-	file {"/pack/jboss/domain/slalog-conf/nspslalog-sorrelationimporter.properties":
-		ensure => present,
-		source => "puppet:///modules/jboss7as/nspslalog-sorrelationimporter.properties",
-		owner => "jboss",
-		require => File["/pack/jboss/domain/slalog-conf"]
+	jboss7as::importermodule { "cprimporter":
+		importername => 'cprimporter'
 	}
 
-	file {"/pack/jboss/domain/slalog-conf/log4j-nspslalog-sorrelationimporter.properties":
-		ensure => present,
-		source => "puppet:///modules/jboss7as/log4j-nspslalog-sorrelationimporter.properties",
-		owner => "jboss",
-		require => File["/pack/jboss/domain/slalog-conf"]
+
+	jboss7as::importermodule { "sorrelationimporter":
+		importername => 'sorrelationimporter'
 	}
 }

@@ -12,6 +12,7 @@ Vagrant::Config.run do |config|
   config.vm.provision :puppet, :module_path => "environment/modules" do |puppet|
     puppet.manifests_path = "environment/manifests"
     puppet.manifest_file = "site.pp"
+    puppet.options = "--verbose --debug"
   end
 
   config.vm.define :app do |config|
