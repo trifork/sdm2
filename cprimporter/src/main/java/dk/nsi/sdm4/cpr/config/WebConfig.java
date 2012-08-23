@@ -2,21 +2,16 @@ package dk.nsi.sdm4.cpr.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import dk.nsi.sdm4.cpr.web.StatusController;
+import dk.nsi.sdm4.core.status.StatusReporter;
 
 @Configuration
-public class WebConfig extends WebMvcConfigurationSupport {
-
-    @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/*").addResourceLocations("/");
-    }
+@EnableWebMvc
+public class WebConfig {
 
     @Bean
-    public StatusController statusController() {
-        return new StatusController();
+    public StatusReporter statusReporter() {
+        return new StatusReporter();
     }
 }

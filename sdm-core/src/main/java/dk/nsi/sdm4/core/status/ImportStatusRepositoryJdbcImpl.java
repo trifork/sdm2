@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.core.persistence;
+package dk.nsi.sdm4.core.status;
 
 import dk.nsi.sdm4.core.parser.Parser;
 import org.joda.time.DateTime;

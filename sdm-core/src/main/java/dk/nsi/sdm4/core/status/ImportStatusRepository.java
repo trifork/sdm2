@@ -1,10 +1,8 @@
-package dk.nsi.sdm4.core.persistence;
+package dk.nsi.sdm4.core.status;
 
 import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 /**
  * Represents the import status and deadline information for a single parser

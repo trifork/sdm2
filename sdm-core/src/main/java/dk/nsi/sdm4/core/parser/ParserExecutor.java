@@ -3,8 +3,9 @@ package dk.nsi.sdm4.core.parser;
 import java.io.File;
 import java.io.IOException;
 
-import dk.nsi.sdm4.core.persistence.ImportStatus;
-import dk.nsi.sdm4.core.persistence.ImportStatusRepository;
+import dk.nsi.sdm4.core.status.ImportStatus;
+import dk.nsi.sdm4.core.status.ImportStatusRepository;
+
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
