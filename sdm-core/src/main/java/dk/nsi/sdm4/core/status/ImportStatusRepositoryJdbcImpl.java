@@ -18,13 +18,17 @@ import java.sql.SQLException;
 @Repository
 public class ImportStatusRepositoryJdbcImpl implements ImportStatusRepository {
 	@Value("${spooler.max.days.between.runs}")
-	private int maxHoursBetweenRuns;
+	private int maxDaysBetweenRuns;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	private Parser parser;
+
+	@Autowired
+	private TimeSource timeSource;
+
 	private String statusTableName;
 
 	@PostConstruct
@@ -63,8 +67,26 @@ public class ImportStatusRepositoryJdbcImpl implements ImportStatusRepository {
 	}
 
 	@Override
+	/**
+	 *        {maxDaysBetweenRuns}
+	 *     <-----------------------------
+	 *
+	 * ____'________|________'___________|___________
+	 *           lastRun                now
+	 *     ^                 ^
+	 *   !overdue         overdue
+	 */
 	public boolean isOverdue() {
-		return false;
+		ImportStatus latestStatus = getLatestStatus();
+		if (latestStatus == null) {
+			// we're not overdue if we have never run
+			return false;
+		}
+
+
+		DateTime lastRun = latestStatus.getStartTime();
+		DateTime now = timeSource.now();
+		return (now.minusDays(maxDaysBetweenRuns).isAfter(lastRun));
 	}
 
 

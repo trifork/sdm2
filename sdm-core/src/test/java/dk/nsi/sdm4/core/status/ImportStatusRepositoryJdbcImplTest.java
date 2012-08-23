@@ -6,12 +6,15 @@ import dk.nsi.sdm4.core.status.ImportStatus;
 import dk.nsi.sdm4.core.status.ImportStatusRepositoryJdbcImpl;
 
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -72,8 +75,13 @@ public class ImportStatusRepositoryJdbcImplTest {
 		}
 
 		@Bean
-		public static PropertySourcesPlaceholderConfigurer properties(){
+		public PropertySourcesPlaceholderConfigurer properties(){
 			return new PropertySourcesPlaceholderConfigurer();
+		}
+
+		@Bean
+		public TimeSource programmableTimeSource() {
+			return new ProgrammableTimeSource();
 		}
 	}
 
@@ -83,9 +91,17 @@ public class ImportStatusRepositoryJdbcImplTest {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	private ProgrammableTimeSource timeSource;
+
 	@Test
 	public void returnsNoStatusWhenTableIsEmpty() {
 		assertNull(repository.getLatestStatus());
+	}
+
+	@Before
+	public void resetTime() {
+		timeSource.now = new DateTime();
 	}
 
 	@Test
@@ -176,6 +192,27 @@ public class ImportStatusRepositoryJdbcImplTest {
 	public void jobIsNotOverdueWhenItHasJustRunWithError() {
 		insertStatusInDb(ImportStatus.Outcome.FAILURE);
 		assertFalse(repository.isOverdue());
+	}
+
+	@Test
+	public void jobIsOverdueWhenItRanMoreDaysAgoThanTheLimit() {
+		insertStatusInDb(ImportStatus.Outcome.FAILURE);
+		timeSource.now = (new DateTime()).plusDays(2) ;
+		assertTrue(repository.isOverdue());
+	}
+
+	@Test
+	public void jobIsNotOverdueOneSecondBeforeTheDeadline() {
+		insertStatusInDb(ImportStatus.Outcome.FAILURE);
+		timeSource.now = (new DateTime()).plusDays(1).minusSeconds(1);
+		assertFalse(repository.isOverdue());
+	}
+
+	@Test
+	public void jobIsOverdueOneSecondAfterTheDeadline() {
+		insertStatusInDb(ImportStatus.Outcome.FAILURE);
+		timeSource.now = (new DateTime()).plusDays(1).plusSeconds(1);
+		assertTrue(repository.isOverdue());
 	}
 
 	private ImportStatus insertStatusInDb(ImportStatus.Outcome outcome) {

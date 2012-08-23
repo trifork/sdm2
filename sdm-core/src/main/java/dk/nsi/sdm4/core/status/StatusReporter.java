@@ -29,8 +29,9 @@ public class StatusReporter {
         try {
             if(inbox.isLocked()) {
                 body = "Inbox is locked: " + inbox;
-            } else if(lastStatusIsFailure()) {
-                // status applied later
+            } else if (statusRepo.isOverdue()) {
+	            // status applied later
+	            body = "Is overdue";
             } else {
                 status = HttpStatus.OK;
             }
@@ -44,27 +45,12 @@ public class StatusReporter {
         return new ResponseEntity<String>(body, headers, status);
     }
 
-    private boolean lastStatusIsFailure() {
-        if (statusRepo != null && 
-            statusRepo.getLatestStatus() != null && 
-            statusRepo.getLatestStatus().getOutcome() != null && 
-            statusRepo.getLatestStatus().getOutcome().equals(Outcome.FAILURE)) {
-            return true;
-        }
-        return false;
-    }
-
     private String addLastRunInformation(String body) {
         ImportStatus latestStatus = statusRepo.getLatestStatus();
         if (latestStatus == null) {
-            return body += "\nLast import: Never run";
+            return body + "\nLast import: Never run";
         } else {
-            body += "\nLast import ended at: " + latestStatus.getEndTime();
-            Outcome outcome = latestStatus.getOutcome();
-            if(outcome != null && outcome.equals(Outcome.FAILURE)) {
-                body += "with outcome" + Outcome.FAILURE;
-            }
-            return body;
+	        return body + "\n" + latestStatus.toString();
         }
     }
 }

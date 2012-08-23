@@ -37,6 +37,22 @@ public class ImportStatus {
 	}
 
 	@Override
+	public String toString() {
+		String body = "\nLast import started at: " + this.getStartTime();
+		Outcome outcome = this.getOutcome();
+
+		if (endTime != null) {
+			body += " and ended at: " + this.getEndTime();
+		}
+
+		if(outcome != null && outcome.equals(Outcome.FAILURE)) {
+			body += ". Outcome was " + Outcome.FAILURE;
+		}
+
+		return body;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;

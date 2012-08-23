@@ -80,10 +80,10 @@ public class StatusReporterTest {
     }
     
     @Test
-    public void reportsEndTimeOfLastSuccess() {
+    public void reportsStartTimeOfLastSuccess() {
         ImportStatus status = new ImportStatus();
-        DateTime endTime = new DateTime();
-        status.setEndTime(endTime);
+        DateTime startTime = new DateTime();
+        status.setStartTime(startTime);
         status.setOutcome(Outcome.SUCCESS);
         
         when(statusRepo.getLatestStatus()).thenReturn(status);
@@ -92,21 +92,76 @@ public class StatusReporterTest {
         final ResponseEntity<String> response = reporter.reportStatus();
         assertEquals(200, response.getStatusCode().value());
         
-        assertTrue(response.getBody().contains(endTime.toString()));
+        assertTrue(response.getBody().contains(startTime.toString()));
     }
 
-    @Test
-    public void reportsLastFailure() {
+	@Test
+	public void reportsEndTimeOfLastSuccess() {
+		ImportStatus status = new ImportStatus();
+		DateTime endTime = new DateTime();
+		status.setEndTime(endTime);
+		status.setOutcome(Outcome.SUCCESS);
+
+		when(statusRepo.getLatestStatus()).thenReturn(status);
+		when(inbox.isLocked()).thenReturn(false);
+
+		final ResponseEntity<String> response = reporter.reportStatus();
+		assertEquals(200, response.getStatusCode().value());
+
+		assertTrue(response.getBody().contains(endTime.toString()));
+	}
+
+	@Test
+    public void reports200OKevenWhenLastRunWasAFailureButTheTextSaysThatItFailed() {
+	    // another test ensures that when inbox is locked, 500 is returned. The fact that something failed previously should
+	    // not give operations warnings if they've taken care of the LOCKED file in the inbox
         ImportStatus status = new ImportStatus();
-        DateTime endTime = new DateTime();
-        status.setEndTime(endTime);
-        status.setOutcome(Outcome.FAILURE);
+        DateTime startTime = new DateTime();
+        status.setStartTime(startTime);
+		DateTime endTime = new DateTime();
+		status.setEndTime(endTime);
+		status.setOutcome(Outcome.FAILURE);
         
         when(statusRepo.getLatestStatus()).thenReturn(status);
         when(inbox.isLocked()).thenReturn(false);
         
         final ResponseEntity<String> response = reporter.reportStatus();
-        assertEquals(500, response.getStatusCode().value());
+        assertEquals(200, response.getStatusCode().value());
         assertTrue(response.getBody().contains(Outcome.FAILURE.toString()));
     }
+
+	@Test
+	public void reportsErrorWhenOverdueEvenWhenLastRunIsSuccess() {
+		ImportStatus status = new ImportStatus();
+		DateTime startTime = new DateTime();
+		status.setStartTime(startTime);
+		status.setOutcome(Outcome.SUCCESS);
+
+		when(statusRepo.getLatestStatus()).thenReturn(status);
+		when(inbox.isLocked()).thenReturn(false);
+		when(statusRepo.isOverdue()).thenReturn(true);
+
+		final ResponseEntity<String> response = reporter.reportStatus();
+		assertEquals(500, response.getStatusCode().value());
+		assertTrue("nævner starttid for sidste kørsel", response.getBody().contains(startTime.toString()));
+		assertTrue("nævner at job er overdue", response.getBody().toLowerCase().contains("overdue"));
+	}
+
+	@Test
+	public void reportsFailureAndMentionsBothConditionsWhenInboxIsLockedAndJobIsOverdue() {
+		ImportStatus status = new ImportStatus();
+		DateTime startTime = new DateTime();
+		status.setStartTime(startTime);
+		status.setOutcome(Outcome.SUCCESS);
+
+		when(statusRepo.getLatestStatus()).thenReturn(status);
+		when(inbox.isLocked()).thenReturn(false);
+		when(statusRepo.isOverdue()).thenReturn(true);
+
+		final ResponseEntity<String> response = reporter.reportStatus();
+		assertEquals(500, response.getStatusCode().value());
+		assertTrue("nævner starttid for sidste kørsel", response.getBody().contains(startTime.toString()));
+		assertTrue("nævner at job er overdue", response.getBody().toLowerCase().contains("overdue"));
+	}
+
 }
