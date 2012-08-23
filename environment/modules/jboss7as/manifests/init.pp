@@ -80,18 +80,6 @@ class jboss7as() {
         require => File["/pack/jboss"]
     }
 
-    file {["/pack/jboss/modules", "/pack/jboss/modules/sdm4", "/pack/jboss/modules/sdm4/config", "/pack/jboss/modules/sdm4/config/cprimporter", "/pack/jboss/modules/sdm4/config/cprimporter/main"]:
-        ensure => directory,
-        owner => "jboss",
-        require => File["/pack/jboss"],
-    }
-
-    file {["/pack/jboss/modules/sdm4/config/sorrelationimporter", "/pack/jboss/modules/sdm4/config/sorrelationimporter/main"]:
-        ensure => directory,
-        owner => "jboss",
-        require => File["/pack/jboss"],
-    }
-
     file {"/pack/jboss/modules/sdm4/config/cprimporter/main/module.xml":
         ensure => present,
         source => "puppet:///modules/jboss7as/sdm-cpr-module.xml",
@@ -102,20 +90,6 @@ class jboss7as() {
     file {"/pack/jboss/modules/sdm4/config/sorrelationimporter/main/module.xml":
         ensure => present,
         source => "puppet:///modules/jboss7as/sdm-sorrelation-module.xml",
-        owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4/config/sorrelationimporter/main"]
-    }
-
-    file {"/pack/jboss/modules/sdm4/config/cprimporter/main/log4j.properties":
-        ensure => present,
-        source => "puppet:///modules/jboss7as/log4j-cpr.properties",
-        owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4/config/cprimporter/main"]
-    }
-
-    file {"/pack/jboss/modules/sdm4/config/sorrelationimporter/main/log4j.properties":
-        ensure => present,
-        source => "puppet:///modules/jboss7as/log4j-sorrelation.properties",
         owner => "jboss",
         require => File["/pack/jboss/modules/sdm4/config/sorrelationimporter/main"]
     }
@@ -136,12 +110,6 @@ class jboss7as() {
         ensure => running,
         name => "jboss-as",
         require => [Exec["unpack-jboss"], Class["jdk"], File["jboss-init-script"]],
-    }
-
-    file {"/pack/jboss/domain/slalog-conf":
-    	ensure => directory,
-    	owner => "jboss",
-    	require => File["/pack/jboss"],
     }
 
 	jboss7as::importermodule { "cprimporter":
