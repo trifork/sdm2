@@ -66,7 +66,7 @@ public class CPRParser implements Parser {
 	@Value("${spooler.cpr.file.pattern.person.delta}")
 	private Pattern personFileDeltaPattern;
 
-	@Value("${spooler.cpr.max.hours.between.runs}")
+	@Value("${spooler.cpr.max.days.between.runs}")
 	private int maxHoursBetweenRuns;
 
 	@Autowired
