@@ -16,9 +16,4 @@ public class WebConfig {
     public StatusReporter statusReporter() {
         return new StatusReporter();
     }
-
-	@Bean
-	public TimeSource timeSource() {
-		return new TimeSourceRealTimeImpl();
-	}
 }

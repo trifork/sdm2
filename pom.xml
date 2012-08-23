@@ -46,6 +46,7 @@
     <modules>
         <module>maven-vagrant-plugin</module>
         <module>cprimporter</module>
+        <module>sorrelationimporter</module>
     </modules>
 
     <properties>
