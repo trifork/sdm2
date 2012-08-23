@@ -37,7 +37,15 @@ public class ImportStatusRepositoryJdbcImpl implements ImportStatusRepository {
 	@Override
 	@Transactional(propagation = Propagation.MANDATORY)
 	public void importEndedAt(DateTime endTime, ImportStatus.Outcome outcome) {
-		jdbcTemplate.update("UPDATE " + statusTableName + " SET EndTime=?, Outcome=? WHERE EndTime IS NULL", endTime.toDate(), outcome.toString());
+		Long newestOpenId;
+		try {
+			newestOpenId = jdbcTemplate.queryForLong("SELECT Id from " + statusTableName + " ORDER BY StartTime DESC LIMIT 1");
+		} catch (EmptyResultDataAccessException e) {
+			// it seems we do not have any open statuses, let's not update
+			return;
+		}
+
+		jdbcTemplate.update("UPDATE " + statusTableName + " SET EndTime=?, Outcome=? WHERE Id=?", endTime.toDate(), outcome.toString(), newestOpenId);
 	}
 
 	@Override
@@ -45,9 +53,14 @@ public class ImportStatusRepositoryJdbcImpl implements ImportStatusRepository {
 		try {
 			return jdbcTemplate.queryForObject("SELECT * from " + statusTableName + " ORDER BY StartTime DESC LIMIT 1", new ImportStatusRowMapper());
 		} catch (EmptyResultDataAccessException ignored) {
-			// that's all right, we just don't have any statuses
+			// that's not a problem, we just don't have any statuses
 			return null;
 		}
+	}
+
+	@Override
+	public boolean isOverdue() {
+		return false;
 	}
 
 

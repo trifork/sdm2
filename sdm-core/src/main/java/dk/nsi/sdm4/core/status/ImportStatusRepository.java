@@ -6,6 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+/**
+ * Represents the import status and deadline information for a single parser
+ */
 public interface ImportStatusRepository {
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	void importStartedAt(DateTime startTime);
@@ -14,4 +17,6 @@ public interface ImportStatusRepository {
 	void importEndedAt(DateTime endTime, ImportStatus.Outcome outcome);
 
 	ImportStatus getLatestStatus();
+
+	boolean isOverdue();
 }

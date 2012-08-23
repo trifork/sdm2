@@ -24,6 +24,8 @@
  */
 package dk.nsi.sdm4.core.parser;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.io.File;
 
 /**
@@ -61,4 +63,6 @@ public interface Parser
     void process(File dataSet) throws ParserException;
     
     String getHome();
+
+	int getMaxHoursBetweenRuns();
 }

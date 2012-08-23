@@ -27,11 +27,7 @@
 package dk.nsi.sdm4.cpr.parser;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
@@ -69,6 +65,9 @@ public class CPRParser implements Parser {
 
 	@Value("${spooler.cpr.file.pattern.person.delta}")
 	private Pattern personFileDeltaPattern;
+
+	@Value("${spooler.cpr.max.hours.between.runs}")
+	private int maxHoursBetweenRuns;
 
 	@Autowired
 	private SLALogger slaLogger;
@@ -216,4 +215,9 @@ public class CPRParser implements Parser {
     public String getHome() {
         return "cprimporter";
     }
+
+	@Override
+	public int getMaxHoursBetweenRuns() {
+		return maxHoursBetweenRuns;
+	}
 }
