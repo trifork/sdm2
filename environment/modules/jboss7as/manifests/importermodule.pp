@@ -27,4 +27,11 @@ define jboss7as::importermodule( $importername ) {
 		content => template("jboss7as/log4j-importer.properties"),
 		require => File["/pack/jboss/modules/sdm4/config/${importername}/main"],
 	}
+
+	file {"/pack/jboss/modules/sdm4/config/${importername}/main/module.xml":
+		content => template("jboss7as/sdm-importer-module.xml"),
+		require => File["/pack/jboss/modules/sdm4/config/${importername}/main"],
+	}
+
+
 }

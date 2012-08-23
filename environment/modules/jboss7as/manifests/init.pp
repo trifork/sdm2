@@ -54,20 +54,6 @@ class jboss7as() {
         require => File["/pack/jboss"]
     }
 
-    file {"/pack/jboss/modules/sdm4/config/cprimporter/main/module.xml":
-        ensure => present,
-        source => "puppet:///modules/jboss7as/sdm-cpr-module.xml",
-        owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4/config/cprimporter/main"]
-    }
-
-    file {"/pack/jboss/modules/sdm4/config/sorrelationimporter/main/module.xml":
-        ensure => present,
-        source => "puppet:///modules/jboss7as/sdm-sorrelation-module.xml",
-        owner => "jboss",
-        require => File["/pack/jboss/modules/sdm4/config/sorrelationimporter/main"]
-    }
-
     file {"/home/vagrant/.bash_history":
         ensure => present,
         source => "puppet:///modules/jboss7as/.bash_history",
@@ -85,7 +71,6 @@ class jboss7as() {
 	jboss7as::importermodule { "cprimporter":
 		importername => 'cprimporter'
 	}
-
 
 	jboss7as::importermodule { "sorrelationimporter":
 		importername => 'sorrelationimporter'
