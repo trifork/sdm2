@@ -18,7 +18,7 @@
     </scm>
     <issueManagement>
         <system>JIRA</system>
-        <url>https://jira.trifork.com/</url>
+        <url>https://jira.trifork.com/browse/NSPSUPPORT</url>
     </issueManagement>
     <ciManagement>
         <system>Jenkins</system>
