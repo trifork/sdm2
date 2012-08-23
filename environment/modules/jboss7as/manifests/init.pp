@@ -86,6 +86,12 @@ class jboss7as() {
         require => File["/pack/jboss"],
     }
 
+    file {["/pack/jboss/modules/sdm4/config/sorrelationimporter", "/pack/jboss/modules/sdm4/config/sorrelationimporter/main"]:
+        ensure => directory,
+        owner => "jboss",
+        require => File["/pack/jboss"],
+    }
+
     file {"/pack/jboss/modules/sdm4/config/cprimporter/main/module.xml":
         ensure => present,
         source => "puppet:///modules/jboss7as/sdm-cpr-module.xml",
@@ -93,11 +99,25 @@ class jboss7as() {
         require => File["/pack/jboss/modules/sdm4/config/cprimporter/main"]
     }
 
+    file {"/pack/jboss/modules/sdm4/config/sorrelationimporter/main/module.xml":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/sdm-sorrelation-module.xml",
+        owner => "jboss",
+        require => File["/pack/jboss/modules/sdm4/config/sorrelationimporter/main"]
+    }
+
     file {"/pack/jboss/modules/sdm4/config/cprimporter/main/log4j.properties":
         ensure => present,
         source => "puppet:///modules/jboss7as/log4j-cpr.properties",
         owner => "jboss",
         require => File["/pack/jboss/modules/sdm4/config/cprimporter/main"]
+    }
+
+    file {"/pack/jboss/modules/sdm4/config/sorrelationimporter/main/log4j.properties":
+        ensure => present,
+        source => "puppet:///modules/jboss7as/log4j-sorrelation.properties",
+        owner => "jboss",
+        require => File["/pack/jboss/modules/sdm4/config/sorrelationimporter/main"]
     }
 
     file {"/home/vagrant/.bash_history":
@@ -137,4 +157,18 @@ class jboss7as() {
         owner => "jboss",
         require => File["/pack/jboss/domain/slalog-conf"]
     }
+
+	file {"/pack/jboss/domain/slalog-conf/nspslalog-sorrelationimporter.properties":
+		ensure => present,
+		source => "puppet:///modules/jboss7as/nspslalog-sorrelationimporter.properties",
+		owner => "jboss",
+		require => File["/pack/jboss/domain/slalog-conf"]
+	}
+
+	file {"/pack/jboss/domain/slalog-conf/log4j-nspslalog-sorrelationimporter.properties":
+		ensure => present,
+		source => "puppet:///modules/jboss7as/log4j-nspslalog-sorrelationimporter.properties",
+		owner => "jboss",
+		require => File["/pack/jboss/domain/slalog-conf"]
+	}
 }

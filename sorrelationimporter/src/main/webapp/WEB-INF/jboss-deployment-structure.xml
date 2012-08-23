@@ -2,7 +2,7 @@
 <jboss-deployment-structure>
   <deployment>
     <dependencies>
-      <module name="sdm4.config.cprimporter" />
+      <module name="sdm4.config.sorrelationimporter" />
     </dependencies>
     <!-- disable jboss logging -->
     <exclusions>
