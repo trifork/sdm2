@@ -16,11 +16,11 @@
     </scm>
     <issueManagement>
         <system>JIRA</system>
-        <url>https://TODO.trifork.com/</url>
+        <url>https://jira.trifork.com/</url>
     </issueManagement>
     <ciManagement>
         <system>Jenkins</system>
-        <url>https://ci82.trifork.com/view/sdm2/</url>
+        <url>https://ci02.trifork.com:8443/view/SDM4/</url>
     </ciManagement>
 
     <prerequisites>
@@ -44,30 +44,13 @@
     </pluginRepositories>
 
     <modules>
-        <module>sdm-core</module>
         <module>maven-vagrant-plugin</module>
         <module>cprimporter</module>
     </modules>
 
     <properties>
-        <integrationtest.urlprefix>http://localhost:${integrationtest.serverport}/sdm-sample</integrationtest.urlprefix>
-        <integrationtest.serverport>8080</integrationtest.serverport>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <profiles>
-        <profile>
-            <id>ci</id>
-            <activation>
-                <property>
-                    <name>env.CONTAINERPORT</name>
-                </property>
-            </activation>
-            <properties>
-                <integrationtest.serverport>${env.CONTAINERPORT}</integrationtest.serverport>
-            </properties>
-        </profile>
-    </profiles>
 
     <dependencyManagement>
         <dependencies>
