@@ -126,18 +126,7 @@ start() {
   fi
 
   count=0
-  launched=false
-
-  until [ $count -gt $STARTUP_WAIT ]
-  do
-    grep 'JBoss AS.*started in' ${JBOSS_LOG_DIR}"/server.log" > /dev/null
-    if [ $? -eq 0 ] ; then
-      launched=true
-      break
-    fi
-    sleep 1
-    count=$((count+1));
-  done
+  launched=true
 
   if [ $launched=true ]; then
     if [ -f $JBOSS_PIDFILE ] && [ -s $JBOSS_PIDFILE ]; then
