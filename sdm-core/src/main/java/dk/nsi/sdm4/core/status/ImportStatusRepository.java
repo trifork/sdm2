@@ -4,8 +4,6 @@ import org.joda.time.DateTime;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 /**
  * Represents the import status and deadline information for a single parser
  */
