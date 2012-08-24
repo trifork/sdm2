@@ -12,6 +12,10 @@
     <artifactId>sorrelationimporter</artifactId>
     <packaging>war</packaging>
 
+    <properties>
+        <generated.sources.dir>${project.build.directory}/generated-sources/</generated.sources.dir>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>dk.nsi.stamdata4</groupId>
@@ -69,7 +73,7 @@
                     <execution>
                         <configuration>
                             <schemaDirectory>${basedir}/src/main/resources/sorschema</schemaDirectory>
-                            <generateDirectory>${project.build.sourceDirectory}/generated-sources/jaxb</generateDirectory>
+                            <generateDirectory>${generated.sources.dir}/jaxb</generateDirectory>
                             <schemaIncludes>
                                 <include>**/*.xsd</include>
                             </schemaIncludes>
