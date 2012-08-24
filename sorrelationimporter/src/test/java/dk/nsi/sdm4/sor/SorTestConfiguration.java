@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.cpr;
+package dk.nsi.sdm4.sor;
 
 
 import com.googlecode.flyway.core.Flyway;
@@ -12,17 +12,15 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.sql.Time;
 
 @Configuration
-public class CprTestConfiguration {
+public class SorTestConfiguration {
 	@Value("${test.mysql.port}")
 	private int mysqlPort;
-	private String testDbName = "sdm_warehouse_cpr_test";
+	private String testDbName = "sdm_warehouse_sor_test";
 	private String db_username = "root";
 	private String db_password = "papkasse";
 

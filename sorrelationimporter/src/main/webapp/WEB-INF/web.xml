@@ -13,7 +13,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>dk.nsi.sdm4.sorrelation.config</param-value>
+        <param-value>dk.nsi.sdm4.sor.config</param-value>
     </context-param>
 
     <listener>

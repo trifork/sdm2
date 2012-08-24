@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.sdm4.sorrelation.recordspecs;
+package dk.nsi.sdm4.sor.recordspecs;
 
 import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
 

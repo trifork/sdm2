@@ -24,110 +24,110 @@
  */
 package dk.nsi.sdm4.sor.relations;
 
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordMySQLTableGenerator;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
 import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
-import dk.nsi.sdm4.sorrelation.recordspecs.SorRelationsRecordSpecs;
-import oio.sundhedsstyrelsen.organisation._1_0.SorTreeType;
+import dk.nsi.sdm4.sor.SorTestConfiguration;
+import dk.nsi.sdm4.sor.recordspecs.SorRelationsRecordSpecs;
+import oio.sundhedsstyrelsen.organisation._1_0.*;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
+import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
-import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@Transactional
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class SorRelationParserTest {
+	@Configuration
+	@PropertySource("classpath:test.properties")
+	@Import(SorTestConfiguration.class)
+	static class ContextConfiguration {
+		@Bean
+		public SorRelationParser parser() {
+			return new SorRelationParser();
+		}
 
-    private RecordSpecification recordSpecification = SorRelationsRecordSpecs.RELATIONS_RECORD_SPEC;
+		@Bean
+		public RecordPersister persister() {
+			return new RecordPersister(Instant.now());
+		}
+	}
+
+	private RecordSpecification recordSpecification = SorRelationsRecordSpecs.RELATIONS_RECORD_SPEC;
     private RecordSpecification shakYderSpecification = SorRelationsRecordSpecs.SHAK_YDER_RECORD_SPEC;
-    private Connection connection;
+
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+	@Autowired
+	private SorRelationParser parser;
 
     @Before
     public void setUp() throws Exception {
-/*
-        connection = setupDatabaseConnection(recordSpecification, shakYderSpecification);
-*/
+        setupDatabaseConnection(recordSpecification, shakYderSpecification);
     }
     
-    @After
-    public void tearDown() {
-        if(connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                // ignore
-            }
-        }
-    }
-
     @Test
-    public void parseXML() {
+    public void parseXML() throws Exception {
         File file = FileUtils.toFile(getClass().getClassLoader().getResource("data/sor/SOR_FULL.xml"));
 
         JAXBContext jaxbContext;
-        try {
-            System.setProperty("jaxb.debug", "true");
+        System.setProperty("jaxb.debug", "true");
 
-            jaxbContext = JAXBContext.newInstance(SorTreeType.class.getPackage().getName());
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-            jaxbUnmarshaller.setEventHandler(new XMLValidationEventHandler());
-            JAXBElement<SorTreeType> jaxbSOR = (JAXBElement<SorTreeType>) jaxbUnmarshaller.unmarshal(file);
-            
-            SorTreeType sor = jaxbSOR.getValue();
-            
-            assertNotNull(sor);
-            assertNotNull(sor.getInstitutionOwnerEntity());
-            assertEquals(6934, sor.getInstitutionOwnerEntity().size());
-            
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            fail();
-        }
+        jaxbContext = JAXBContext.newInstance(SorTreeType.class.getPackage().getName());
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        jaxbUnmarshaller.setEventHandler(new XMLValidationEventHandler());
+        JAXBElement<SorTreeType> jaxbSOR = (JAXBElement<SorTreeType>) jaxbUnmarshaller.unmarshal(file);
+
+        SorTreeType sor = jaxbSOR.getValue();
+
+        assertNotNull(sor);
+        assertNotNull(sor.getInstitutionOwnerEntity());
+        assertEquals(6934, sor.getInstitutionOwnerEntity().size());
     }
-/*
 
     @Test
     public void testParseFile() throws Exception {
-        SorRelationParser parser = new SorRelationParser(keyValueStore);
-
         File file = FileUtils.toFile(getClass().getClassLoader().getResource("data/sor/SOR_FULL.xml"));
 
-        parser.process(file, new RecordPersister(connection, Instant.now()));
-        
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM " + recordSpecification.getTable() + " WHERE sor_parent = '21000016006'");
-        resultSet.next();
-        assertEquals(22, resultSet.getLong(1));
-        
-        Statement statement2 = connection.createStatement();
-        ResultSet resultSet2 = statement2.executeQuery("SELECT sor FROM " + shakYderSpecification.getTable() + " WHERE shak_yder = 'SHAK=804301'");
-        resultSet2.next();
-        assertEquals("278591000016002", resultSet2.getString(1));
+        parser.process(file);
 
-        Statement statement3 = connection.createStatement();
-        ResultSet resultSet3 = statement3.executeQuery("SELECT sor FROM " + shakYderSpecification.getTable() + " WHERE shak_yder = 'Yder=045756'");
-        int count = 0;
-        boolean hasSor1 = false;
-        boolean hasSor2 = false;
-        while (resultSet3.next()) {
-            count++;
-            String sor = resultSet3.getString(1);
-            if(sor.equals("8301000016000")) {hasSor1 = true;}
-            if(sor.equals("8311000016003")) {hasSor2 = true;}
-        }
-        assertEquals(2, count);
-        assertTrue(hasSor1);
-        assertTrue(hasSor2);
+	    assertEquals(22, jdbcTemplate.queryForInt("SELECT Count(*) FROM " + recordSpecification.getTable() + " WHERE sor_parent = '21000016006'"));
+        assertEquals("278591000016002", jdbcTemplate.queryForObject("SELECT sor FROM " + shakYderSpecification.getTable() + " WHERE shak_yder = 'SHAK=804301'", String.class));
+        assertEquals(2, jdbcTemplate.queryForInt("SELECT count(sor) FROM " + shakYderSpecification.getTable() + " WHERE shak_yder = 'Yder=045756' AND (sor ='8301000016000' OR sor='8311000016003')"));
     }
-    
+
     @Test
     public void testSimpleTree() throws Exception {
-        SorRelationParser parser = new SorRelationParser(keyValueStore);
-        
         List<InstitutionOwnerEntityType> institutions = new ArrayList<InstitutionOwnerEntityType>();
         InstitutionOwnerEntityType ioe = new InstitutionOwnerEntityType();
         institutions.add(ioe);
@@ -153,38 +153,16 @@ public class SorRelationParserTest {
         ouChild.setSorIdentifier(98765);
         oueChild.setOrganizationalUnit(ouChild);
         
-        parser.processSorTree(new RecordPersister(connection, Instant.now()), institutions);
+        parser.processSorTree(institutions);
         
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM " + recordSpecification.getTable() + " WHERE sor_parent = '1234'");
-        resultSet.next();
-        assertEquals(4, resultSet.getLong(1));
+        assertEquals(4, jdbcTemplate.queryForInt("SELECT Count(*) FROM " + recordSpecification.getTable() + " WHERE sor_parent = '1234'"));
 
-        Statement statement2 = connection.createStatement();
-        ResultSet resultSet2 = statement2.executeQuery("SELECT sor_parent FROM " + recordSpecification.getTable() + " WHERE sor_child = '98765'");
-        int count = 0;
-        boolean hasSor1 = false;
-        boolean hasSor2 = false;
-        boolean hasSor3 = false;
-        boolean hasSor4 = false;
-        while (resultSet2.next()) {
-            count++;
-            String sor = resultSet2.getString(1);
-            if(sor.equals("1234")) {hasSor1 = true;}
-            if(sor.equals("2345678")) {hasSor2 = true;}
-            if(sor.equals("9876")) {hasSor3 = true;}
-            if(sor.equals("98765")) {hasSor4 = true;}
-        }
-        assertEquals(4, count);
-        assertTrue(hasSor1);
-        assertTrue(hasSor2);
-        assertTrue(hasSor3);
-        assertTrue(hasSor4);
+        assertEquals(4, jdbcTemplate.queryForInt("SELECT count(sor_parent) FROM " + recordSpecification.getTable() + " WHERE " +
+		        "sor_child = '98765' AND (sor_parent = '1234' or sor_parent='2345678' or sor_parent='9876' or sor_parent='98765')"));
     }
 
     @Test
     public void testValidToDates() throws Exception {
-        SorRelationParser parser = new SorRelationParser(keyValueStore);
         parser.setSnapshotDate(new DateTime());
 
         DateTime now = new DateTime();
@@ -232,36 +210,27 @@ public class SorRelationParserTest {
         ouChild.setSorStatus(invalidValidTo);
         oueChild.setOrganizationalUnit(ouChild);
         
-        parser.processSorTree(new RecordPersister(connection, Instant.now()), institutions);
+        parser.processSorTree(institutions);
         
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM " + recordSpecification.getTable() + " WHERE sor_parent = '1234'");
-        resultSet.next();
-        assertEquals(3, resultSet.getLong(1));
-
+        assertEquals(3, jdbcTemplate.queryForInt("SELECT Count(*) FROM " + recordSpecification.getTable() + " WHERE sor_parent = '1234'"));
     }
-    
-    private Connection setupDatabaseConnection(RecordSpecification sorRelations, RecordSpecification shakYder) throws SQLException {
-        Connection connection = new ConnectionManager().getConnection();
 
-        Statement setupStatements = connection.createStatement();
-        setupStatements.executeUpdate("DROP TABLE IF EXISTS " + sorRelations.getTable());
-        setupStatements.executeUpdate(RecordMySQLTableGenerator.createSqlSchema(sorRelations));
+    private void setupDatabaseConnection(RecordSpecification sorRelations, RecordSpecification shakYder) throws SQLException {
+        jdbcTemplate.update("DROP TABLE IF EXISTS " + sorRelations.getTable());
+	    jdbcTemplate.update(RecordMySQLTableGenerator.createSqlSchema(sorRelations));
 
-        setupStatements.executeUpdate("DROP TABLE IF EXISTS " + shakYder.getTable());
-        setupStatements.executeUpdate(RecordMySQLTableGenerator.createSqlSchema(shakYder));
-
-        return connection;
+	    jdbcTemplate.update("DROP TABLE IF EXISTS " + shakYder.getTable());
+	    jdbcTemplate.update(RecordMySQLTableGenerator.createSqlSchema(shakYder));
     }
-*/
 
+	/**
+	 * The SOR Schemas does not parse when using a validating parser, so we'll ignore all errors while parsing
+	 */
     class XMLValidationEventHandler extends DefaultValidationEventHandler {
-        
         @Override
         public boolean handleEvent(ValidationEvent event) {
-            //System.out.println(event.toString());
             return true;
         }
-        
+
     }
 }

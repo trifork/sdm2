@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.sorrelation.config;
+package dk.nsi.sdm4.sor.config;
 
 import dk.nsi.sdm4.core.config.StamdataConfiguration;
 import dk.nsi.sdm4.core.parser.Parser;

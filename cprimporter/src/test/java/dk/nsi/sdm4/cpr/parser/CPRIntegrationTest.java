@@ -67,7 +67,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class CPRIntegrationTest {
 	@Configuration
-	@PropertySource("classpath:test.properties")
+	@PropertySource({"classpath:test.properties", "classpath:default-config.properties"})
 	@Import(CprTestConfiguration.class)
 	static class ContextConfiguration {
 		@Bean
