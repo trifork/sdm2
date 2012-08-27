@@ -68,11 +68,9 @@ class jboss7as() {
 
 	include "jboss7as::mysqlmodule"
 
-	jboss7as::importermodule { "cprimporter":
-		importername => 'cprimporter'
-	}
+	jboss7as::importermodule { "cprimporter": }
 
-	jboss7as::importermodule { "sorrelationimporter":
-		importername => 'sorrelationimporter'
-	}
+	jboss7as::importermodule { "sorrelationimporter": }
+
+	jboss7as::importermodule { "sorimporter": }
 }
