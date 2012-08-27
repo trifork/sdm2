@@ -24,12 +24,32 @@
  */
 package dk.nsi.sdm4.sor.relations;
 
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordMySQLTableGenerator;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
-import dk.nsi.sdm4.sor.SorTestConfiguration;
-import dk.nsi.sdm4.sor.recordspecs.SorRelationsRecordSpecs;
-import oio.sundhedsstyrelsen.organisation._1_0.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.ValidationEvent;
+import javax.xml.bind.helpers.DefaultValidationEventHandler;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import oio.sundhedsstyrelsen.organisation._1_0.HealthInstitutionEntityType;
+import oio.sundhedsstyrelsen.organisation._1_0.HealthInstitutionType;
+import oio.sundhedsstyrelsen.organisation._1_0.InstitutionOwnerEntityType;
+import oio.sundhedsstyrelsen.organisation._1_0.InstitutionOwnerType;
+import oio.sundhedsstyrelsen.organisation._1_0.OrganizationalUnitEntityType;
+import oio.sundhedsstyrelsen.organisation._1_0.OrganizationalUnitType;
+import oio.sundhedsstyrelsen.organisation._1_0.SorStatusType;
+import oio.sundhedsstyrelsen.organisation._1_0.SorTreeType;
+
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
@@ -47,22 +67,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.helpers.DefaultValidationEventHandler;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordMySQLTableGenerator;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
+import dk.nsi.sdm4.sor.SorTestConfiguration;
+import dk.nsi.sdm4.sor.recordspecs.SorRelationsRecordSpecs;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -115,6 +124,21 @@ public class SorRelationParserTest {
         assertEquals(6934, sor.getInstitutionOwnerEntity().size());
     }
 
+    @Test
+    public void testSORRelationTablesAreCleanedUpBeforeEachRun() throws Exception {
+
+        File file = FileUtils.toFile(getClass().getClassLoader().getResource("data/sor/ONE_SYGEHUS.xml"));
+        
+        parser.process(file);
+        assertEquals(10, jdbcTemplate.queryForInt("SELECT Count(*) FROM " + recordSpecification.getTable()));
+        
+        //run again and see data is the same
+        parser.process(file);
+        assertEquals(10, jdbcTemplate.queryForInt("SELECT Count(*) FROM " + recordSpecification.getTable()));
+        
+    }
+ 
+    
     @Test
     public void testParseFile() throws Exception {
         File file = FileUtils.toFile(getClass().getClassLoader().getResource("data/sor/SOR_FULL.xml"));

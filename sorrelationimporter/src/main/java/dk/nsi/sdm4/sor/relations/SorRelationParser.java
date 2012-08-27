@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -65,6 +66,9 @@ public class SorRelationParser implements Parser {
 	@Autowired
 	private RecordPersister persister;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     public SorRelationParser() {
         this.recordSpecification = SorRelationsRecordSpecs.RELATIONS_RECORD_SPEC;
         this.shakYderSpecification = SorRelationsRecordSpecs.SHAK_YDER_RECORD_SPEC;
@@ -77,6 +81,7 @@ public class SorRelationParser implements Parser {
             logger.debug("Starting SOR NPI relation parser");
             File files = checkRequiredFiles(dataSet);
             
+            truncateTables();
             List<InstitutionOwnerEntityType> list = unmarshallFile(files);
             processSorTree(list);
             
@@ -92,7 +97,15 @@ public class SorRelationParser implements Parser {
         
     }
 
-	@Override
+    /*
+     * Tables needs to be truncated before each run, because SOR-Relation tables must not support history
+     */
+	private void truncateTables() {
+	    jdbcTemplate.execute("truncate table "+ recordSpecification.getTable());
+        jdbcTemplate.execute("truncate table "+ shakYderSpecification.getTable());
+    }
+
+    @Override
 	public String getHome() {
 		return "sorrelationimporter";
 	}
