@@ -28,7 +28,6 @@ package dk.nsi.sdm4.sor.model;
 
 import dk.nsi.sdm4.core.domain.AbstractStamdataEntity;
 import dk.nsi.sdm4.core.util.Dates;
-import org.apache.log4j.Logger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -50,7 +49,6 @@ public class Sygehus extends AbstractStamdataEntity
 	private Long sorNummer;
 	private Date validFrom;
 	private Date validTo;
-    private static final Logger logger = Logger.getLogger(Sygehus.class);
 
 	@Column
 	public String getNavn()
