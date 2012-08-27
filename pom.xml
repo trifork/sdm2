@@ -49,6 +49,7 @@
         <module>sorrelationimporter</module>
         <module>sorimporter</module>
         <module>bemyndigelseimporter</module>
+        <module>autorisationimporter</module>
     </modules>
 
     <properties>
