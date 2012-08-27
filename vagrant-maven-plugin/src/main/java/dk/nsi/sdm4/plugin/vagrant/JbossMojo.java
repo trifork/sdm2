@@ -29,7 +29,6 @@ public class JbossMojo extends AbstractMojo {
 	 */
 	private File packaging;
 
-	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().debug("Detected packaging: " + packaging + " for module " + modulename);
 		if ("war".equals(packaging)) {
