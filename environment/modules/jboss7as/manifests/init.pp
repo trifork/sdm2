@@ -73,4 +73,7 @@ class jboss7as() {
 	jboss7as::importermodule { "sorrelationimporter": }
 
 	jboss7as::importermodule { "sorimporter": }
+	
+	jboss7as::importermodule { "bemyndigelseimporter": }
+	
 }
