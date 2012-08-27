@@ -5,6 +5,7 @@ import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.sor.SORImporter;
 import dk.sdsd.nsp.slalog.api.SLALogConfig;
 import dk.sdsd.nsp.slalog.api.SLALogger;
 import org.springframework.context.annotation.Bean;
@@ -22,17 +23,7 @@ import java.sql.SQLException;
 public class SorimporterConfig extends StamdataConfiguration {
 	@Bean
 	public Parser parser() {
-		return new Parser() {
-			@Override
-			public void process(File dataSet) throws ParserException {
-				throw new UnsupportedOperationException("process");
-			}
-
-			@Override
-			public String getHome() {
-				return "sorimporter";
-			}
-		};
+		return new SORImporter();
 	}
 
 	@Bean
