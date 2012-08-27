@@ -44,7 +44,6 @@
     </pluginRepositories>
 
     <modules>
-        <module>vagrant-maven-plugin</module>
         <module>cprimporter</module>
         <module>sorrelationimporter</module>
         <module>sorimporter</module>
