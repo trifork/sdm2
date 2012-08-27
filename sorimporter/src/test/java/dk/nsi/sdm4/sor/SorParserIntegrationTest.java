@@ -28,7 +28,6 @@ package dk.nsi.sdm4.sor;
 
 import dk.nsi.sdm4.sor.model.*;
 import org.apache.commons.io.FileUtils;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
@@ -38,22 +37,9 @@ import static org.junit.Assert.assertEquals;
 
 
 public class SorParserIntegrationTest {
-	public static File fullSor;
-	public static File fullSor2;
-
-	public File getFile(String path) {
-		return FileUtils.toFile(getClass().getClassLoader().getResource(path));
-	}
-
-	@Before
-	public void setUp() {
-		fullSor = getFile("data/sor/SOR_FULL.xml");
-		fullSor2 = getFile("data/sor/SOR_FULL2.xml");
-	}
-
 	@Test
 	public void testFullTest() throws Exception {
-		SORDataSets dataSets = SORImporter.parse(fullSor);
+		SORDataSets dataSets = SORImporter.parse(getFile("data/sor/SOR_FULL.xml"));
 
 		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
 		Collection<Yder> yder = dataSets.getYderDS().getEntities();
@@ -70,7 +56,7 @@ public class SorParserIntegrationTest {
 
 	@Test
 	public void TestFull2Tests() throws Exception {
-		SORDataSets dataSets = SORImporter.parse(fullSor2);
+		SORDataSets dataSets = SORImporter.parse(getFile("data/sor/SOR_FULL2.xml"));
 
 		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
 		Collection<Yder> yder = dataSets.getYderDS().getEntities();
@@ -83,5 +69,9 @@ public class SorParserIntegrationTest {
 		assertEquals(475, sygehus.size());
 		assertEquals(2922, sygehusAfdeling.size());
 		assertEquals(329, apotek.size());
+	}
+
+	private File getFile(String path) {
+		return FileUtils.toFile(getClass().getClassLoader().getResource(path));
 	}
 }
