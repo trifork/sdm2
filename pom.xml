@@ -130,6 +130,18 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>dk.nsi.stamdata4</groupId>
+                <artifactId>vagrant-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-jboss-descriptors</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 </project>
