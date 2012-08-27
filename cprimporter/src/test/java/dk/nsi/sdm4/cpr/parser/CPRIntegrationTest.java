@@ -329,7 +329,6 @@ public class CPRIntegrationTest {
 	}
 
 
-/*
 	@Test
 	public void shouldUpdateTheCPRChangesTableForTheCPRGOSService() throws Exception {
 		importFile("data/PVIT/D100314.L431101");
@@ -372,8 +371,6 @@ public class CPRIntegrationTest {
 
 		assertFalse(rs.next());
 	}
-
-*/
 
 	private void importFile(String filePath) throws Exception {
 		URL resource = getClass().getClassLoader().getResource(filePath);
