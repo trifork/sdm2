@@ -157,7 +157,7 @@ public class BemyndigelseParser implements Parser {
 
     @Override
     public String getHome() {
-        return "bemyndigelse";
+        return "bemyndigelseimporter";
     }
 
 }
