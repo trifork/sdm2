@@ -144,4 +144,43 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>deploy-integrationtest-war</id>
+            <activation>
+                <file>
+                    <!-- activate profile only in modules which seems to be war files -->
+                    <exists>src/main/webapp/WEB-INF/web.xml</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>vagrant</executable>
+                            <arguments>
+                                <argument>ssh</argument>
+                                <argument>-c</argument>
+                                <argument>/pack/jboss/bin/jboss-cli.sh -c --commands='deploy --force
+                                    /vagrant/${project.artifactId}/target/${project.build.finalName}.war' --user=sdmadmin --password=trifork
+                                </argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
