@@ -10,7 +10,7 @@ import java.io.*;
 
 /**
  * @goal generate-jboss-descriptors
- * @phase package
+ * @phase prepare-package
  */
 public class JbossMojo extends AbstractMojo {
 
