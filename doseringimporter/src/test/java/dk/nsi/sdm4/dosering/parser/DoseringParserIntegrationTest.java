@@ -27,15 +27,14 @@ package dk.nsi.sdm4.dosering.parser;
 
 import static org.apache.commons.io.FileUtils.toFile;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -55,15 +54,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import sun.security.action.GetLongAction;
-
-import dk.nsi.sdm4.core.domain.CompleteDataset;
-import dk.nsi.sdm4.core.domain.Dataset;
-import dk.nsi.sdm4.core.domain.TemporalEntity;
 import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
 import dk.nsi.sdm4.dosering.DoseringTestConfiguration;
-import dk.nsi.sdm4.dosering.model.DosageVersion;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -113,7 +106,7 @@ public class DoseringParserIntegrationTest {
         // it is a lot faster.
         //
         // The other files contain several records and are
-        // used to count the number of records importet.
+        // used to count the number of records imported.
 
         versionFile = getFile("single/DosageVersion.json");
         drugsFile = getFile("single/Drugs.json");
@@ -123,7 +116,7 @@ public class DoseringParserIntegrationTest {
     }
 
     @Test
-    public void Should_import_the_version_file_correctly() throws Exception {
+    public void importTheVersionFileCorrectly() throws Exception {
         runImporter();
 
         SqlRowSet rs = jdbcTemplate.queryForRowSet("select * from DosageVersion");
@@ -133,35 +126,38 @@ public class DoseringParserIntegrationTest {
         assertThat(rs.getDate("releaseDate"), equalTo(date("2011-02-15")));
         assertThat(rs.getDate("lmsDate"), equalTo(date("2011-02-02")));
         assertThat(rs.getDate("daDate"), equalTo(date("2011-01-24")));
+        
+        // expect only one row
+        assertFalse(rs.next());
     }
-/*
+
     @Test
-    public void Should_import_all_dosage_structures() throws Exception {
+    public void importAllDosageStructures() throws Exception {
         dosageStructureFile = getFile("multiple/DosageStructures.json");
 
         runImporter();
-
-        CompleteDataset<DosageStructure> structures = persister.getDataset(DosageStructure.class);
-
-        assertThat(structures.size(), equalTo(587));
+        
+        assertThat(jdbcTemplate.queryForInt("select count(*) from DosageStructure"), equalTo(587));
     }
 
     @Test
-    public void Should_import_the_structures_correctly() throws Exception {
+    public void importTheStructuresCorrectly() throws Exception {
         runImporter();
 
-        DosageStructure structure = getFirst(DosageStructure.class);
+        SqlRowSet rs = jdbcTemplate.queryForRowSet("select * from DosageStructure");
+        rs.next();
 
-        assertThat(structure.getReleaseNumber(), equalTo(125L));
-        assertThat(structure.getCode(), equalTo(3L));
-        assertThat(structure.getType(), equalTo("M+M+A+N"));
-        assertThat(structure.getSimpleString(), equalTo("0.5"));
-        assertThat(structure.getShortTranslation(), equalTo("1/2 tablet morgen"));
-        assertThat(
-                structure.getXml(),
-                equalTo("<b:DosageStructure\n   xsi:schemaLocation=\"http://www.dkma.dk/medicinecard/xml.schema/2009/01/01 DKMA_DosageStructure.xsd\"\n   xmlns:a=\"http://www.dkma.dk/medicinecard/xml.schema/2008/06/01\"\n   xmlns:b=\"http://www.dkma.dk/medicinecard/xml.schema/2009/01/01\"\n   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n   <b:DosageTimesStructure>\n      <a:DosageTimesIterationIntervalQuantity>1</a:DosageTimesIterationIntervalQuantity>\n      <a:DosageTimesStartDate>2000-01-01</a:DosageTimesStartDate>\n      <b:DosageQuantityUnitText>tablet</b:DosageQuantityUnitText>\n      <b:DosageDayElementStructure>\n         <a:DosageDayIdentifier>1</a:DosageDayIdentifier>\n         <b:MorningDosageTimeElementStructure>\n            <a:DosageQuantityValue>0.5</a:DosageQuantityValue>\n         </b:MorningDosageTimeElementStructure>\n      </b:DosageDayElementStructure>\n   </b:DosageTimesStructure>\n</b:DosageStructure>"));
-        assertThat(structure.getLongTranslation(), equalTo("Daglig 1/2 tablet morgen"));
-        assertThat(structure.getSupplementaryText(), nullValue());
+        assertThat(rs.getLong("releaseNumber"), equalTo(125L));
+        assertThat(rs.getString("code"), equalTo("3"));
+        assertThat(rs.getString("type"), equalTo("M+M+A+N"));
+        assertThat(rs.getString("simpleString"), equalTo("0.5"));
+        assertThat(rs.getString("shortTranslation"), equalTo("1/2 tablet morgen"));
+        assertThat(rs.getString("xml"), equalTo("<b:DosageStructure\n   xsi:schemaLocation=\"http://www.dkma.dk/medicinecard/xml.schema/2009/01/01 DKMA_DosageStructure.xsd\"\n   xmlns:a=\"http://www.dkma.dk/medicinecard/xml.schema/2008/06/01\"\n   xmlns:b=\"http://www.dkma.dk/medicinecard/xml.schema/2009/01/01\"\n   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n   <b:DosageTimesStructure>\n      <a:DosageTimesIterationIntervalQuantity>1</a:DosageTimesIterationIntervalQuantity>\n      <a:DosageTimesStartDate>2000-01-01</a:DosageTimesStartDate>\n      <b:DosageQuantityUnitText>tablet</b:DosageQuantityUnitText>\n      <b:DosageDayElementStructure>\n         <a:DosageDayIdentifier>1</a:DosageDayIdentifier>\n         <b:MorningDosageTimeElementStructure>\n            <a:DosageQuantityValue>0.5</a:DosageQuantityValue>\n         </b:MorningDosageTimeElementStructure>\n      </b:DosageDayElementStructure>\n   </b:DosageTimesStructure>\n</b:DosageStructure>"));
+        assertThat(rs.getString("longTranslation"), equalTo("Daglig 1/2 tablet morgen"));
+        assertThat(rs.getString("supplementaryText"), nullValue());
+        
+        // expect only one row
+        assertFalse(rs.next());
     }
 
     @Test
@@ -169,22 +165,24 @@ public class DoseringParserIntegrationTest {
         unitsFile = getFile("multiple/DosageUnits.json");
 
         runImporter();
-
-        CompleteDataset<DosageUnit> units = persister.getDataset(DosageUnit.class);
-
-        assertThat(units.size(), equalTo(21));
+        assertThat(jdbcTemplate.queryForInt("select count(*) from DosageUnit"), equalTo(21));
     }
 
     @Test
     public void Should_import_dosage_units_correctly() throws Exception {
         runImporter();
 
-        DosageUnit unit = getFirst(DosageUnit.class);
+        SqlRowSet rs = jdbcTemplate.queryForRowSet("select * from DosageUnit");
+        rs.next();
 
-        assertThat(unit.getReleaseNumber(), equalTo(125L));
-        assertThat(unit.getCode(), equalTo(8));
-        assertThat(unit.getTextSingular(), equalTo("brusetablet"));
-        assertThat(unit.getTextPlural(), equalTo("brusetabletter"));
+        assertThat(rs.getLong("releaseNumber"), equalTo(125L));
+        assertThat(rs.getInt("code"), equalTo(8));
+        assertThat(rs.getString("textSingular"), equalTo("brusetablet"));
+        assertThat(rs.getString("textPlural"), equalTo("brusetabletter"));
+        
+        // expect only one row
+        assertFalse(rs.next());
+
     }
 
     @Test
@@ -192,12 +190,9 @@ public class DoseringParserIntegrationTest {
         drugsFile = getFile("multiple/Drugs.json");
 
         runImporter();
+        assertThat(jdbcTemplate.queryForInt("select count(*) from DosageDrug"), equalTo(3710));
 
-        CompleteDataset<?> records = persister.getDataset(Drug.class);
-
-        assertThat(records.size(), equalTo(3710));
     }
-*/    
 
     // HELPER METHODS
 
