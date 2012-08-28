@@ -115,12 +115,3 @@ CREATE TABLE ChangesToCPR (
 	ModifiedDate TIMESTAMP NOT NULL,
 	INDEX (ModifiedDate)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
-
-CREATE TABLE cprimporterImportStatus (
-    Id BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    StartTime DATETIME NOT NULL,
-    EndTime DATETIME,
-    Outcome VARCHAR(20),
-
-    INDEX (StartTime)
-) ENGINE=InnoDB COLLATE=utf8_bin;
