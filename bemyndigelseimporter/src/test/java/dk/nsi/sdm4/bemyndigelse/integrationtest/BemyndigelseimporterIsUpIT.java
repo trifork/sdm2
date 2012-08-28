@@ -28,7 +28,7 @@ public class BemyndigelseimporterIsUpIT {
 				return;
 			}
 
-			if (status != 404) {
+			if (status != 404 && status != 503) {
 				fail("Status page on " + url + " did not respond with HTTP code 200, status was " + status);
 			}
 
