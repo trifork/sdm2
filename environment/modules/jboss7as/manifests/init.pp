@@ -76,4 +76,5 @@ class jboss7as() {
 	
 	jboss7as::importermodule { "bemyndigelseimporter": }
 	
+	jboss7as::importermodule { "doseringimporter": }
 }
