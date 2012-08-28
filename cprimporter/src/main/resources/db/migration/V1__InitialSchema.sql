@@ -114,7 +114,7 @@ CREATE TABLE ChangesToCPR (
 	CPR CHAR(10) PRIMARY KEY,
 	ModifiedDate TIMESTAMP NOT NULL,
 	INDEX (ModifiedDate)
-);
+) ENGINE=InnoDB COLLATE=utf8_bin;
 
 CREATE TABLE cprimporterImportStatus (
     Id BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -123,4 +123,4 @@ CREATE TABLE cprimporterImportStatus (
     Outcome VARCHAR(20),
 
     INDEX (StartTime)
-);
+) ENGINE=InnoDB COLLATE=utf8_bin;
