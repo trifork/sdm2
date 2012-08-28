@@ -1,8 +1,10 @@
 package dk.nsi.sdm4.autorisation;
 
 
-import javax.sql.DataSource;
-
+import com.mysql.jdbc.Driver;
+import dk.nsi.sdm4.core.persistence.migration.DbMigrator;
+import dk.sdsd.nsp.slalog.api.SLALogger;
+import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +14,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.googlecode.flyway.core.Flyway;
-import com.mysql.jdbc.Driver;
-
-import dk.sdsd.nsp.slalog.api.SLALogger;
-import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
+import javax.sql.DataSource;
 
 @Configuration
 public class AutorisationTestConfiguration {
@@ -47,10 +45,8 @@ public class AutorisationTestConfiguration {
 	}
 
 	@Bean(initMethod = "migrate")
-	public Flyway flyway(DataSource dataSource) {
-		Flyway flyway = new Flyway();
-		flyway.setDataSource(dataSource);
-		return flyway;
+	public DbMigrator dbMigrator() {
+		return new DbMigrator();
 	}
 
 	@Bean

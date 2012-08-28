@@ -1,8 +1,8 @@
 package dk.nsi.sdm4.sor;
 
 
-import com.googlecode.flyway.core.Flyway;
 import com.mysql.jdbc.Driver;
+import dk.nsi.sdm4.core.persistence.migration.DbMigrator;
 import dk.sdsd.nsp.slalog.api.SLALogger;
 import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,10 +45,8 @@ public class SorImporterTestConfiguration {
 	}
 
 	@Bean(initMethod = "migrate")
-	public Flyway flyway(DataSource dataSource) {
-		Flyway flyway = new Flyway();
-		flyway.setDataSource(dataSource);
-		return flyway;
+	public DbMigrator dbMigrator() {
+		return new DbMigrator();
 	}
 
 	@Bean
