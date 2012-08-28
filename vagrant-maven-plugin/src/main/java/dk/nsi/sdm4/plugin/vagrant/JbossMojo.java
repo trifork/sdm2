@@ -27,7 +27,7 @@ public class JbossMojo extends AbstractMojo {
 	/**
 	 * @parameter default-value="${project.packaging}"
 	 */
-	private File packaging;
+	private String packaging;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().debug("Detected packaging: " + packaging + " for module " + modulename);

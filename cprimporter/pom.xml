@@ -62,29 +62,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>vagrant</executable>
-                    <arguments>
-                        <argument>ssh</argument>
-                        <argument>-c</argument>
-                        <argument>/pack/jboss/bin/jboss-cli.sh -c --commands='deploy --force
-                            /vagrant/cprimporter/target/cprimporter-1.0-SNAPSHOT.war' --user=sdmadmin --password=trifork
-                        </argument>
-                    </arguments>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.12</version>
