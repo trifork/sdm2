@@ -7,6 +7,9 @@ import java.net.URL;
 
 import static org.junit.Assert.fail;
 
+/**
+ * This tests assumes a deployed war file running on a jboss on localhost:8080
+ */
 public class CprimporterIsUpIT {
 	private static final int MAX_RETRIES = 10;
 
