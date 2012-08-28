@@ -49,6 +49,7 @@
         <module>sorimporter</module>
         <module>bemyndigelseimporter</module>
         <module>autorisationimporter</module>
+        <module>doseringimporter</module>
     </modules>
 
     <properties>
