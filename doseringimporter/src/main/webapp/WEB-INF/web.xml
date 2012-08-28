@@ -4,7 +4,7 @@
            xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
            version="2.5">
-    <display-name>SDM Autorisation Importer</display-name>
+    <display-name>SDM Dosering Importer</display-name>
 
     <context-param>
         <param-name>contextClass</param-name>
@@ -13,7 +13,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>dk.nsi.sdm4.autorisation.config</param-value>
+        <param-value>dk.nsi.sdm4.dosering.config</param-value>
     </context-param>
 
     <listener>

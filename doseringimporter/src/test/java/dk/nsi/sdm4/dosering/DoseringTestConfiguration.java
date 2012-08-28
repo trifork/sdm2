@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.autorisation;
+package dk.nsi.sdm4.dosering;
 
 
 import javax.sql.DataSource;
@@ -19,10 +19,10 @@ import dk.sdsd.nsp.slalog.api.SLALogger;
 import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
 
 @Configuration
-public class AutorisationTestConfiguration {
+public class DoseringTestConfiguration {
 	@Value("${test.mysql.port}")
 	private int mysqlPort;
-	private String testDbName = "sdm_warehouse_autorisation_test";
+	private String testDbName = "sdm_warehouse_dosering_test";
 	private String db_username = "root";
 	private String db_password = "papkasse";
 
