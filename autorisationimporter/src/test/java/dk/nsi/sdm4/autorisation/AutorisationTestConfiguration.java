@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.cpr;
+package dk.nsi.sdm4.autorisation;
 
 
 import javax.sql.DataSource;
@@ -19,7 +19,7 @@ import dk.sdsd.nsp.slalog.api.SLALogger;
 import dk.sdsd.nsp.slalog.impl.SLALoggerDummyImpl;
 
 @Configuration
-public class CprTestConfiguration {
+public class AutorisationTestConfiguration {
 	@Value("${test.mysql.port}")
 	private int mysqlPort;
 	private String testDbName = "sdm_warehouse_cpr_test";

@@ -26,11 +26,22 @@
 
 package dk.nsi.sdm4.cpr.parser;
 
-import dk.nsi.sdm4.core.parser.ParserException;
-import dk.nsi.sdm4.core.persistence.AuditingPersister;
-import dk.nsi.sdm4.core.persistence.Persister;
-import dk.nsi.sdm4.core.util.Dates;
-import dk.nsi.sdm4.cpr.CprTestConfiguration;
+import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.net.URL;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Map;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -46,21 +57,13 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Map;
-
-import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import dk.nsi.sdm4.core.parser.ParserException;
+import dk.nsi.sdm4.core.persistence.AuditingPersister;
+import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.core.util.Dates;
+import dk.nsi.sdm4.cpr.CprTestConfiguration;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -94,6 +97,7 @@ public class CPRIntegrationTest {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
 
 	@Test
 	public void canEstablishData() throws Exception {
