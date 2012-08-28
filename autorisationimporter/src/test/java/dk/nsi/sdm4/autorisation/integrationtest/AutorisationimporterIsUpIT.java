@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.cpr.integrationtest;
+package dk.nsi.sdm4.autorisation.integrationtest;
 
 import org.junit.Test;
 
@@ -10,13 +10,13 @@ import static org.junit.Assert.fail;
 /**
  * This tests assumes a deployed war file running on a jboss on localhost:8080
  */
-public class CprimporterIsUpIT {
+public class AutorisationimporterIsUpIT {
 	private static final int MAX_RETRIES = 10;
 
 	@Test
 	public void statusPageReturns200OK() throws Exception {
 		int status = 0;
-		String url = "http://localhost:8080/cprimporter/status";
+		String url = "http://localhost:8080/sorrelationimporter/status";
 		final URL u = new URL(url);
 		for (int i = 0; i < MAX_RETRIES; i++) {
 			HttpURLConnection connection = (HttpURLConnection) u.openConnection();
