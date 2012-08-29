@@ -26,9 +26,14 @@
 
 package dk.nsi.sdm4.dosering.model;
 
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.Arrays;
+import java.util.Collections;
 
 @Entity
 public class DosageStructure extends DosageRecord
@@ -113,5 +118,9 @@ public class DosageStructure extends DosageRecord
 	public String getLongTranslation()
 	{
 		return longTranslation;
+	}
+
+	public String toString() {
+		return new ReflectionToStringBuilder(this).setExcludeFieldNames(new String[] {"xml"}).toString();
 	}
 }

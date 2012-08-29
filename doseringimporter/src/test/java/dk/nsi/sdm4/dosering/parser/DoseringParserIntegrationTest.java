@@ -214,35 +214,4 @@ public class DoseringParserIntegrationTest {
 
         parser.process(datasetDir);
     }
-
-
-//    private class MockPersister implements Persister {
-//        Map<Class<? extends TemporalEntity>, CompleteDataset<? extends TemporalEntity>> results;
-//
-//        @Override
-//        public void persistCompleteDataset(CompleteDataset<? extends TemporalEntity>... datasets) throws Exception {
-//            results = new HashMap<Class<? extends TemporalEntity>, CompleteDataset<? extends TemporalEntity>>();
-//
-//            for (CompleteDataset<? extends TemporalEntity> dataset : datasets) {
-//                results.put(dataset.getType(), dataset);
-//            }
-//        }
-//
-//        @Override
-//        public <T extends TemporalEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception {
-//            // Don't use this.
-//        }
-//
-//        @SuppressWarnings("unchecked")
-//        public <T extends TemporalEntity> CompleteDataset<T> getDataset(Class<T> type) {
-//            return (CompleteDataset<T>) results.get(type);
-//        }
-//
-//        @Override
-//        public void persist(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException,
-//                InvocationTargetException {
-//            // TODO Auto-generated method stub
-//
-//        }
-//    }
 }

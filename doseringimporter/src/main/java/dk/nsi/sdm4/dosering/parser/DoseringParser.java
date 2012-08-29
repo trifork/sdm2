@@ -32,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -173,7 +174,7 @@ public class DoseringParser implements Parser {
      * Parses other data files.
      */
     private <T extends TemporalEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException {
-        Reader reader = new InputStreamReader(new FileInputStream(file));
+        Reader reader = new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8"));
 
         Map<String, List<T>> parsedData = new Gson().fromJson(reader, collectionType);
 
