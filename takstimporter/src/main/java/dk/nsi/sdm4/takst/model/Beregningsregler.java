@@ -24,16 +24,41 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.TakstEntity;
 
-	int getLength(int fieldNo);
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-	int getNumberOfFields();
 
-	int getOffset(int fieldNo);
+@Entity
+public class Beregningsregler extends TakstEntity {
+	private String kode; // Ref. t. LMS02, felt 21
+	private String tekst;
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Override
+	public String getKey() {
+		return kode;
+	}
+
+	@Id
+	@Column
+	public String getKode() {
+		return kode;
+	}
+
+	@Column
+	public String getTekst() {
+		return tekst;
+	}
+
+	public void setKode(String kode) {
+		this.kode = kode;
+	}
+
+	public void setTekst(String tekst) {
+		this.tekst = tekst;
+	}
 }

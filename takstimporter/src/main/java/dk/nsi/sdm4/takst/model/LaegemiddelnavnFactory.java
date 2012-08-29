@@ -24,16 +24,55 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.FixedLengthParserConfiguration;
+import org.apache.commons.lang.math.NumberUtils;
 
-	int getLength(int fieldNo);
+public class LaegemiddelnavnFactory implements FixedLengthParserConfiguration<Laegemiddelnavn> {
+	@Override
+	public String getFilename() {
+		return "lms21.txt";
+	}
 
-	int getNumberOfFields();
+	@Override
+	public int getLength(int fieldNo) {
+		switch (fieldNo) {
+			case 0:
+				return 11;
+			case 1:
+				return 60;
+			default:
+				return -1;
+		}
+	}
 
-	int getOffset(int fieldNo);
+	@Override
+	public int getNumberOfFields() {
+		return 2;
+	}
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Override
+	public int getOffset(int fieldNo) {
+		switch (fieldNo) {
+			case 0:
+				return 0;
+			case 1:
+				return 11;
+			default:
+				return -1;
+		}
+	}
+
+	@Override
+	public void setFieldValue(Laegemiddelnavn obj, int fieldNo, String value) {
+		switch (fieldNo) {
+			case 0:
+				obj.setDrugid(NumberUtils.createLong(value));
+				break;
+			case 1:
+				obj.setLaegemidletsUforkortedeNavn(value);
+				break;
+		}
+	}
 }

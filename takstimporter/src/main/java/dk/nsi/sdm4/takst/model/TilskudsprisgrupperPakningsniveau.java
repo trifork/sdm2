@@ -24,16 +24,41 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.TakstEntity;
 
-	int getLength(int fieldNo);
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-	int getNumberOfFields();
 
-	int getOffset(int fieldNo);
+@Entity
+public class TilskudsprisgrupperPakningsniveau extends TakstEntity {
+	private Long tilskudsprisGruppe;
+	private Long varenummer; // Ref. t. LMS02
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Override
+	public Long getKey() {
+		return varenummer;
+	}
+
+	@Column
+	public Long getTilskudsprisGruppe() {
+		return tilskudsprisGruppe;
+	}
+
+	@Id
+	@Column
+	public Long getVarenummer() {
+		return varenummer;
+	}
+
+	public void setTilskudsprisGruppe(Long tilskudsprisGruppe) {
+		this.tilskudsprisGruppe = tilskudsprisGruppe;
+	}
+
+	public void setVarenummer(Long varenummer) {
+		this.varenummer = varenummer;
+	}
 }

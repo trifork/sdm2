@@ -24,16 +24,52 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.TakstEntity;
 
-	int getLength(int fieldNo);
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-	int getNumberOfFields();
+@Entity(name = "Formbetegnelse")
+public class LaegemiddelformBetegnelser extends TakstEntity {
+	private String kode; // Ref. t. LMS01, felt 08
+	private String tekst;
+	private String aktivInaktiv; // A (Aktiv)=DLS o.l.-I (inaktiv)=Ikke
+	// anerkendt term
 
-	int getOffset(int fieldNo);
+	@Column(name = "Aktiv")
+	public Boolean getAktivInaktiv() {
+		return "A".equalsIgnoreCase(this.aktivInaktiv);
+	}
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Override
+	public String getKey() {
+		return this.kode;
+	}
+
+	@Id
+	@Column
+	public String getKode() {
+		return this.kode;
+	}
+
+	@Column
+	public String getTekst() {
+		return tekst;
+	}
+
+	public void setAktivInaktiv(String aktivInaktiv) {
+		this.aktivInaktiv = aktivInaktiv;
+	}
+
+	public void setKode(String kode) {
+		this.kode = kode;
+	}
+
+	public void setTekst(String tekst) {
+		this.tekst = tekst;
+	}
+
 }

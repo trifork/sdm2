@@ -24,16 +24,45 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.TakstEntity;
 
-	int getLength(int fieldNo);
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-	int getNumberOfFields();
+@Entity
+public class LaegemiddelAdministrationsvejRef extends TakstEntity {
+	private long drugId;
+	private String AdministrationsvejKode;
 
-	int getOffset(int fieldNo);
+	public LaegemiddelAdministrationsvejRef(Laegemiddel lm, Administrationsvej av) {
+		this.drugId = lm.getDrugid();
+		this.AdministrationsvejKode = av.getKode();
+	}
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Column
+	public String getAdministrationsvejKode() {
+		return AdministrationsvejKode;
+	}
+
+	@Id
+	@Column
+	public String getCID() {
+		return drugId + "-" + AdministrationsvejKode;
+	}
+
+	@Column
+	public long getDrugId() {
+		return drugId;
+	}
+
+	public void setAdministrationsvejKode(String administrationsvejKode) {
+		AdministrationsvejKode = administrationsvejKode;
+	}
+
+	public void setDrugId(long drugId) {
+		this.drugId = drugId;
+	}
 }

@@ -24,16 +24,40 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.TakstEntity;
 
-	int getLength(int fieldNo);
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-	int getNumberOfFields();
+@Entity
+public class Pakningsstoerrelsesenhed extends TakstEntity {
+	private final DivEnheder enheder;
 
-	int getOffset(int fieldNo);
+	public Pakningsstoerrelsesenhed(DivEnheder enheder) {
+		this.enheder = enheder;
+	}
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Override
+	public String getKey() {
+		return enheder.getKode();
+	}
+
+	@Id
+	@Column
+	public String getPakningsstoerrelsesenhedKode() {
+		return enheder.getKode();
+	}
+
+	@Column
+	public String getPakningsstoerrelsesenhedKortTekst() {
+		return enheder.getKortTekst();
+	}
+
+	@Column
+	public String getPakningsstoerrelsesenhedTekst() {
+		return enheder.getTekst();
+	}
 }

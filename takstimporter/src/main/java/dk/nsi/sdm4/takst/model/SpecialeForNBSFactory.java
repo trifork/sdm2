@@ -24,16 +24,62 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
 
-	int getLength(int fieldNo);
+import dk.nsi.sdm4.takst.FixedLengthParserConfiguration;
 
-	int getNumberOfFields();
+public class SpecialeForNBSFactory implements FixedLengthParserConfiguration<SpecialeForNBS> {
+	@Override
+	public String getFilename() {
+		return "lms19.txt";
+	}
 
-	int getOffset(int fieldNo);
+	@Override
+	public int getLength(int fieldNo) {
+		switch (fieldNo) {
+			case 0:
+				return 5;
+			case 1:
+				return 10;
+			case 2:
+				return 50;
+			default:
+				return -1;
+		}
+	}
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Override
+	public int getNumberOfFields() {
+		return 3;
+	}
+
+	@Override
+	public int getOffset(int fieldNo) {
+		switch (fieldNo) {
+			case 0:
+				return 0;
+			case 1:
+				return 5;
+			case 2:
+				return 15;
+			default:
+				return -1;
+		}
+	}
+
+	@Override
+	public void setFieldValue(SpecialeForNBS obj, int fieldNo, String value) {
+		switch (fieldNo) {
+			case 0:
+				obj.setKode(value);
+				break;
+			case 1:
+				obj.setKortTekst(value);
+				break;
+			case 2:
+				obj.setTekst(value);
+				break;
+		}
+	}
 }

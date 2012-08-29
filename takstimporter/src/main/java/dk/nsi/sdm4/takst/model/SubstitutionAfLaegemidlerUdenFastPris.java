@@ -24,16 +24,40 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.TakstEntity;
 
-	int getLength(int fieldNo);
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-	int getNumberOfFields();
+@Entity
+public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity {
+	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
+	private Long varenummer;
 
-	int getOffset(int fieldNo);
+	@Override
+	public Long getKey() {
+		return varenummer;
+	}
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Column
+	public Long getSubstitutionsgruppenummer() {
+		return substitutionsgruppenummer;
+	}
+
+	@Id
+	@Column
+	public Long getVarenummer() {
+		return varenummer;
+	}
+
+	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer) {
+		this.substitutionsgruppenummer = substitutionsgruppenummer;
+	}
+
+	public void setVarenummer(Long varenummer) {
+		this.varenummer = varenummer;
+	}
 }

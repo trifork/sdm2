@@ -37,7 +37,7 @@ public class TakstimporterConfig extends StamdataConfiguration {
 	}
 
 	@Bean
-	public Persister persister() throws SQLException {
+	public Persister persister() {
 		return new AuditingPersister();
 	}
 

@@ -24,16 +24,56 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.FixedLengthParserConfiguration;
+import org.apache.commons.lang.math.NumberUtils;
 
-	int getLength(int fieldNo);
 
-	int getNumberOfFields();
+public class DoseringskodeFactory implements FixedLengthParserConfiguration<Doseringskode> {
+	@Override
+	public String getFilename() {
+		return "lms27.txt";
+	}
 
-	int getOffset(int fieldNo);
+	@Override
+	public int getLength(int fieldNo) {
+		switch (fieldNo) {
+			case 0:
+				return 11;
+			case 1:
+				return 7;
+			default:
+				return -1;
+		}
+	}
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	@Override
+	public int getNumberOfFields() {
+		return 2;
+	}
+
+	@Override
+	public int getOffset(int fieldNo) {
+		switch (fieldNo) {
+			case 0:
+				return 0;
+			case 1:
+				return 11;
+			default:
+				return -1;
+		}
+	}
+
+	@Override
+	public void setFieldValue(Doseringskode obj, int fieldNo, String value) {
+		switch (fieldNo) {
+			case 0:
+				obj.setDrugid(NumberUtils.createLong(value));
+				break;
+			case 1:
+				obj.setDoseringskode(NumberUtils.createLong(value));
+				break;
+		}
+	}
 }

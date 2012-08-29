@@ -24,16 +24,41 @@
  */
 
 
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.takst.model;
 
-public interface FixedLengthParserConfiguration<T> {
-	String getFilename();
+import dk.nsi.sdm4.takst.TakstEntity;
 
-	int getLength(int fieldNo);
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-	int getNumberOfFields();
 
-	int getOffset(int fieldNo);
+@Entity
+public class Styrkeenhed extends TakstEntity {
+	private final DivEnheder enheder;
 
-	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
+	public Styrkeenhed(DivEnheder enheder) {
+		this.enheder = enheder;
+	}
+
+	@Override
+	public String getKey() {
+		return enheder.getKode();
+	}
+
+	@Id
+	@Column
+	public String getStyrkeenhedKode() {
+		return enheder.getKode();
+	}
+
+	@Column
+	public String getStyrkeenhedKortTekst() {
+		return enheder.getKortTekst();
+	}
+
+	@Column
+	public String getStyrkeenhedTekst() {
+		return enheder.getTekst();
+	}
 }
