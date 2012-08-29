@@ -84,7 +84,7 @@ public class CPRIntegrationTest {
 		}
 
 		@Bean
-		public Persister persister() throws SQLException {
+		public Persister persister() {
 			return new AuditingPersister();
 		}
 	}
