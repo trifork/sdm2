@@ -51,6 +51,7 @@
         <module>autorisationimporter</module>
         <module>doseringimporter</module>
         <module>sksimporter</module>
+        <module>takstimporter</module>
     </modules>
 
     <properties>

@@ -5,7 +5,6 @@ import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
-import dk.nsi.sdm4.sks.SKSParser;
 import dk.sdsd.nsp.slalog.api.SLALogConfig;
 import dk.sdsd.nsp.slalog.api.SLALogger;
 import org.springframework.context.annotation.Bean;
@@ -21,10 +20,20 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 //The Spring Java Configuration annotations above needs to be on this class, not on the abstract superclass to
 // make Spring stop complaining about weird things
-public class SksimporterConfig extends StamdataConfiguration {
+public class TakstimporterConfig extends StamdataConfiguration {
     @Bean
     public Parser parser() {
-		return new SKSParser();
+		return new Parser() {
+			@Override
+			public void process(File dataSet) throws ParserException {
+				throw new UnsupportedOperationException("process");
+			}
+
+			@Override
+			public String getHome() {
+				return "takstimporter";
+			}
+		};
 	}
 
     @Bean
