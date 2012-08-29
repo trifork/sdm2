@@ -121,64 +121,62 @@ public class DataLayerIntegrationTest {
         assertThat(validToKemadron.getTime(), is(Dates.THE_END_OF_TIME.getTime()));
     }
 
-	/*
-
     @Test
     public void ifARecordIsMissingInANewDatasetTheCoresponsingRecordFromAnyExistingDatasetShouldBeInvalidated() throws Exception
     {
-        Takst initDataset = parse("data/takst/initial");
-        persister.persistCompleteDataset(initDataset.getDatasets());
+        Takst initDataset = parse("data/initial");
+        persister.persistCompleteDataset(initDataset.getDatasets().toArray(new CompleteDataset[]{}));
 
-        Takst updatedDataset = parse("data/takst/delete");
-        persister.persistCompleteDataset(updatedDataset.getDatasets());
+        Takst updatedDataset = parse("data/delete");
+        persister.persistCompleteDataset(updatedDataset.getDatasets().toArray(new CompleteDataset[]{}));
 
         assertThat(count("Laegemiddel"), is(100));
 
-        ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM Laegemiddel WHERE DrugId = 28100009555");
-
-        rs.next();
-
-        assertThat(rs.getTimestamp("ValidTo").getTime(), is(new DateTime(2009, 7, 31, 0, 0).getMillis()));
+	    Timestamp validTo = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugId = 28100009555", Timestamp.class);
+	    assertThat(validTo.getTime(), is(new DateTime(2009, 7, 31, 0, 0).getMillis()));
     }
 
-    @Test
-    public void canImportUdgaaedeNavneSubsetWhereEntriesHaveDifferentLetterCase() throws Exception
-    {
-        Takst takst = parse("data/takst/udgaaedeNavneTakst");
+	/*
 
-        persister.persistCompleteDataset(takst.getDatasets());
 
-        connection.commit();
+	 @Test
+	 public void canImportUdgaaedeNavneSubsetWhereEntriesHaveDifferentLetterCase() throws Exception
+	 {
+		 Takst takst = parse("data/takst/udgaaedeNavneTakst");
 
-        assertThat(count("UdgaaedeNavne"), is(3));
-    }
+		 persister.persistCompleteDataset(takst.getDatasets());
 
-    @Test
-    public void canImportACompleteDatasetWithAllDataTypes() throws Exception
-    {
-        Takst takst = parse("data/takst/realtakst");
+		 connection.commit();
 
-        persister.persistCompleteDataset(takst.getDatasets());
+		 assertThat(count("UdgaaedeNavne"), is(3));
+	 }
 
-        connection.commit();
+	 @Test
+	 public void canImportACompleteDatasetWithAllDataTypes() throws Exception
+	 {
+		 Takst takst = parse("data/takst/realtakst");
 
-        // See these numbers in the system.txt file.
+		 persister.persistCompleteDataset(takst.getDatasets());
 
-        assertThat(count("Laegemiddel"), is(5492));
-        assertThat(count("Pakning"), is(8809));
+		 connection.commit();
 
-        // Udgaaede navne is a bit special. Since the keys we are able to
-        // construct from the line entries might create duplicates, we might
-        // not persist all entries. This is a problem stamdata solves itself
-        // (by keeping track of historical data). Removal of UdgaaedeNavne (LMS10)
-        // should be considered.
+		 // See these numbers in the system.txt file.
 
-        int totalUdgaaedeNavnRecords = 2547;
-        int numDublicateEntriesOnSameDay = 7;
+		 assertThat(count("Laegemiddel"), is(5492));
+		 assertThat(count("Pakning"), is(8809));
 
-        assertThat(count("UdgaaedeNavne"), is(totalUdgaaedeNavnRecords - numDublicateEntriesOnSameDay));
-    }
-*/
+		 // Udgaaede navne is a bit special. Since the keys we are able to
+		 // construct from the line entries might create duplicates, we might
+		 // not persist all entries. This is a problem stamdata solves itself
+		 // (by keeping track of historical data). Removal of UdgaaedeNavne (LMS10)
+		 // should be considered.
+
+		 int totalUdgaaedeNavnRecords = 2547;
+		 int numDublicateEntriesOnSameDay = 7;
+
+		 assertThat(count("UdgaaedeNavne"), is(totalUdgaaedeNavnRecords - numDublicateEntriesOnSameDay));
+	 }
+ */
 
 	//
 	// Helpers
