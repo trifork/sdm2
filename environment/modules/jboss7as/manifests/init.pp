@@ -83,4 +83,6 @@ class jboss7as() {
 	jboss7as::importermodule { "sikredeimporter": }
 
 	jboss7as::importermodule { "sksimporter": }
+
+	jboss7as::importermodule { "takstimporter": }
 }
