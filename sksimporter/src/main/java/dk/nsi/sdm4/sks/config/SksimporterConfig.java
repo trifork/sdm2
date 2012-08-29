@@ -5,6 +5,7 @@ import dk.nsi.sdm4.core.parser.Parser;
 import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.sks.SKSParser;
 import dk.sdsd.nsp.slalog.api.SLALogConfig;
 import dk.sdsd.nsp.slalog.api.SLALogger;
 import org.springframework.context.annotation.Bean;
@@ -23,18 +24,8 @@ import java.sql.SQLException;
 public class SksimporterConfig extends StamdataConfiguration {
     @Bean
     public Parser parser() {
-        return new Parser() {
-	        @Override
-	        public void process(File dataSet) throws ParserException {
-		        throw new UnsupportedOperationException("process");
-	        }
-
-	        @Override
-	        public String getHome() {
-		        return "sksimporter";
-	        }
-        };
-    }
+		return new SKSParser();
+	}
 
     
     @Bean
