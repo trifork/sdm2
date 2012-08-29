@@ -27,7 +27,6 @@ public class SksimporterConfig extends StamdataConfiguration {
 		return new SKSParser();
 	}
 
-    
     @Bean
     public Persister persister() throws SQLException {
         return new AuditingPersister();
