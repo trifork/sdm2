@@ -1,0 +1,1 @@
+This file is only used for testing purposes, where the SKSParser looks at the file name, so this content does not matter
