@@ -46,10 +46,8 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.Date;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -95,86 +93,76 @@ public class DataLayerIntegrationTest {
 		assertThat(count("Laegemiddel"), Is.is(100));
 	}
 
-    @Test
-    public void updateANameShouldResultInTheOldRecordBeingInvalidated() throws Exception
-    {
-        Takst initialDataset = parse("data/initial");
-        persister.persistCompleteDataset(initialDataset.getDatasets().toArray(new CompleteDataset[]{}));
+	@Test
+	public void updateANameShouldResultInTheOldRecordBeingInvalidated() throws Exception {
+		Takst initialDataset = parse("data/initial");
+		persister.persistCompleteDataset(initialDataset.getDatasets().toArray(new CompleteDataset[]{}));
 
-        Takst updateDataset = parse("data/update");
-        persister.persistCompleteDataset(updateDataset.getDatasets().toArray(new CompleteDataset[]{}));
+		Takst updateDataset = parse("data/update");
+		persister.persistCompleteDataset(updateDataset.getDatasets().toArray(new CompleteDataset[]{}));
 
-        int numOfRecords = 100;
-        int numOfChangesToExisting = 1;
+		int numOfRecords = 100;
+		int numOfChangesToExisting = 1;
 
-        // The overwritten record should be kept but have its validity period
-        // set to validTo = validFrom.
+		// The overwritten record should be kept but have its validity period
+		// set to validTo = validFrom.
 
-        assertThat(count("Laegemiddel"), is(numOfRecords + numOfChangesToExisting));
+		assertThat(count("Laegemiddel"), is(numOfRecords + numOfChangesToExisting));
 
-        // The update changes the name 'Kemadrin' to 'Kemadron'.
+		// The update changes the name 'Kemadrin' to 'Kemadron'.
 
-	    Timestamp validTo = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin' AND DrugId = 28100009555", Timestamp.class);
-        assertThat(validTo.getTime(), is(new DateTime(2009, 7, 30, 0, 0).getMillis()));
+		Timestamp validTo = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin' AND DrugId = 28100009555", Timestamp.class);
+		assertThat(validTo.getTime(), is(new DateTime(2009, 7, 30, 0, 0).getMillis()));
 
-	    Timestamp validToKemadron = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugName LIKE 'Kemadron' AND DrugId = 28100009555", Timestamp.class);
-        assertThat(validToKemadron.getTime(), is(Dates.THE_END_OF_TIME.getTime()));
-    }
+		Timestamp validToKemadron = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugName LIKE 'Kemadron' AND DrugId = 28100009555", Timestamp.class);
+		assertThat(validToKemadron.getTime(), is(Dates.THE_END_OF_TIME.getTime()));
+	}
 
-    @Test
-    public void ifARecordIsMissingInANewDatasetTheCoresponsingRecordFromAnyExistingDatasetShouldBeInvalidated() throws Exception
-    {
-        Takst initDataset = parse("data/initial");
-        persister.persistCompleteDataset(initDataset.getDatasets().toArray(new CompleteDataset[]{}));
+	@Test
+	public void ifARecordIsMissingInANewDatasetTheCoresponsingRecordFromAnyExistingDatasetShouldBeInvalidated() throws Exception {
+		Takst initDataset = parse("data/initial");
+		persister.persistCompleteDataset(initDataset.getDatasets().toArray(new CompleteDataset[]{}));
 
-        Takst updatedDataset = parse("data/delete");
-        persister.persistCompleteDataset(updatedDataset.getDatasets().toArray(new CompleteDataset[]{}));
+		Takst updatedDataset = parse("data/delete");
+		persister.persistCompleteDataset(updatedDataset.getDatasets().toArray(new CompleteDataset[]{}));
 
-        assertThat(count("Laegemiddel"), is(100));
+		assertThat(count("Laegemiddel"), is(100));
 
-	    Timestamp validTo = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugId = 28100009555", Timestamp.class);
-	    assertThat(validTo.getTime(), is(new DateTime(2009, 7, 31, 0, 0).getMillis()));
-    }
+		Timestamp validTo = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugId = 28100009555", Timestamp.class);
+		assertThat(validTo.getTime(), is(new DateTime(2009, 7, 31, 0, 0).getMillis()));
+	}
 
-	 @Test
-	 public void canImportUdgaaedeNavneSubsetWhereEntriesHaveDifferentLetterCase() throws Exception
-	 {
-		 Takst takst = parse("data/udgaaedeNavneTakst");
+	@Test
+	public void canImportUdgaaedeNavneSubsetWhereEntriesHaveDifferentLetterCase() throws Exception {
+		Takst takst = parse("data/udgaaedeNavneTakst");
 
-		 persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[]{}));
+		persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[]{}));
 
-		 assertThat(count("UdgaaedeNavne"), is(3));
-	 }
+		assertThat(count("UdgaaedeNavne"), is(3));
+	}
 
-	/*
+	@Test
+	public void canImportACompleteDatasetWithAllDataTypes() throws Exception {
+		Takst takst = parse("data/realtakst");
 
+		persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[]{}));
 
-		 @Test
-		 public void canImportACompleteDatasetWithAllDataTypes() throws Exception
-		 {
-			 Takst takst = parse("data/takst/realtakst");
+		// See these numbers in the system.txt file.
 
-			 persister.persistCompleteDataset(takst.getDatasets());
+		assertThat(count("Laegemiddel"), is(5492));
+		assertThat(count("Pakning"), is(8809));
 
-			 connection.commit();
+		// Udgaaede navne is a bit special. Since the keys we are able to
+		// construct from the line entries might create duplicates, we might
+		// not persist all entries. This is a problem stamdata solves itself
+		// (by keeping track of historical data). Removal of UdgaaedeNavne (LMS10)
+		// should be considered.
 
-			 // See these numbers in the system.txt file.
+		int totalUdgaaedeNavnRecords = 2547;
+		int numDublicateEntriesOnSameDay = 7;
 
-			 assertThat(count("Laegemiddel"), is(5492));
-			 assertThat(count("Pakning"), is(8809));
-
-			 // Udgaaede navne is a bit special. Since the keys we are able to
-			 // construct from the line entries might create duplicates, we might
-			 // not persist all entries. This is a problem stamdata solves itself
-			 // (by keeping track of historical data). Removal of UdgaaedeNavne (LMS10)
-			 // should be considered.
-
-			 int totalUdgaaedeNavnRecords = 2547;
-			 int numDublicateEntriesOnSameDay = 7;
-
-			 assertThat(count("UdgaaedeNavne"), is(totalUdgaaedeNavnRecords - numDublicateEntriesOnSameDay));
-		 }
-	 */
+		assertThat(count("UdgaaedeNavne"), is(totalUdgaaedeNavnRecords - numDublicateEntriesOnSameDay));
+	}
 
 	//
 	// Helpers
