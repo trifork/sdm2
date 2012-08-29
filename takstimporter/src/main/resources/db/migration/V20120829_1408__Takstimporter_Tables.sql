@@ -520,3 +520,116 @@ CREATE TABLE Laegemiddel (
 	INDEX (LaegemiddelPID, ModifiedDate),
 	INDEX (DrugID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
+
+-- Takst
+--
+CREATE TABLE Formbetegnelse (
+	FormbetegnelsePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	Kode VARCHAR(10) NOT NULL,
+
+	Tekst VARCHAR(150) NOT NULL,
+	Aktiv BOOLEAN,
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (FormbetegnelsePID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+CREATE TABLE Rekommandationer (
+	RekommandationerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	Varenummer BIGINT(12) NOT NULL,
+
+	Rekommandationsgruppe BIGINT(12),
+	DrugID BIGINT(12),
+	Rekommandationsniveau VARCHAR(25),
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (RekommandationerPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+CREATE TABLE Enhedspriser (
+	EnhedspriserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	Varenummer BIGINT(12) NOT NULL,
+
+	DrugID BIGINT(12),
+	PrisPrEnhed BIGINT(12),
+	PrisPrDDD BIGINT(12),
+	BilligstePakning VARCHAR(1),
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (EnhedspriserPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+CREATE TABLE Pakningskombinationer (
+	PakningskombinationerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	CID VARCHAR(23) NOT NULL,
+
+	VarenummerOrdineret BIGINT(12),
+	VarenummerSubstitueret BIGINT(12),
+	VarenummerAlternativt BIGINT(12),
+	AntalPakninger BIGINT(12),
+	EkspeditionensSamledePris BIGINT(12),
+	InformationspligtMarkering VARCHAR(1),
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (PakningskombinationerPID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+CREATE TABLE Laegemiddelnavn (
+	LaegemiddelnavnPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	DrugID BIGINT(12) NOT NULL,
+	LaegemidletsUforkortedeNavn VARCHAR(60),
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (LaegemiddelnavnPID, ModifiedDate),
+	INDEX (DrugID, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+CREATE TABLE Indholdsstoffer (
+	IndholdsstofferPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+	CID VARCHAR(364) NOT NULL,
+
+	DrugID BIGINT(12),
+	Varenummer BIGINT(12),
+	Stofklasse VARCHAR(100),
+	Substansgruppe VARCHAR(100),
+	Substans VARCHAR(150),
+
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+
+	INDEX (IndholdsstofferPID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
