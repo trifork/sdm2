@@ -87,7 +87,7 @@ public class DataLayerIntegrationTest {
 	private TakstParser parser;
 
 	@Test
-	public void simpleImportOfInitilDataset() throws Exception {
+	public void simpleImportOfInitialDataset() throws Exception {
 		Takst takst = parse("data/initial");
 
 		persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[]{}));
