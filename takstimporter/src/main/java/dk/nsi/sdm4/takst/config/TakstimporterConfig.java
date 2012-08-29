@@ -43,6 +43,6 @@ public class TakstimporterConfig extends StamdataConfiguration {
 
 	@Bean
 	public SLALogger slaLogger() {
-		return new SLALogConfig("Stamdata SKS-importer", "sksimporter").getSLALogger();
+		return new SLALogConfig("Stamdata Takst-importer", "takstimporter").getSLALogger();
 	}
 }
