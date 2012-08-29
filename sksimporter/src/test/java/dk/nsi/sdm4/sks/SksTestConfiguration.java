@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 public class SksTestConfiguration {
 	@Value("${test.mysql.port}")
 	private int mysqlPort;
-	private String testDbName = "sdm_warehouse_dosering_test";
+	private String testDbName = "sdm_warehouse_sks_test";
 	private String db_username = "root";
 	private String db_password = "papkasse";
 
