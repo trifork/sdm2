@@ -28,8 +28,10 @@ package dk.nsi.sdm4.takst;
 import dk.nsi.sdm4.core.domain.CompleteDataset;
 import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.core.util.Dates;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.core.Is;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +46,12 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -89,14 +95,13 @@ public class DataLayerIntegrationTest {
 		assertThat(count("Laegemiddel"), Is.is(100));
 	}
 
-/*
     @Test
     public void updateANameShouldResultInTheOldRecordBeingInvalidated() throws Exception
     {
-        Takst initialDataset = parse("data/takst/initial");
+        Takst initialDataset = parse("data/initial");
         persister.persistCompleteDataset(initialDataset.getDatasets().toArray(new CompleteDataset[]{}));
 
-        Takst updateDataset = parse("data/takst/update");
+        Takst updateDataset = parse("data/update");
         persister.persistCompleteDataset(updateDataset.getDatasets().toArray(new CompleteDataset[]{}));
 
         int numOfRecords = 100;
@@ -109,14 +114,14 @@ public class DataLayerIntegrationTest {
 
         // The update changes the name 'Kemadrin' to 'Kemadron'.
 
-        ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin' AND DrugId = 28100009555");
-        rs.next();
-        assertThat(rs.getTimestamp("ValidTo").getTime(), is(new DateTime(2009, 7, 30, 0, 0).getMillis()));
+	    Timestamp validTo = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin' AND DrugId = 28100009555", Timestamp.class);
+        assertThat(validTo.getTime(), is(new DateTime(2009, 7, 30, 0, 0).getMillis()));
 
-        rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadron' AND DrugId = 28100009555");
-        rs.next();
-        assertThat(rs.getTimestamp("ValidTo").getTime(), is(Dates.THE_END_OF_TIME.getTime()));
+	    Timestamp validToKemadron = jdbcTemplate.queryForObject("SELECT ValidTo FROM Laegemiddel WHERE DrugName LIKE 'Kemadron' AND DrugId = 28100009555", Timestamp.class);
+        assertThat(validToKemadron.getTime(), is(Dates.THE_END_OF_TIME.getTime()));
     }
+
+	/*
 
     @Test
     public void ifARecordIsMissingInANewDatasetTheCoresponsingRecordFromAnyExistingDatasetShouldBeInvalidated() throws Exception
