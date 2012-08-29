@@ -50,6 +50,7 @@
         <module>bemyndigelseimporter</module>
         <module>autorisationimporter</module>
         <module>doseringimporter</module>
+        <module>sksimporter</module>
     </modules>
 
     <properties>

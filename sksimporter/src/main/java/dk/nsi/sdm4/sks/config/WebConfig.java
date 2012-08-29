@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.dosering.config;
+package dk.nsi.sdm4.sks.config;
 
 import dk.nsi.sdm4.core.status.StatusReporter;
 import org.springframework.context.annotation.Bean;
