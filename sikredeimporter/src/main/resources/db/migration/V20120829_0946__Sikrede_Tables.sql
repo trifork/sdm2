@@ -51,3 +51,24 @@ CREATE TABLE Sikrede (
     ValidTo DateTime,
     ModifiedDate DateTime NOT NULL
 ) ENGINE=InnoDB COLLATE=utf8_bin;
+
+
+-- This table is to be replicated to the BRS db schema.
+-- It is populated by stamdata, but not read by stamdata.
+--
+CREATE TABLE AssignedDoctor ( -- Sikrede
+  pk bigint AUTO_INCREMENT NOT NULL,
+
+    -- cpr numre er base64 af hashede numre
+  patientCpr varchar(80) NOT NULL,
+
+  doctorOrganisationIdentifier varchar(6) NOT NULL, -- ydernummer
+
+  assignedFrom datetime NOT NULL,
+  assignedTo datetime,
+
+  reference varchar(40) NOT NULL,
+
+  PRIMARY KEY (pk),
+  KEY `patientCpr` (`patientCpr`)
+) ENGINE=InnoDB COLLATE=utf8_bin;
