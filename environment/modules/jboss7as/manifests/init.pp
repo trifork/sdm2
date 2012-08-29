@@ -79,6 +79,8 @@ class jboss7as() {
 	jboss7as::importermodule { "doseringimporter": }
 
 	jboss7as::importermodule { "autorisationimporter": }
+	
+	jboss7as::importermodule { "sikredeimporter": }
 
 	jboss7as::importermodule { "sksimporter": }
 }
