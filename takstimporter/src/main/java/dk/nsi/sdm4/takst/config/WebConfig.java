@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.sks.config;
+package dk.nsi.sdm4.takst.config;
 
 import dk.nsi.sdm4.core.status.StatusReporter;
 import org.springframework.context.annotation.Bean;
@@ -9,8 +9,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 public class WebConfig {
 
-    @Bean
-    public StatusReporter statusReporter() {
-        return new StatusReporter();
-    }
+	@Bean
+	public StatusReporter statusReporter() {
+		return new StatusReporter();
+	}
 }

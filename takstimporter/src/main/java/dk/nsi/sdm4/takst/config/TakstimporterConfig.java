@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.sks.config;
+package dk.nsi.sdm4.takst.config;
 
 import dk.nsi.sdm4.core.config.StamdataConfiguration;
 import dk.nsi.sdm4.core.parser.Parser;
@@ -21,8 +21,8 @@ import java.sql.SQLException;
 //The Spring Java Configuration annotations above needs to be on this class, not on the abstract superclass to
 // make Spring stop complaining about weird things
 public class TakstimporterConfig extends StamdataConfiguration {
-    @Bean
-    public Parser parser() {
+	@Bean
+	public Parser parser() {
 		return new Parser() {
 			@Override
 			public void process(File dataSet) throws ParserException {
@@ -36,10 +36,10 @@ public class TakstimporterConfig extends StamdataConfiguration {
 		};
 	}
 
-    @Bean
-    public Persister persister() throws SQLException {
-        return new AuditingPersister();
-    }
+	@Bean
+	public Persister persister() throws SQLException {
+		return new AuditingPersister();
+	}
 
 	@Bean
 	public SLALogger slaLogger() {
