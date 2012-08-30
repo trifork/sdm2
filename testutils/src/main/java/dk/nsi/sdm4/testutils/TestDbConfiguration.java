@@ -1,4 +1,4 @@
-package dk.nsi.sdm4.takst;
+package dk.nsi.sdm4.testutils;
 
 
 import com.mysql.jdbc.Driver;
@@ -19,10 +19,13 @@ import javax.sql.DataSource;
 
 @Configuration
 @PropertySource({"classpath:test.properties", "classpath:default-config.properties"})
-public class TakstTestConfiguration {
+public class TestDbConfiguration {
 	@Value("${test.mysql.port}")
 	private int mysqlPort;
-	private String testDbName = "sdm_warehouse_takst_test";
+
+	@Value("${test.db.name}")
+	private String testDbName;
+
 	private String db_username = "root";
 	private String db_password = "papkasse";
 

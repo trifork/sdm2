@@ -30,17 +30,14 @@ import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.util.Dates;
 import dk.nsi.sdm4.takst.config.TakstimporterApplicationConfig;
 import dk.nsi.sdm4.takst.model.Doseringskode;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -52,7 +49,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(classes = {TakstimporterApplicationConfig.class, TakstTestConfiguration.class})
+@ContextConfiguration(classes = {TakstimporterApplicationConfig.class, TestDbConfiguration.class})
 public class TakstImporterIntegrationTest
 {
 	@Autowired

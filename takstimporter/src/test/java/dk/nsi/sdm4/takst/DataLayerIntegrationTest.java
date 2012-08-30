@@ -29,6 +29,7 @@ import dk.nsi.sdm4.core.domain.CompleteDataset;
 import dk.nsi.sdm4.core.persistence.Persister;
 import dk.nsi.sdm4.core.util.Dates;
 import dk.nsi.sdm4.takst.config.TakstimporterApplicationConfig;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
@@ -53,7 +54,7 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(classes = {TakstimporterApplicationConfig.class, TakstTestConfiguration.class})
+@ContextConfiguration(classes = {TakstimporterApplicationConfig.class, TestDbConfiguration.class})
 public class DataLayerIntegrationTest {
 	@Autowired
 	private Persister persister;
