@@ -85,4 +85,6 @@ class jboss7as() {
 	jboss7as::importermodule { "sksimporter": }
 
 	jboss7as::importermodule { "takstimporter": }
+	
+	jboss7as::importermodule { "yderimporter": }
 }

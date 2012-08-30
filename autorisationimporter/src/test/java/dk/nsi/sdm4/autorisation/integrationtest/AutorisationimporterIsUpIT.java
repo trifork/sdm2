@@ -16,7 +16,7 @@ public class AutorisationimporterIsUpIT {
 	@Test
 	public void statusPageReturns200OK() throws Exception {
 		int status = 0;
-		String url = "http://localhost:8080/sorrelationimporter/status";
+		String url = "http://localhost:8080/autorisationimporter/status";
 		final URL u = new URL(url);
 		for (int i = 0; i < MAX_RETRIES; i++) {
 			HttpURLConnection connection = (HttpURLConnection) u.openConnection();
