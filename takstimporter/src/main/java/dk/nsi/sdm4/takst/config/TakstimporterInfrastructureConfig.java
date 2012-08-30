@@ -20,27 +20,7 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 //The Spring Java Configuration annotations above needs to be on this class, not on the abstract superclass to
 // make Spring stop complaining about weird things
-public class TakstimporterConfig extends StamdataConfiguration {
-	@Bean
-	public Parser parser() {
-		return new Parser() {
-			@Override
-			public void process(File dataSet) throws ParserException {
-				throw new UnsupportedOperationException("process");
-			}
-
-			@Override
-			public String getHome() {
-				return "takstimporter";
-			}
-		};
-	}
-
-	@Bean
-	public Persister persister() {
-		return new AuditingPersister();
-	}
-
+public class TakstimporterInfrastructureConfig extends StamdataConfiguration {
 	@Bean
 	public SLALogger slaLogger() {
 		return new SLALogConfig("Stamdata Takst-importer", "takstimporter").getSLALogger();
