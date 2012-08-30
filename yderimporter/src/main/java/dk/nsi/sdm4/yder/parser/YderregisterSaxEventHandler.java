@@ -61,10 +61,13 @@ public class YderregisterSaxEventHandler extends DefaultHandler {
 
     private String versionNumber = null;
     
-    @Autowired
     RecordPersister persister;
 
-    YderregisterSaxEventHandler() {
+    public YderregisterSaxEventHandler(RecordPersister persister) {
+        this.persister = persister;
+        yderRecordCount = 0;
+        personRecordCount = 0;
+        versionNumber = null;
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
