@@ -29,6 +29,7 @@ package dk.nsi.sdm4.takst;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import dk.nsi.sdm4.core.domain.Dataset;
+import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.core.util.Dates;
 import dk.nsi.sdm4.takst.model.*;
 import org.apache.log4j.Logger;
@@ -64,6 +65,14 @@ public class TakstParser {
 	}
 
 	public Takst parseFiles(File[] input) throws Exception {
+		if (input == null) {
+			throw new ParserException("input is null");
+		}
+
+		if (input.length == 0) {
+			throw new ParserException("input array is empty");
+		}
+
 		// Parse required meta information first.
 
 		String systemline = getSystemLine(input);

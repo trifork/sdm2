@@ -27,6 +27,7 @@
 package dk.nsi.sdm4.takst;
 
 import com.google.common.collect.Lists;
+import dk.nsi.sdm4.core.parser.ParserException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.StringUtils;
@@ -49,6 +50,9 @@ public class FixedLengthFileParser {
 		logger.debug("Parsing file=" + configuration.getFilename());
 
 		File file = TakstParser.getFileByName(configuration.getFilename(), input);
+		if (!(file != null && file.exists())) {
+			throw new ParserException("File " + configuration.getFilename() + " for " + configuration.getClass().getSimpleName() + " does not exist");
+		}
 		LineIterator lines = FileUtils.lineIterator(file, FILE_ENCODING);
 
 		List<T> results = Lists.newArrayList();
