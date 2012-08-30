@@ -19,7 +19,7 @@ import dk.sdsd.nsp.slalog.api.SLALogger;
 @Configuration
 @EnableScheduling
 @EnableTransactionManagement
-public class AutorisationConfig extends StamdataConfiguration {
+public class AutorisationApplicationConfig {
 	@Bean
 	public Parser parser() {
 		return new AutorisationParser();
@@ -35,9 +35,4 @@ public class AutorisationConfig extends StamdataConfiguration {
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 	    return StamdataConfiguration.propertySourcesPlaceholderConfigurer();
     }
-
-	@Bean
-	public SLALogger slaLogger() {
-		return new SLALogConfig("Stamdata Autorisation-importer", "autorisationimporter").getSLALogger();
-	}
 }
