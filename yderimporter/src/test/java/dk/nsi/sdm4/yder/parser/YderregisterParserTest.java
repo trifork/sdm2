@@ -24,12 +24,11 @@
  */
 package dk.nsi.sdm4.yder.parser;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.joda.time.Instant;
 import org.junit.Rule;
 import org.junit.Test;
@@ -69,10 +68,6 @@ public class YderregisterParserTest {
             return new RecordPersister(Instant.now());
         }
 
-        @Bean
-        public YderregisterSaxEventHandler saxHandler() {
-            return new YderregisterSaxEventHandler();
-        }
     }
 
     @Autowired
@@ -82,81 +77,36 @@ public class YderregisterParserTest {
     RecordPersister persister;
 
     @Autowired
-    YderregisterSaxEventHandler saxHandler;
-    
-    @Autowired
     JdbcTemplate jdbcTemplate;
 
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
     
+    @Test(expected = OutOfSequenceException.class)
+    public void testImportingOldVersionWillResultInAnOutOfSequenceException() {
+        String sql = "insert into YderregisterKeyValue (`key`, value) values ('Yderregister_version', '20120104')";
+        jdbcTemplate.update(sql);
+        
+        File fileSet = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/csc"));
+        parser.process(fileSet);
+        
+    }
+
+    @Test(expected = OutOfSequenceException.class)
+    public void testImportingCurrentVersionResultInAnOutOfSequenceException() throws Exception {
+        String sql = "insert into YderregisterKeyValue (`key`, value) values ('Yderregister_version', '20120103')";
+        jdbcTemplate.update(sql);
+        
+        File fileSet = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/csc"));
+        parser.process(fileSet);
+    }
+
     @Test
-    public void dummy() {
-        boolean dummy = true;
-        assertTrue(dummy);
-    }
-
-//    @Test(expected = OutOfSequenceException.class)
-//    public void testImportingOldVersionWillResultInAnOutOfSequenceException() {
-//        String sql = "insert into YderregisterKeyValue (`key`, value) values ('Yderregister_version', '00002')";
-//        jdbcTemplate.update(sql);
-//        
-//        File fileSet = null;
-//        try {
-//            fileSet = createFileSet("00001");
-//        } catch (IOException e) {
-//            fail(e.getMessage());
-//        }
-//
-//        parser.process(fileSet);
-//    }
-
-    /*
-     * @Test(expected = OutOfSequenceException.class) public void
-     * testImportingCurrentVersionResultInAnOutOfSequenceException() throws
-     * Exception { when(keyValueStore.get("version")).thenReturn("00002"); File
-     * fileSet = createFileSet("00002");
-     * 
-     * parser.process(fileSet, persister); }
-     * 
-     * @Test(expected = ParserException.class) public void
-     * testMissingFilesResultsInAParserException() throws Exception { File
-     * fileSet = createFileSet("00001"); fileSet.listFiles()[0].delete();
-     * 
-     * parser.process(fileSet, persister); }
-     * 
-     * @Test public void testStoresTheVersionFromStartRecordCorrectly() throws
-     * Exception { String version = "00031";
-     * 
-     * File fileSet = createFileSet(version);
-     * 
-     * parser.process(fileSet, persister);
-     * 
-     * verify(keyValueStore).put("version", version); }
-     * 
-     * @Test public void testThatAllFilesArePassedToTheParser() throws Exception
-     * { File fileSet = createFileSet("00001");
-     * 
-     * parser.process(fileSet, persister);
-     * 
-     * for (File file : fileSet.listFiles()) { verify(saxParser).parse(file,
-     * saxHandler); } }
-     */
-
-    //
-    // Helpers
-    //
-
-    public File createFileSet(String filename, String version) throws IOException {
-        File root = folder.newFolder("root");
-
-        File file = new File(root, filename);
-        file.createNewFile();
-
-        return root;
-    }
-
-    public File createFileSet(String version) throws IOException {
-        return createFileSet("M.S1040025.SB025.xml", version);
+    public void testThatFileContentAreParsed() throws Exception {
+        File fileSet = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/csc"));
+        parser.process(fileSet);
+        
+        assertEquals(58, jdbcTemplate.queryForInt("select count(*) from Yderregister"));
+        assertEquals(54, jdbcTemplate.queryForInt("select count(*) from YderregisterPerson"));
     }
 }

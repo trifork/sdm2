@@ -30,6 +30,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import dk.nsi.sdm4.core.parser.OutOfSequenceException;
@@ -49,7 +50,6 @@ public class YderregisterParser implements Parser {
     @Autowired
     private RecordPersister persister;
 
-    @Autowired
     YderregisterSaxEventHandler eventHandler;
     
     @Autowired
@@ -61,6 +61,7 @@ public class YderregisterParser implements Parser {
     
     @Override
     public void process(File dataSet) throws ParserException {
+        eventHandler = new YderregisterSaxEventHandler(persister);
     
         SLALogItem slaLogItem = slaLogger.createLogItem("YderregisterParser", dataSet != null ? dataSet.getName() : "no input file");
         try {
@@ -86,7 +87,13 @@ public class YderregisterParser implements Parser {
             // version and ensuring that the version number is larger.
             //
             
-            String prevVersion = jdbcTemplate.queryForObject("select value from YderregisterKeyValue where `key` = "+VERSION_KEY,String.class);
+            
+            String prevVersion;
+            try {
+                prevVersion = jdbcTemplate.queryForObject("select value from YderregisterKeyValue where `key` = '"+VERSION_KEY+"'",String.class);
+            } catch(EmptyResultDataAccessException e) {
+                prevVersion = null;
+            }
 
             if (prevVersion != null && newVersion.compareTo(prevVersion) <= 0) {
                 throw new OutOfSequenceException(prevVersion, newVersion);
@@ -94,18 +101,22 @@ public class YderregisterParser implements Parser {
 
             String sql;
             if(prevVersion == null) {
-                sql = "insert into YderregisterKeyValue (`key`, value) values ("+VERSION_KEY+", "+newVersion+")";
+                sql = "insert into YderregisterKeyValue (`key`, value) values ('"+VERSION_KEY+"', "+newVersion+")";
             } else {
-                sql = "update YderregisterKeyValue set value="+newVersion+" where `key`="+VERSION_KEY;
+                sql = "update YderregisterKeyValue set value="+newVersion+" where `key`='"+VERSION_KEY+"'";
             }
             jdbcTemplate.update(sql);
 
             slaLogItem.setCallResultOk();
             slaLogItem.store();
+        } catch (OutOfSequenceException e) {
+            slaLogItem.setCallResultError("YderregisterParser failed - Cause: " + e.getMessage());
+            slaLogItem.store();
+            throw e;
+
         } catch (Exception e) {
             slaLogItem.setCallResultError("YderregisterParser failed - Cause: " + e.getMessage());
             slaLogItem.store();
-
             throw new ParserException(e);
         }
     }
