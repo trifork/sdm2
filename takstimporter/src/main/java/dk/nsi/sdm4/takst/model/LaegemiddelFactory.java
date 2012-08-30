@@ -26,9 +26,11 @@
 
 package dk.nsi.sdm4.takst.model;
 
+import dk.nsi.sdm4.core.parser.ParserException;
 import dk.nsi.sdm4.takst.FixedLengthParserConfiguration;
 import org.apache.commons.lang.math.NumberUtils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -148,82 +150,88 @@ public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegem
 	}
 
 	@Override
-	public void setFieldValue(Laegemiddel obj, int fieldNo, String value) throws Exception {
-		switch (fieldNo) {
-			case 0:
-				obj.setDrugid(NumberUtils.createLong(value));
-				break;
-			case 1:
-				obj.setVaretype(value);
-				break;
-			case 2:
-				obj.setVaredeltype(value);
-				break;
-			case 3:
-				obj.setAlfabetSekvensplads(value);
-				break;
-			case 4:
-				obj.setSpecNummer(NumberUtils.createLong(value));
-				break;
-			case 5:
-				obj.setNavn(value);
-				break;
-			case 6:
-				obj.setLaegemiddelformTekst(value);
-				break;
-			case 7:
-				obj.setFormKode(value);
-				break;
-			case 8:
-				obj.setKodeForYderligereFormOplysn(value);
-				break;
-			case 9:
-				obj.setStyrkeKlarTekst(value);
-				break;
-			case 10:
-				obj.setStyrkeNumerisk(NumberUtils.createLong(value));
-				break;
-			case 11:
-				obj.setStyrkeEnhed(value);
-				break;
-			case 12:
-				obj.setMTIndehaver(NumberUtils.createLong(value));
-				break;
-			case 13:
-				obj.setRepraesentantDistributoer(NumberUtils.createLong(value));
-				break;
-			case 14:
-				obj.setATC(value);
-				break;
-			case 15:
-				obj.setAdministrationsvej(value);
-				break;
-			case 16:
-				boolean hasWarning = "J".equalsIgnoreCase(value);
-				obj.setTrafikadvarsel(hasWarning);
-				break;
-			case 17:
-				obj.setSubstitution(value);
-				break;
-			case 21:
-				obj.setLaegemidletsSubstitutionsgruppe(value);
-				break;
-			case 22:
-				boolean suitedForDosageDispensation = "D".equalsIgnoreCase(value);
-				obj.setEgnetTilDosisdispensering(suitedForDosageDispensation);
-				break;
-			case 23:
-				if (value != null) {
-					Date date = new SimpleDateFormat("yyyyMMdd").parse(value);
-					obj.setDatoForAfregistrAfLaegemiddel(date);
-				}
-				break;
-			case 24:
-				if (value != null) {
-					Date date = new SimpleDateFormat("yyyyMMdd").parse(value);
-					obj.setKarantaenedato(date);
-				}
-				break;
+	public void setFieldValue(Laegemiddel obj, int fieldNo, String value) {
+		try {
+			switch (fieldNo) {
+				case 0:
+					obj.setDrugid(NumberUtils.createLong(value));
+					break;
+				case 1:
+					obj.setVaretype(value);
+					break;
+				case 2:
+					obj.setVaredeltype(value);
+					break;
+				case 3:
+					obj.setAlfabetSekvensplads(value);
+					break;
+				case 4:
+					obj.setSpecNummer(NumberUtils.createLong(value));
+					break;
+				case 5:
+					obj.setNavn(value);
+					break;
+				case 6:
+					obj.setLaegemiddelformTekst(value);
+					break;
+				case 7:
+					obj.setFormKode(value);
+					break;
+				case 8:
+					obj.setKodeForYderligereFormOplysn(value);
+					break;
+				case 9:
+					obj.setStyrkeKlarTekst(value);
+					break;
+				case 10:
+					obj.setStyrkeNumerisk(NumberUtils.createLong(value));
+					break;
+				case 11:
+					obj.setStyrkeEnhed(value);
+					break;
+				case 12:
+					obj.setMTIndehaver(NumberUtils.createLong(value));
+					break;
+				case 13:
+					obj.setRepraesentantDistributoer(NumberUtils.createLong(value));
+					break;
+				case 14:
+					obj.setATC(value);
+					break;
+				case 15:
+					obj.setAdministrationsvej(value);
+					break;
+				case 16:
+					boolean hasWarning = "J".equalsIgnoreCase(value);
+					obj.setTrafikadvarsel(hasWarning);
+					break;
+				case 17:
+					obj.setSubstitution(value);
+					break;
+				case 21:
+					obj.setLaegemidletsSubstitutionsgruppe(value);
+					break;
+				case 22:
+					boolean suitedForDosageDispensation = "D".equalsIgnoreCase(value);
+					obj.setEgnetTilDosisdispensering(suitedForDosageDispensation);
+					break;
+				case 23:
+					if (value != null) {
+						Date date = new SimpleDateFormat("yyyyMMdd").parse(value);
+						obj.setDatoForAfregistrAfLaegemiddel(date);
+					}
+					break;
+				case 24:
+					if (value != null) {
+						Date date = new SimpleDateFormat("yyyyMMdd").parse(value);
+						obj.setKarantaenedato(date);
+					}
+					break;
+			}
+		} catch (RuntimeException e) {
+			throw new ParserException("Could not set field " + fieldNo + " on " + obj + " to value " + value, e);
+		} catch (ParseException e) {
+			throw new ParserException("Could not set field " + fieldNo + " on " + obj + " to value " + value, e);
 		}
 	}
 }
