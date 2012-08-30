@@ -26,23 +26,18 @@
 package dk.nsi.sdm4.takst;
 
 import dk.nsi.sdm4.core.domain.CompleteDataset;
-import dk.nsi.sdm4.core.persistence.AuditingPersister;
 import dk.nsi.sdm4.core.persistence.Persister;
 import dk.nsi.sdm4.core.util.Dates;
+import dk.nsi.sdm4.takst.config.TakstimporterApplicationConfig;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.core.Is;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
@@ -58,23 +53,8 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {TakstimporterApplicationConfig.class, TakstTestConfiguration.class})
 public class DataLayerIntegrationTest {
-	@Configuration
-	@PropertySource({"classpath:test.properties", "classpath:default-config.properties"})
-	@Import(TakstTestConfiguration.class)
-	static class ContextConfiguration {
-		@Bean
-		public Persister persister() {
-			return new AuditingPersister();
-		}
-
-		@Bean
-		public TakstParser takstParser() {
-			return new TakstParser();
-		}
-	}
-
 	@Autowired
 	private Persister persister;
 
