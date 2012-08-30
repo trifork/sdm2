@@ -52,6 +52,7 @@
         <module>doseringimporter</module>
         <module>sksimporter</module>
         <module>takstimporter</module>
+        <module>testutils</module>
     </modules>
 
     <properties>
