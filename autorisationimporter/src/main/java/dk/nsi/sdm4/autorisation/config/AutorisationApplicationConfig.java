@@ -17,8 +17,6 @@ import dk.sdsd.nsp.slalog.api.SLALogConfig;
 import dk.sdsd.nsp.slalog.api.SLALogger;
 
 @Configuration
-@EnableScheduling
-@EnableTransactionManagement
 public class AutorisationApplicationConfig {
 	@Bean
 	public Parser parser() {
