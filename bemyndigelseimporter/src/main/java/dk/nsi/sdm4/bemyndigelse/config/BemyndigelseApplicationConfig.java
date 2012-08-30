@@ -15,9 +15,7 @@ import dk.sdsd.nsp.slalog.api.SLALogConfig;
 import dk.sdsd.nsp.slalog.api.SLALogger;
 
 @Configuration
-@EnableScheduling
-@EnableTransactionManagement
-public class BemyndigelseConfig extends StamdataConfiguration {
+public class BemyndigelseApplicationConfig {
 	@Bean
 	public Parser parser() {
 		return new BemyndigelseParser();
@@ -26,16 +24,5 @@ public class BemyndigelseConfig extends StamdataConfiguration {
 	@Bean
 	public RecordPersister persister() {
 		return new RecordPersister(Instant.now());
-	}
-
-	// this is not automatically registered, see https://jira.springsource.org/browse/SPR-8539
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-	    return StamdataConfiguration.propertySourcesPlaceholderConfigurer();
-    }
-
-	@Bean
-	public SLALogger slaLogger() {
-		return new SLALogConfig("Stamdata Bemyndigelse-importer", "bemyndigelseimporter").getSLALogger();
 	}
 }
