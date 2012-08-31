@@ -53,6 +53,7 @@
         <module>sikredeimporter</module>
         <module>sksimporter</module>
         <module>takstimporter</module>
+        <module>yderimporter</module>
         <module>testutils</module>
     </modules>
 
