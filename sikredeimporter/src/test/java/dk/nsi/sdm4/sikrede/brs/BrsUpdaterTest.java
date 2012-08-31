@@ -24,63 +24,35 @@ package dk.nsi.sdm4.sikrede.brs;
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.sql.Date;
-import java.sql.SQLException;
-
+import dk.nsi.sdm4.sikrede.config.SikredeimporterApplicationConfig;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
 import org.joda.time.DateTime;
-import org.joda.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
-import dk.nsi.sdm4.sikrede.SikredeTestConfiguration;
-import dk.nsi.sdm4.sikrede.parser.SikredeParser;
+import java.sql.Date;
+import java.sql.SQLException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {SikredeimporterApplicationConfig.class, TestDbConfiguration.class})
 public class BrsUpdaterTest {
-
     private static final DateTime ASSIGNED_FROM = new DateTime(2011, 10, 10, 0, 0);
     private static final DateTime ASSIGNED_TO = new DateTime(2011, 11, 10, 0, 0);
 
     private String examplePatientCpr;
     private String exampleDoctorOrganisationIdentifier;
-
-    @Configuration
-    @PropertySource( { "classpath:test.properties", "default-config.properties" })
-    @Import(SikredeTestConfiguration.class)
-    static class ContextConfiguration {
-        @Bean
-        public SikredeParser parser() {
-            return new SikredeParser();
-        }
-
-        @Bean
-        public BrsUpdater brsUpdater() {
-            return new BrsUpdater();
-        }
-
-        @Bean
-        public RecordPersister persister() {
-            return new RecordPersister(Instant.now());
-        }
-    }
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
