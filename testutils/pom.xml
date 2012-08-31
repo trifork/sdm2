@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>dk.nsi.stamdata4</groupId>
 		<artifactId>sdm-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<version>4.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>testutils</artifactId>
