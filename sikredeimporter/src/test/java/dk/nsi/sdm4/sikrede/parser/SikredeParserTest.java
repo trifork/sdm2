@@ -24,66 +24,37 @@
  */
 package dk.nsi.sdm4.sikrede.parser;
 
-import static org.junit.Assert.assertEquals;
+import dk.nsi.sdm4.core.persistence.recordpersister.Record;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
+import dk.nsi.sdm4.sikrede.config.SikredeimporterApplicationConfig;
+import dk.nsi.sdm4.sikrede.recordspecs.SikredeRecordSpecs;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import org.joda.time.Instant;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Transactional;
-
-import dk.nsi.sdm4.core.persistence.recordpersister.Record;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
-import dk.nsi.sdm4.sikrede.SikredeTestConfiguration;
-import dk.nsi.sdm4.sikrede.brs.BrsUpdater;
-import dk.nsi.sdm4.sikrede.recordspecs.SikredeRecordSpecs;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {SikredeimporterApplicationConfig.class, TestDbConfiguration.class})
 public class SikredeParserTest {
-    
-    @Configuration
-    @PropertySource({"classpath:test.properties", "default-config.properties"})
-    @Import(SikredeTestConfiguration.class)
-    static class ContextConfiguration {
-        @Bean
-        public SikredeParser parser() {
-            return new SikredeParser();
-        }
-
-        @Bean
-        public BrsUpdater brsUpdater() {
-            return new BrsUpdater();
-        }
-
-        @Bean
-        public RecordPersister persister() {
-            return new RecordPersister(Instant.now());
-        }
-    }
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
     @Autowired
     private SikredeParser parser;
-    
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -158,16 +129,6 @@ public class SikredeParserTest {
                 connection.rollback();
             }
         }
-    }
-    private Connection setupSikredeGeneratedDatabaseAndConnection(RecordSpecification recordSpecification)
-            throws SQLException {
-        Connection connection = new ConnectionManager().getConnection();
-
-        Statement setupStatements = connection.createStatement();
-        setupStatements.executeUpdate("DROP TABLE IF EXISTS " + recordSpecification.getTable());
-        setupStatements.executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
-
-        return connection;
     }
 */
 

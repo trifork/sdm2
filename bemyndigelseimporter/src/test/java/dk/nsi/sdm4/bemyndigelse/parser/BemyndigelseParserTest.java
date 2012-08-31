@@ -24,69 +24,43 @@
  */
 package dk.nsi.sdm4.bemyndigelse.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-
+import dk.nsi.sdm4.bemyndigelse.config.BemyndigelseApplicationConfig;
+import dk.nsi.sdm4.bemyndigelse.model.Bemyndigelser;
+import dk.nsi.sdm4.bemyndigelse.recordspecs.BemyndigelseRecordSpecs;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
 import org.apache.commons.io.FileUtils;
-import org.joda.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import dk.nsi.sdm4.bemyndigelse.BemyndigelseTestConfiguration;
-import dk.nsi.sdm4.bemyndigelse.model.Bemyndigelser;
-import dk.nsi.sdm4.bemyndigelse.recordspecs.BemyndigelseRecordSpecs;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.File;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {BemyndigelseApplicationConfig.class, TestDbConfiguration.class})
 public class BemyndigelseParserTest {
-
-    @Configuration
-    @PropertySource("classpath:test.properties")
-    @Import(BemyndigelseTestConfiguration.class)
-    static class ContextConfiguration {
-        @Bean
-        public BemyndigelseParser parser() {
-            return new BemyndigelseParser();
-        }
-
-        @Bean
-        public RecordPersister persister() {
-            return new RecordPersister(Instant.now());
-        }
-    }
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private BemyndigelseParser parser;
-    
-    
+
     @Before
     public void setUp() throws Exception {
     }
 
     @Test
     public void parseXML() {
-
         File file = FileUtils.toFile(getClass().getClassLoader().getResource("data/bemyndigelse/valid/20120329_102310000_v1.bemyndigelse.xml"));
         JAXBContext jaxbContext;
         try {

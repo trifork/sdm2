@@ -25,53 +25,29 @@
 
 package dk.nsi.sdm4.autorisation.parser;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
-
+import dk.nsi.sdm4.autorisation.config.AutorisationApplicationConfig;
+import dk.nsi.sdm4.autorisation.model.Autorisation;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import dk.nsi.sdm4.autorisation.AutorisationTestConfiguration;
-import dk.nsi.sdm4.autorisation.model.Autorisation;
-import dk.nsi.sdm4.core.persistence.AuditingPersister;
-import dk.nsi.sdm4.core.persistence.Persister;
+import java.io.File;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {AutorisationApplicationConfig.class, TestDbConfiguration.class})
 public class AutParserTest {
-    
-    @Configuration
-    @PropertySource({"classpath:test.properties", "classpath:default-config.properties"})
-    @Import(AutorisationTestConfiguration.class)
-    static class ContextConfiguration {
-         @Bean
-         public AutorisationParser parser() {
-             return new AutorisationParser();
-         }
-        
-         @Bean
-         public Persister persister() {
-             return new AuditingPersister();
-         }
-    }
-    
     @Autowired
     AutorisationParser parser;
     
