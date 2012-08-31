@@ -24,14 +24,22 @@
  */
 package dk.nsi.sdm4.sor.relations;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordMySQLTableGenerator;
+import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
+import dk.nsi.sdm4.sor.config.SorrelationApplicationConfig;
+import dk.nsi.sdm4.sor.recordspecs.SorRelationsRecordSpecs;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
+import oio.sundhedsstyrelsen.organisation._1_0.*;
+import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -40,63 +48,25 @@ import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.io.File;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.List;
 
-import oio.sundhedsstyrelsen.organisation._1_0.HealthInstitutionEntityType;
-import oio.sundhedsstyrelsen.organisation._1_0.HealthInstitutionType;
-import oio.sundhedsstyrelsen.organisation._1_0.InstitutionOwnerEntityType;
-import oio.sundhedsstyrelsen.organisation._1_0.InstitutionOwnerType;
-import oio.sundhedsstyrelsen.organisation._1_0.OrganizationalUnitEntityType;
-import oio.sundhedsstyrelsen.organisation._1_0.OrganizationalUnitType;
-import oio.sundhedsstyrelsen.organisation._1_0.SorStatusType;
-import oio.sundhedsstyrelsen.organisation._1_0.SorTreeType;
-
-import org.apache.commons.io.FileUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import org.springframework.transaction.annotation.Transactional;
-
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordMySQLTableGenerator;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordPersister;
-import dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification;
-import dk.nsi.sdm4.sor.SorTestConfiguration;
-import dk.nsi.sdm4.sor.recordspecs.SorRelationsRecordSpecs;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {SorrelationApplicationConfig.class, TestDbConfiguration.class})
 public class SorRelationParserTest {
-	@Configuration
-	@PropertySource("classpath:test.properties")
-	@Import(SorTestConfiguration.class)
-	static class ContextConfiguration {
-		@Bean
-		public SorRelationParser parser() {
-			return new SorRelationParser();
-		}
-
-		@Bean
-		public RecordPersister persister() {
-			return new RecordPersister(Instant.now());
-		}
-	}
-
 	private RecordSpecification recordSpecification = SorRelationsRecordSpecs.RELATIONS_RECORD_SPEC;
     private RecordSpecification shakYderSpecification = SorRelationsRecordSpecs.SHAK_YDER_RECORD_SPEC;
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
 	@Autowired
 	private SorRelationParser parser;
 
