@@ -26,6 +26,7 @@ package dk.nsi.sdm4.sikrede.parser;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +36,7 @@ import dk.nsi.sdm4.sikrede.recordspecs.SikredeRecordSpecs;
 import static dk.nsi.sdm4.core.persistence.recordpersister.RecordSpecification.field;
 
 public class SikredeSqlSchemaCreatorTest {
+	private static final Logger log = Logger.getLogger(SikredeSqlSchemaCreatorTest.class);
     private RecordSpecification exampleRecordSpecification;
 
     @Before
@@ -56,6 +58,6 @@ public class SikredeSqlSchemaCreatorTest {
 
     @Test
     public void testPrintOfActualSchema() {
-        System.out.println(RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC));
+        log.debug(RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC));
     }
 }
