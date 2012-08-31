@@ -77,15 +77,6 @@ public class SORIntegrationTest {
 	@Rule
 	public TemporaryFolder tmpDir = new TemporaryFolder();
 
-	@Before
-	public void setUp() throws Exception {
-		jdbcTemplate.update("truncate table Praksis");
-		jdbcTemplate.update("truncate table Yder");
-		jdbcTemplate.update("truncate table Sygehus");
-		jdbcTemplate.update("truncate table SygehusAfdeling");
-		jdbcTemplate.update("truncate table Apotek");
-	}
-
 	@Test
 	public void testImport() throws Exception {
 		importFile("data/sor/SOR_FULL.xml");
