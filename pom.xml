@@ -205,19 +205,6 @@
                         <version>1.2.1</version>
                         <executions>
                             <execution>
-                                <id>ensure-vm-running</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>vagrant</executable>
-                                    <arguments>
-                                        <argument>up</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                            <execution>
                                 <id>provision</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
@@ -258,6 +245,49 @@
                                         <argument>/pack/jboss/bin/jboss-cli.sh -c --commands='deploy --force
                                             /vagrant/${project.artifactId}/target/${project.artifactId}.war' --user=sdmadmin --password=trifork
                                         </argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>handle-vagrant-vms</id>
+            <activation>
+                <property>sdm.handle.vagrant.vms</property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>vm-up</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>vagrant</executable>
+                                    <arguments>
+                                        <argument>up</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>vm-destroy</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>vagrant</executable>
+                                    <arguments>
+                                        <argument>destroy</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
