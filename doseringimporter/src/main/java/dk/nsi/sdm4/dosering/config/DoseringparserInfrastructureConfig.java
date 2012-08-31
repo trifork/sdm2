@@ -1,19 +1,12 @@
 package dk.nsi.sdm4.dosering.config;
 
-import java.sql.SQLException;
-
+import dk.nsi.sdm4.core.config.StamdataConfiguration;
+import dk.sdsd.nsp.slalog.api.SLALogConfig;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import dk.nsi.sdm4.core.config.StamdataConfiguration;
-import dk.nsi.sdm4.core.parser.Parser;
-import dk.nsi.sdm4.core.persistence.AuditingPersister;
-import dk.nsi.sdm4.core.persistence.Persister;
-import dk.nsi.sdm4.dosering.parser.DoseringParser;
-import dk.sdsd.nsp.slalog.api.SLALogConfig;
-import dk.sdsd.nsp.slalog.api.SLALogger;
 
 @Configuration
 @EnableScheduling
