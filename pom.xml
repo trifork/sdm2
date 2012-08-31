@@ -255,9 +255,7 @@
         </profile>
         <profile>
             <id>handle-vagrant-vms</id>
-            <activation>
-                <property>sdm.handle.vagrant.vms</property>
-            </activation>
+            <activation><property><name>sdm.handle.vagrant.vms</name></property></activation>
             <build>
                 <plugins>
                     <plugin>
