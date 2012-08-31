@@ -218,6 +218,20 @@
                                 </configuration>
                             </execution>
                             <execution>
+                                <id>prepare-deploy</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>ln</executable>
+                                    <arguments>
+                                        <argument>${project.build.directory}/${project.build.finalName}.war</argument>
+                                        <argument>${project.build.directory}/${project.artifactId}.war</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
                                 <id>deploy</id>
                                 <phase>pre-integration-test</phase>
                                 <goals>
@@ -229,7 +243,7 @@
                                         <argument>ssh</argument>
                                         <argument>-c</argument>
                                         <argument>/pack/jboss/bin/jboss-cli.sh -c --commands='deploy --force
-                                            /vagrant/${project.artifactId}/target/${project.build.finalName}.war' --user=sdmadmin --password=trifork
+                                            /vagrant/${project.artifactId}/target/${project.artifactId}.war' --user=sdmadmin --password=trifork
                                         </argument>
                                     </arguments>
                                 </configuration>
