@@ -21,17 +21,7 @@ import java.sql.SQLException;
 @EnableTransactionManagement
 //The Spring Java Configuration annotations above needs to be on this class, not on the abstract superclass to
 // make Spring stop complaining about weird things
-public class SksimporterConfig extends StamdataConfiguration {
-    @Bean
-    public Parser parser() {
-		return new SKSParser();
-	}
-
-    @Bean
-    public Persister persister() {
-        return new AuditingPersister();
-    }
-
+public class SksimporterInfrastructureConfig extends StamdataConfiguration {
 	@Bean
 	public SLALogger slaLogger() {
 		return new SLALogConfig("Stamdata SKS-importer", "sksimporter").getSLALogger();
