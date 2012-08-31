@@ -18,6 +18,14 @@
         <connection>scm:git:git@github.com:trifork/sdm2.git</connection>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>Trifork-Nexus-Release-Repository</id>
+            <name>Trifork Nexus Release Repository</name>
+            <url>https://nexus.trifork.com/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
