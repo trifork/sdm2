@@ -25,17 +25,9 @@
 
 package dk.nsi.sdm4.dosering.parser;
 
-import static org.apache.commons.io.FileUtils.toFile;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.dosering.config.DoseringparserApplicationConfig;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,41 +35,27 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import dk.nsi.sdm4.core.persistence.AuditingPersister;
-import dk.nsi.sdm4.core.persistence.Persister;
-import dk.nsi.sdm4.dosering.DoseringTestConfiguration;
+import java.io.File;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static org.apache.commons.io.FileUtils.toFile;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {DoseringparserApplicationConfig.class, TestDbConfiguration.class})
 public class DoseringParserIntegrationTest {
-
-    @Configuration
-    @PropertySource({"classpath:test.properties", "classpath:default-config.properties"})
-    @Import(DoseringTestConfiguration.class)
-    static class ContextConfiguration {
-         @Bean
-         public DoseringParser parser() {
-             return new DoseringParser();
-         }
-        
-         @Bean
-         public Persister persister() {
-             return new AuditingPersister();
-         }
-    }
-    
     @Rule
     public TemporaryFolder tmpDir = new TemporaryFolder();
 
@@ -100,7 +78,6 @@ public class DoseringParserIntegrationTest {
 
     @Before
     public void setUp() throws SQLException {
-
         // The 'single' files only contain one record each.
         // This makes it easy to know that is imported and
         // it is a lot faster.
