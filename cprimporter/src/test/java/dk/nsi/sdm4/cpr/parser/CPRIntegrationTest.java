@@ -26,69 +26,37 @@
 
 package dk.nsi.sdm4.cpr.parser;
 
-import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.net.URL;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Map;
-
+import dk.nsi.sdm4.core.parser.ParserException;
+import dk.nsi.sdm4.core.util.Dates;
+import dk.nsi.sdm4.cpr.config.CprparserApplicationConfig;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
-import dk.nsi.sdm4.core.parser.ParserException;
-import dk.nsi.sdm4.core.persistence.AuditingPersister;
-import dk.nsi.sdm4.core.persistence.Persister;
-import dk.nsi.sdm4.core.util.Dates;
-import dk.nsi.sdm4.cpr.CprTestConfiguration;
+import java.io.File;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Map;
+
+import static dk.nsi.sdm4.core.util.Dates.yyyy_MM_dd;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {CprparserApplicationConfig.class, TestDbConfiguration.class})
 public class CPRIntegrationTest {
-	@Configuration
-	@PropertySource({"classpath:test.properties", "classpath:default-config.properties"})
-	@Import(CprTestConfiguration.class)
-	static class ContextConfiguration {
-		@Bean
-		public CPRParser parser() {
-			return new CPRParser();
-		}
-
-		@Bean
-		public CprSingleFileImporter singleFileImporter() {
-			return new CprSingleFileImporter();
-		}
-
-		@Bean
-		public Persister persister() {
-			return new AuditingPersister();
-		}
-	}
-
 	@Rule
 	public TemporaryFolder tmpDir = new TemporaryFolder();
 
@@ -97,7 +65,6 @@ public class CPRIntegrationTest {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
 
 	@Test
 	public void canEstablishData() throws Exception {
