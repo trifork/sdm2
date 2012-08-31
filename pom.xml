@@ -50,6 +50,7 @@
         <module>bemyndigelseimporter</module>
         <module>autorisationimporter</module>
         <module>doseringimporter</module>
+        <module>sikredeimporter</module>
         <module>sksimporter</module>
         <module>takstimporter</module>
         <module>testutils</module>
