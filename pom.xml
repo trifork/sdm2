@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
 
     <scm>
-        <url>https://github.com/trifork/sdm2</url>
-        <connection>scm:git:git://github.com/trifork/sdm2.git</connection>
-        <developerConnection>scm:git:git://github.com/trifork/sdm2.git</developerConnection>
+        <url>scm:git:git@github.com:trifork/sdm2</url>
+        <connection>scm:git:git@github.com:trifork/sdm2.git</connection>
+        <developerConnection>scm:git:git@github.com:trifork/sdm2.git</developerConnection>
     </scm>
     <issueManagement>
         <system>JIRA</system>
@@ -26,6 +26,14 @@
     <prerequisites>
         <maven>3.0.0</maven>
     </prerequisites>
+
+	<distributionManagement>
+    	<repository>
+            <id>Trifork-Nexus-Release-Repository</id>
+            <name>Trifork Nexus Release Repository</name>
+            <url>https://nexus.trifork.com/content/repositories/releases/</url>
+        </repository>
+	</distributionManagement>
 
     <repositories>
         <repository>
