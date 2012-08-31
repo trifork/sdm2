@@ -52,6 +52,8 @@
         <module>doseringimporter</module>
         <module>sksimporter</module>
         <module>takstimporter</module>
+        <module>yderimporter</module>
+        <module>sikredeimporter</module>
     </modules>
 
     <properties>
