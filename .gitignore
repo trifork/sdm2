@@ -12,3 +12,4 @@
 parsers/cprparser/target
 sorrelationimporter/src/main/java/generated-sources
 release.properties
+pom.xml.releaseBackup
