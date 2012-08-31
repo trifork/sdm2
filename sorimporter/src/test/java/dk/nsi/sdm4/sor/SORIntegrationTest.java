@@ -24,8 +24,8 @@
  */
 package dk.nsi.sdm4.sor;
 
-import dk.nsi.sdm4.core.persistence.AuditingPersister;
-import dk.nsi.sdm4.core.persistence.Persister;
+import dk.nsi.sdm4.sor.config.SorimporterApplicationConfig;
+import dk.nsi.sdm4.testutils.TestDbConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -33,41 +33,20 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = {SorimporterApplicationConfig.class, TestDbConfiguration.class})
 public class SORIntegrationTest {
-	@Configuration
-	@PropertySource({"classpath:test.properties", "classpath:default-config.properties"})
-	@Import(SorImporterTestConfiguration.class)
-	static class ContextConfiguration {
-		@Bean
-		public SORImporter parser() {
-			return new SORImporter();
-		}
-
-		@Bean
-		public Persister persister() {
-			return new AuditingPersister();
-		}
-	}
-
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
