@@ -21,6 +21,7 @@ import dk.sdsd.nsp.slalog.api.SLALogger;
 //The Spring Java Configuration annotations above needs to be on this class, not on the abstract superclass to
 // make Spring stop complaining about weird things
 public class DoseringparserInfrastructureConfig extends StamdataConfiguration {
+	@Bean
 	public SLALogger slaLogger() {
 		return new SLALogConfig("Stamdata Dosering-importer", "doseringimporter").getSLALogger();
 	}
