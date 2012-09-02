@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dk.nsi.stamdata4</groupId>
 		<artifactId>sdm-parent</artifactId>
-		<version>4.0</version>
+		<version>4.1-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>doseringimporter</artifactId>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>dk.nsi.stamdata4</groupId>
             <artifactId>testutils</artifactId>
-            <version>4.0</version>
+            <version>4.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
