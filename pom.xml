@@ -4,7 +4,7 @@
 
     <groupId>dk.nsi.stamdata4</groupId>
     <artifactId>sdm-parent</artifactId>
-    <version>4.1-SNAPSHOT</version>
+    <version>4.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <scm>
