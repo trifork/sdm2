@@ -1,1 +1,1 @@
-vagrant up&&mvn release:prepare&&vagrant halt&&mvn -Dsdm.handle.vagrant.vms release:perform
+vagrant up&&mvn -X release:prepare&&vagrant halt&&mvn -X -Dsdm.handle.vagrant.vms release:perform
