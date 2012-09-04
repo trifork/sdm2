@@ -50,16 +50,6 @@
     </pluginRepositories>
 
     <modules>
-        <module>cprimporter</module>
-        <module>sorrelationimporter</module>
-        <module>sorimporter</module>
-        <module>bemyndigelseimporter</module>
-        <module>autorisationimporter</module>
-        <module>doseringimporter</module>
-        <module>sksimporter</module>
-        <module>takstimporter</module>
-        <module>yderimporter</module>
-        <module>sikredeimporter</module>
         <module>testutils</module>
     </modules>
 
@@ -224,6 +214,7 @@
                                 <configuration>
                                     <executable>ln</executable>
                                     <arguments>
+                                        <argument>-f</argument>
                                         <argument>${project.build.directory}/${project.build.finalName}.war</argument>
                                         <argument>${project.build.directory}/${project.artifactId}.war</argument>
                                     </arguments>
@@ -241,7 +232,7 @@
                                         <argument>ssh</argument>
                                         <argument>-c</argument>
                                         <argument>/pack/jboss/bin/jboss-cli.sh -c --commands='deploy --force
-                                            /vagrant/${project.artifactId}/target/${project.artifactId}.war' --user=sdmadmin --password=trifork
+                                            /vagrant/sdm4-${project.artifactId}/target/${project.artifactId}.war' --user=sdmadmin --password=trifork
                                         </argument>
                                     </arguments>
                                 </configuration>
