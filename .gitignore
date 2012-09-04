@@ -14,3 +14,4 @@ sorrelationimporter/src/main/java/generated-sources
 release.properties
 pom.xml.releaseBackup
 *~
+sdm4-*
